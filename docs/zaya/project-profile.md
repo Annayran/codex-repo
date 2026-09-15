@@ -1,5 +1,5 @@
 <!-- generated-by: zaya-sankhya-development -->
-<!-- zaya-profile:fingerprint=D0779D909F9D61DBEACE4F11B8FF25F069EB647DC7673274832732469582927C -->
+<!-- zaya-profile:fingerprint=7F158D6860794DFEC9318E4F432EE5E0A4CDB59F86CAF7E335830396EB4A8317 -->
 # Perfil tecnico do projeto
 
 > Arquivo gerado automaticamente. Fatos funcionais e compatibilidade Sankhya
@@ -12,8 +12,8 @@
 - Build: Nenhum
 - Java detectado: nao identificado
 - Gradle Wrapper detectado: nao identificado
-- Profile gerado em: 2026-09-15T11:28:10-03:00
-- Git HEAD: sem commit
+- Profile gerado em: 2026-09-15T11:30:05-03:00
+- Git HEAD de origem: 4ef05c654ccd84555202f267c6f722ba8b06d2d3
 - Build hash: E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855
 - Source tree hash: E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855
 

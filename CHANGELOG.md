@@ -9,6 +9,7 @@ Todas as mudanças relevantes nos padrões serão registradas neste arquivo.
 - Arquitetura de contexto mínimo com AGENTS global enxuto e skill como roteador.
 - Classificador de tarefas e exploration budget inicial.
 - Fingerprint e validação de freshness no project profile.
+- Freshness estrutural independente do commit que versiona o próprio profile, evitando invalidação circular.
 - Consultas PowerShell objetivas para tabelas, campos e relações.
 - Ponto de entrada estável `scripts/Get-ZayaProjectProfile.ps1` para o gerador canônico da skill.
 - CLI leve `scripts/zaya.ps1`.

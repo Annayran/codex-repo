@@ -198,7 +198,9 @@ $sourceManifest = @($allFiles | Where-Object {
 })
 $buildFileHash = Get-TextSha256 ($structuralManifest -join [Environment]::NewLine)
 $sourceTreeHash = Get-TextSha256 ($sourceManifest -join [Environment]::NewLine)
-$fingerprint = Get-TextSha256 (($gitHead, $buildFileHash, $sourceTreeHash) -join '|')
+# O HEAD é registrado como proveniência, mas não participa do freshness: incluir
+# o commit que contém o próprio profile criaria uma invalidação circular.
+$fingerprint = Get-TextSha256 (($buildFileHash, $sourceTreeHash) -join '|')
 $profilePath = Join-Path $scanRoot 'docs\zaya\project-profile.md'
 $existingFingerprint = ''
 if (Test-Path -LiteralPath $profilePath) {
@@ -231,7 +233,7 @@ if ($statusCount -gt 0) { $warnings.Add("Working tree possui $statusCount item(n
 if (-not $profileFresh) { $warnings.Add('Project profile ausente ou desatualizado.') }
 
 $profile = [ordered]@{
-    schemaVersion = 1
+    schemaVersion = 2
     generatedAt = (Get-Date).ToString('yyyy-MM-ddTHH:mm:ssK')
     fingerprint = $fingerprint
     profileFresh = $profileFresh
@@ -326,7 +328,7 @@ $marker
 - Java detectado: $javaSummary
 - Gradle Wrapper detectado: $wrapperSummary
 - Profile gerado em: $($profile.generatedAt)
-- Git HEAD: $(if ($gitHead) { $gitHead } else { 'sem commit' })
+- Git HEAD de origem: $(if ($gitHead) { $gitHead } else { 'sem commit' })
 - Build hash: $buildFileHash
 - Source tree hash: $sourceTreeHash
 

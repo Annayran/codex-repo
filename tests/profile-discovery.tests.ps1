@@ -44,6 +44,7 @@ Describe 'Zaya project discovery' {
                 Set-Content -LiteralPath (Join-Path $fixture 'settings.gradle') -Encoding UTF8 -Value 'rootProject.name = "fixture"'
                 & $global:ZayaTestProfileScript -ProjectPath $fixture -WriteProfile | Out-Null
                 $fresh = (& $global:ZayaTestProfileScript -ProjectPath $fixture -AsJson | Out-String) | ConvertFrom-Json
+                $fresh.schemaVersion | Should Be 2
                 $fresh.profileFresh | Should Be $true
                 Add-Content -LiteralPath (Join-Path $fixture 'build.gradle') -Value '// structural change'
                 $stale = (& $global:ZayaTestProfileScript -ProjectPath $fixture -AsJson | Out-String) | ConvertFrom-Json
