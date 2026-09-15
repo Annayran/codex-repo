@@ -1,0 +1,34 @@
+# TGFCNAE — CNAE Empresa
+
+- Módulo técnico: [TGF](../modules/TGF.md)
+- Campos: 4
+- Instâncias DWF: 1
+- Relações DWF: 2
+- Objeto adicional: não indicado
+- Tipo de numeração: M
+
+> As relações documentadas são relações de instância do DWF e não comprovam, isoladamente, uma foreign key física no banco.
+
+## Instâncias
+
+| Instância | Descrição | Ativa | Raiz |
+|---|---|---:|---:|
+| CNAEEmpresa | CNAE Empresa | S | N |
+
+## Campos
+
+| Campo | Descrição | Tipo | Tamanho | Adicional | Calculado |
+|---|---|---|---:|---:|---:|
+| CNAE | CNAE | S |  |  | N |
+| CODEMP | Cód. Empresa | I |  |  | N |
+| LOCTRIBNORMAL | Local tributação (ISS normal) | S |  |  | N |
+| LOCTRIBRETIDO | Local tributação (ISS Retido) | S |  |  | N |
+
+## Relações DWF
+
+| Origem | Destino | Campos | Tipo |
+|---|---|---|---|
+| CNAEEmpresa / [TGFCNAE](TGFCNAE.md) | Empresa / [TSIEMP](TSIEMP.md) | CODEMP->CODEMP | I |
+| EmpresaFinanceiro / [TGFEMP](TGFEMP.md) | CNAEEmpresa / [TGFCNAE](TGFCNAE.md) | CODEMP->CODEMP | I |
+
+[Voltar ao índice de tabelas](../TABLE_INDEX.md)

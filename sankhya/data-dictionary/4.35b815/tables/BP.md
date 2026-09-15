@@ -1,0 +1,33 @@
+# BP — BP
+
+- Módulo técnico: [BP](../modules/BP.md)
+- Campos: 3
+- Instâncias DWF: 1
+- Relações DWF: 2
+- Objeto adicional: não indicado
+- Tipo de numeração: A
+
+> As relações documentadas são relações de instância do DWF e não comprovam, isoladamente, uma foreign key física no banco.
+
+## Instâncias
+
+| Instância | Descrição | Ativa | Raiz |
+|---|---|---:|---:|
+| BPUniversidade | BP da Universidade | S | N |
+
+## Campos
+
+| Campo | Descrição | Tipo | Tamanho | Adicional | Calculado |
+|---|---|---|---:|---:|---:|
+| FULLNAME | Nome | S |  |  | N |
+| ID | Código | I |  |  | N |
+| VISIBLE | Ativo | I |  |  | N |
+
+## Relações DWF
+
+| Origem | Destino | Campos | Tipo |
+|---|---|---|---|
+| GestorReport / [GESTOR_REPORT](GESTOR_REPORT.md) | BPUniversidade / [BP](BP.md) | INSTITUTIONID->ID | I |
+| ParceiroUniversidade / [INSTITUTION](INSTITUTION.md) | BPUniversidade / [BP](BP.md) | BPID->ID | I |
+
+[Voltar ao índice de tabelas](../TABLE_INDEX.md)

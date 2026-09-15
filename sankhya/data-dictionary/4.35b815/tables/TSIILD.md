@@ -1,0 +1,37 @@
+# TSIILD — Importação legacy detalhe
+
+- Módulo técnico: [TSI](../modules/TSI.md)
+- Campos: 8
+- Instâncias DWF: 1
+- Relações DWF: 1
+- Objeto adicional: não indicado
+- Tipo de numeração: A
+
+> As relações documentadas são relações de instância do DWF e não comprovam, isoladamente, uma foreign key física no banco.
+
+## Instâncias
+
+| Instância | Descrição | Ativa | Raiz |
+|---|---|---:|---:|
+| ImportacaoLegacyDetalhe | Importação Legacy Detalhe | N | N |
+
+## Campos
+
+| Campo | Descrição | Tipo | Tamanho | Adicional | Calculado |
+|---|---|---|---:|---:|---:|
+| CODILD | Id importação filha | I |  |  | N |
+| CODLIL | Id importação | I |  |  | N |
+| DESCRICAO | Mensagem | S |  |  | N |
+| DHEVENTO | Data evento | H |  |  | N |
+| EVENTO | Evento | S |  |  | N |
+| IDEXTERNO | Id do sistema de origem | S |  |  | N |
+| NROLINHA | Número da linha | I |  |  | N |
+| TABELA | Nome template | S |  |  | N |
+
+## Relações DWF
+
+| Origem | Destino | Campos | Tipo |
+|---|---|---|---|
+| ImportacaoLegacyDetalhe / [TSIILD](TSIILD.md) | LogImportacaoLegacy / [TSILIL](TSILIL.md) | CODLIL->CODLIL | I |
+
+[Voltar ao índice de tabelas](../TABLE_INDEX.md)

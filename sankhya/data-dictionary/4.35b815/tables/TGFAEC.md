@@ -1,0 +1,36 @@
+# TGFAEC — Apontamento Entrega
+
+- Módulo técnico: [TGF](../modules/TGF.md)
+- Campos: 7
+- Instâncias DWF: 1
+- Relações DWF: 1
+- Objeto adicional: não indicado
+- Tipo de numeração: A
+
+> As relações documentadas são relações de instância do DWF e não comprovam, isoladamente, uma foreign key física no banco.
+
+## Instâncias
+
+| Instância | Descrição | Ativa | Raiz |
+|---|---|---:|---:|
+| ApontamentoEntrega | Apontamento de Entrega | S | N |
+
+## Campos
+
+| Campo | Descrição | Tipo | Tamanho | Adicional | Calculado |
+|---|---|---|---:|---:|---:|
+| CODCONTATO | Cód. Contato | I |  |  | N |
+| CODPARCFAT | Cód. Parceiro | I |  |  | N |
+| DHOCORRENCIA | Dt. Hora Ocorrência | H |  |  | N |
+| ENTREGUE | Entregue | S |  |  | N |
+| NUPLAN | Nro. Planejamento | I |  |  | N |
+| OBSERVACAO | Observação | S |  |  | N |
+| OCORRENCIA | Ocorrência | I |  |  | N |
+
+## Relações DWF
+
+| Origem | Destino | Campos | Tipo |
+|---|---|---|---|
+| ViewCabPlanejamentoEntrega / [VGFPLAC](VGFPLAC.md) | ApontamentoEntrega / [TGFAEC](TGFAEC.md) | CODCONTATO->CODCONTATO; CODPARCFAT->CODPARCFAT; NUPLAN->NUPLAN | I |
+
+[Voltar ao índice de tabelas](../TABLE_INDEX.md)
