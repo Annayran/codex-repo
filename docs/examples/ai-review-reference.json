@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "state": "HIPOTESE",
+  "problem": "Bloqueio relatado em operação com produto reportado inativo.",
+  "observations": [
+    {"statement": "O item coletado está associado a produto inativo.", "evidenceIds": ["synthetic-item"], "limitation": "Estado reportado na coleta; histórico da transação ausente."},
+    {"statement": "Unidades CX e UN diferem; saldo físico e reservado reportados iguais a zero.", "evidenceIds": ["synthetic-item"], "limitation": "Conversão e política de disponibilidade não homologadas."},
+    {"statement": "Há trecho filtrado com códigos Oracle e referência a gatilho.", "evidenceIds": ["synthetic-log"], "limitation": "Correspondência textual sem vínculo comprovado com a requisição; janela truncada."}
+  ],
+  "hypotheses": [
+    {"statement": "A condição de produto inativo pode explicar o bloqueio relatado.", "evidenceIds": ["synthetic-item", "synthetic-report"], "limitation": "A regra do gatilho e o estado na tentativa ainda precisam ser verificados."}
+  ],
+  "missingEvidence": ["Estado histórico do produto na tentativa", "Correlação do log com a requisição", "Regra do gatilho na versão instalada", "Conversão CX/UN e política de disponibilidade homologadas"],
+  "nextChecks": [
+    {"action": "Consultar a regra do gatilho e o histórico do cadastro no ambiente autorizado.", "purpose": "Verificar a condição do bloqueio e o estado do produto no horário da tentativa.", "readOnly": true},
+    {"action": "Consultar a conversão de unidade e a política de disponibilidade aplicável.", "purpose": "Estabelecer se quantidades podem ser comparadas antes de investigar insuficiência.", "readOnly": true}
+  ]
+}

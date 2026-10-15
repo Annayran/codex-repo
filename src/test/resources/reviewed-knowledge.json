@@ -1,0 +1,15 @@
+[
+  {
+    "metadata": {
+      "id": "synthetic-policy-document",
+      "source": "fixture://reviewed-policy",
+      "version": "1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "Synthetic policy reference; never validated in Sankhya"
+    },
+    "environment": "fixture",
+    "content": "Synthetic scenario 5 supplies availability=1 from balance=20 under fixture-rule-v1. This is not a Sankhya availability formula. Event history is required to establish origin."
+  }
+]

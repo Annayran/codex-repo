@@ -1,0 +1,9 @@
+# Copy to config/private/central.properties and replace demo names with administrator-managed identities.
+# Password is resolved on our central server; never commit a real value.
+quarkus.security.users.embedded.users.integracao-exemplo=${NEXO_INTEGRATION_PASSWORD}
+quarkus.security.users.embedded.roles.integracao-exemplo=investigator
+nexo.identity-manifest=config/private/identities.json
+nexo.gateway=disabled
+nexo.ai.enabled=false
+# Public HTTPS endpoint must terminate at an approved reverse proxy or TLS configuration.
+quarkus.http.host=127.0.0.1

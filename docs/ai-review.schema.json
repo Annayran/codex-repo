@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Nexo advisory review v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "state", "problem", "observations", "hypotheses", "missingEvidence", "nextChecks"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "state": {"enum": ["HIPOTESE", "INCONCLUSIVA"]},
+    "problem": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "observations": {"type": "array", "minItems": 1, "maxItems": 50, "items": {"$ref": "#/$defs/claim"}},
+    "hypotheses": {"type": "array", "maxItems": 10, "items": {"$ref": "#/$defs/claim"}},
+    "missingEvidence": {"type": "array", "minItems": 1, "maxItems": 50, "items": {"type": "string", "minLength": 1, "maxLength": 1000}},
+    "nextChecks": {"type": "array", "minItems": 1, "maxItems": 10, "items": {"type": "object", "additionalProperties": false, "required": ["action", "purpose", "readOnly"], "properties": {"action": {"type": "string", "minLength": 1, "maxLength": 1000}, "purpose": {"type": "string", "minLength": 1, "maxLength": 1000}, "readOnly": {"const": true}}}}
+  },
+  "$defs": {
+    "claim": {"type": "object", "additionalProperties": false, "required": ["statement", "evidenceIds", "limitation"], "properties": {"statement": {"type": "string", "minLength": 1, "maxLength": 1000}, "evidenceIds": {"type": "array", "minItems": 1, "maxItems": 50, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 100}}, "limitation": {"type": "string", "minLength": 1, "maxLength": 1000}}}
+  }
+}
