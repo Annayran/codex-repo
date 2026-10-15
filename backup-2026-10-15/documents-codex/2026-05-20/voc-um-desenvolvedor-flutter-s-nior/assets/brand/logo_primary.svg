@@ -1,0 +1,15 @@
+<svg width="640" height="240" viewBox="0 0 640 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="240" rx="28" fill="#0E1116"/>
+  <g transform="translate(38 46) scale(1.15)">
+    <path d="M16 98L58 18H82L126 98H101L72 42L43 98H16Z" fill="#FFFFFF"/>
+    <path d="M57 79H84L72 55L57 79Z" fill="#0E1116"/>
+    <path d="M83 18H144L132 40H71L83 18Z" fill="#32D74B"/>
+    <path d="M103 54H136L126 74H93L103 54Z" fill="#FFFFFF"/>
+  </g>
+  <text x="230" y="102" fill="#FFFFFF" font-family="Montserrat, Arial, sans-serif" font-size="52" font-style="italic" font-weight="800">AF HEALTH</text>
+  <line x1="278" y1="138" x2="374" y2="138" stroke="#32D74B" stroke-width="4"/>
+  <text x="398" y="148" fill="#32D74B" font-family="Montserrat, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="18">LAB</text>
+  <line x1="505" y1="138" x2="600" y2="138" stroke="#32D74B" stroke-width="4"/>
+  <text x="72" y="198" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="10">DADOS. CIÊNCIA. </text>
+  <text x="370" y="198" fill="#32D74B" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="10">PERFORMANCE.</text>
+</svg>

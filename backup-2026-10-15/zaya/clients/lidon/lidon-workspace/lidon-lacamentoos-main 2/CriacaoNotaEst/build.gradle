@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.projects'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+def path = 'C:\\Users\\AnnayranFerreira\\Desktop\\Desenvolvimento\\Sankhya\\Dependencias\\Jar'
+def path2 = 'C:\\Users\\AnnayranFerreira\\Desktop\\Desenvolvimento\\Sankhya\\Dependencias\\4_35'
+
+dependencies {
+    compileOnly fileTree(dir: path, include: '*.jar')
+    compileOnly fileTree(dir: path2, include: '*.jar')
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:unchecked'
+}

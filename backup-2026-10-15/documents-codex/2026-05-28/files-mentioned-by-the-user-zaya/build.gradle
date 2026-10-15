@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya.skala'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Base das dependencias locais Sankhya no Windows.
+def baseLibPath = 'C:/zy-tools/modulos-sankhya/Dependencias'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/sankhya/java']
+        }
+    }
+}
+
+dependencies {
+    // ===== LIBS LOCAIS SANKHYA (compileOnly) =====
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+
+    // ===== TESTES =====
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    failOnNoDiscoveredTests = false
+}
+
+tasks.register('runScenarios', JavaExec) {
+    group = 'verification'
+    description = 'Executa os cenarios de teste do algoritmo de particionamento sem dependencias externas.'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.skala.particionamento.ParticionamentoServiceTestRunner'
+}
+
+check.dependsOn tasks.named('runScenarios')
+
+jar {
+    archiveFileName = 'PARTICIONAMENTOSKALA-1.0-SNAPSHOT.JAR'
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="360" viewBox="0 0 1400 360" fill="none">
+  <text x="40" y="135" font-size="118" font-weight="800" font-style="italic" font-family="Montserrat, Arial, sans-serif" fill="#FFFFFF" letter-spacing="-2">AF</text>
+  <text x="232" y="135" font-size="98" font-weight="500" font-style="italic" font-family="Montserrat, Arial, sans-serif" fill="#FFFFFF" letter-spacing="2">HEALTH</text>
+  <line x1="35" y1="238" x2="180" y2="238" stroke="#32D74B" stroke-width="5"/>
+  <text x="218" y="262" font-size="72" font-weight="500" font-style="italic" font-family="Montserrat, Arial, sans-serif" fill="#32D74B" letter-spacing="34">LAB</text>
+  <line x1="565" y1="238" x2="750" y2="238" stroke="#32D74B" stroke-width="5"/>
+</svg>

@@ -1,0 +1,1 @@
+package tech.skala.modules.logistica.callcenter;

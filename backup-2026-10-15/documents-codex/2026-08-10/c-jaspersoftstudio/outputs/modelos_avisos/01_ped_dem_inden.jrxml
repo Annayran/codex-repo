@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pedido_Demissao_Indenizado" language="java" pageWidth="595" pageHeight="842" columnWidth="467" leftMargin="64" rightMargin="64" topMargin="54" bottomMargin="54" whenNoDataType="AllSectionsNoDetail">
+  <style name="Base" fontName="Arial" fontSize="11" pdfFontName="Helvetica" pdfEncoding="Cp1252"/>
+  <parameter name="P_CODEMP" class="java.lang.String"/>
+  <parameter name="P_CODFUNC" class="java.lang.String"/>
+  <queryString><![CDATA[SELECT
+    NVL(EMP.RAZAOSOCIALCOMPLETA, NVL(EMP.RAZAOSOCIAL, EMP.NOMEFANTASIA)) AS EMPRESA,
+    FUN.NOMEFUNC AS COLABORADOR,
+    CID.NOMECID AS CIDADE,
+    TO_CHAR(SYSDATE, 'DD/MM/YYYY') AS DATA_DOCUMENTO
+FROM (
+    SELECT TO_NUMBER(TRIM($P{P_CODEMP})) AS CODEMP,
+           TO_NUMBER(TRIM($P{P_CODFUNC})) AS CODFUNC
+    FROM DUAL
+) PAR
+LEFT JOIN VFPFUN FUN ON FUN.CODEMP = PAR.CODEMP AND FUN.CODFUNC = PAR.CODFUNC
+LEFT JOIN TSIEMP EMP ON EMP.CODEMP = PAR.CODEMP
+LEFT JOIN TSICID CID ON CID.CODCID = EMP.CODCID
+ORDER BY PAR.CODEMP, PAR.CODFUNC]]></queryString>
+  <field name="EMPRESA" class="java.lang.String"/>
+  <field name="COLABORADOR" class="java.lang.String"/>
+  <field name="CIDADE" class="java.lang.String"/>
+  <field name="DATA_DOCUMENTO" class="java.lang.String"/>
+  <detail>
+    <band height="734" splitType="Prevent">
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="0" width="467" height="18"/>
+        <textElement textAlignment="Center" verticalAlignment="Top"><font size="10" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["(MODELO - FAZER DE PRÓPRIO PUNHO)"]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="26" width="467" height="30"/>
+        <textElement textAlignment="Center" verticalAlignment="Top"><font size="14" isBold="true"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["PEDIDO DE DEMISSÃO"]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="72" width="467" height="36"/>
+        <textElement textAlignment="Left" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["À" + "\n" + ($F{EMPRESA} == null || $F{EMPRESA}.trim().length() == 0 ? "____________________________" : $F{EMPRESA})]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="116" width="467" height="20"/>
+        <textElement textAlignment="Left" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Prezados senhores,"]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="144" width="467" height="54"/>
+        <textElement textAlignment="Justified" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Pelo presente notifico que a partir da data da entrega deste, deixarei os serviços desta empresa, por minha livre e espontânea vontade."]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="208" width="467" height="62"/>
+        <textElement textAlignment="Justified" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Deixo claro que não cumprirei o aviso prévio de 30 dias, estando ciente que a empresa poderá descontá-lo das minhas verbas rescisórias. (art. 487, § 2º da CLT)"]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="280" width="467" height="76"/>
+        <textElement textAlignment="Justified" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Estou ciente que deverei devolver: Objetos e materiais de qualquer natureza postos sob minha responsabilidade e não devolvidos no devido tempo, autorizo expressamente a EMPREGADORA a descontar de meus vencimentos."]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="366" width="467" height="38"/>
+        <textElement textAlignment="Justified" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Solicito, ainda, seja aposto o \"ciente\" na segunda via que acompanha o presente documento."]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="414" width="467" height="28"/>
+        <textElement textAlignment="Justified" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Na expectativa de ser atendido, firmo-me."]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="452" width="467" height="20"/>
+        <textElement textAlignment="Left" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["Atenciosamente."]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="480" width="467" height="26"/>
+        <textElement textAlignment="Center" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA[($F{CIDADE} == null || $F{CIDADE}.trim().length() == 0 ? "____________________________" : $F{CIDADE}) + ", " + ($F{DATA_DOCUMENTO} == null || $F{DATA_DOCUMENTO}.trim().length() == 0 ? "____________________________" : $F{DATA_DOCUMENTO}) + "."]]></textFieldExpression>
+      </textField>
+      <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+        <reportElement style="Base" positionType="Float" x="0" y="514" width="467" height="58"/>
+        <textElement textAlignment="Center" verticalAlignment="Top"><font size="11" isBold="false"/></textElement>
+        <textFieldExpression class="java.lang.String"><![CDATA["______________________________________________\n" + ($F{COLABORADOR} == null || $F{COLABORADOR}.trim().length() == 0 ? "____________________________" : $F{COLABORADOR}) + "\nNome e Assinatura do Colaborador"]]></textFieldExpression>
+      </textField>
+    </band>
+  </detail>
+</jasperReport>

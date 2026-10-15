@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "a-f-health-lab-he71ml",
+          "appId": "1:372031775233:android:307f6700c7237e909e5600",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "a-f-health-lab-he71ml",
+          "configurations": {
+            "android": "1:372031775233:android:307f6700c7237e909e5600",
+            "ios": "1:372031775233:ios:f69dfc84879db5229e5600"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}

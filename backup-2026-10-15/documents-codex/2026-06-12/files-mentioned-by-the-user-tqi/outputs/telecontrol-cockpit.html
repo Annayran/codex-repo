@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polyvox | Cockpit Telecontrol</title>
+  <link rel="preconnect" href="https://acdn-us.mitiendanube.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --poly-red: #e30613;
+      --poly-red-dark: #b8040f;
+      --ink: #111111;
+      --ink-soft: #2a2a2a;
+      --paper: #ffffff;
+      --muted: #6f7277;
+      --line: #e6e7ea;
+      --panel: #f6f7f8;
+      --success: #128747;
+      --warning: #b86b00;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #f1f2f4;
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .top-strip {
+      display: flex;
+      justify-content: center;
+      gap: 34px;
+      padding: 8px 16px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .top-strip span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      min-height: 74px;
+      padding: 14px 30px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 250px;
+    }
+
+    .brand img {
+      display: block;
+      width: 178px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 34px;
+      background: var(--line);
+    }
+
+    .brand-title {
+      line-height: 1.2;
+    }
+
+    .brand-title strong {
+      display: block;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .brand-title span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .global-search {
+      position: relative;
+      flex: 1;
+      max-width: 560px;
+    }
+
+    .global-search i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      color: var(--muted);
+      transform: translateY(-50%);
+    }
+
+    .global-search input {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 14px 0 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      outline: none;
+    }
+
+    .global-search input:focus {
+      border-color: var(--ink);
+      background: #fff;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: var(--poly-red);
+    }
+
+    .btn-primary:hover { background: var(--poly-red-dark); }
+
+    .btn-ghost {
+      color: var(--ink);
+      background: #fff;
+      border-color: var(--line);
+    }
+
+    .btn-ghost:hover { border-color: var(--ink); }
+
+    .btn-dark {
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 286px minmax(0, 1fr);
+      min-height: calc(100vh - 112px);
+    }
+
+    .sidebar {
+      padding: 24px 18px;
+      background: var(--paper);
+      border-right: 1px solid var(--line);
+    }
+
+    .sidebar-label {
+      margin: 0 10px 12px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .module-list {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 26px;
+    }
+
+    .module-btn {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .module-btn:hover,
+    .module-btn.active {
+      border-color: var(--line);
+      background: #f7f7f7;
+    }
+
+    .module-btn.active {
+      box-shadow: inset 4px 0 0 var(--poly-red);
+    }
+
+    .module-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      color: #fff;
+      background: var(--ink);
+      border-radius: var(--radius);
+    }
+
+    .module-btn.active .module-icon {
+      background: var(--poly-red);
+    }
+
+    .module-name {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .module-table {
+      color: var(--muted);
+      font-size: 11px;
+      font-family: Consolas, monospace;
+    }
+
+    .module-count {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .sidebar-card {
+      padding: 14px;
+      background: #111;
+      color: #fff;
+      border-radius: var(--radius);
+    }
+
+    .sidebar-card strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-card p {
+      margin: 0;
+      color: #d7d7d7;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .content {
+      padding: 28px;
+      min-width: 0;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+      padding: 26px;
+      color: #fff;
+      background:
+        linear-gradient(125deg, rgba(17, 17, 17, 0.98), rgba(17, 17, 17, 0.9)),
+        radial-gradient(circle at right top, rgba(227, 6, 19, 0.38), transparent 38%);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      background: var(--poly-red);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      max-width: 780px;
+      margin: 0;
+      color: #d8d8d8;
+      line-height: 1.55;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      padding: 0 10px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .stat-card {
+      padding: 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .stat-card span {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .stat-card strong {
+      font-size: 26px;
+    }
+
+    .work-area {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) 390px;
+      gap: 18px;
+    }
+
+    .panel {
+      min-width: 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .panel-title span {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: Consolas, monospace;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      min-height: 36px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      outline: none;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 520px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #fbfbfb;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tbody tr {
+      cursor: pointer;
+    }
+
+    tbody tr:hover,
+    tbody tr.selected {
+      background: #fff4f5;
+    }
+
+    .code {
+      font-family: Consolas, monospace;
+      font-weight: 700;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status.ok {
+      color: var(--success);
+      background: #eaf7ef;
+    }
+
+    .status.warn {
+      color: var(--warning);
+      background: #fff5df;
+    }
+
+    .status.off {
+      color: var(--muted);
+      background: #eeeeee;
+    }
+
+    .detail-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 620px;
+    }
+
+    .detail-empty {
+      display: grid;
+      place-items: center;
+      min-height: 300px;
+      padding: 30px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .record-head {
+      padding: 18px;
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .record-head span {
+      display: block;
+      margin-bottom: 6px;
+      color: #d2d2d2;
+      font-size: 12px;
+      font-family: Consolas, monospace;
+    }
+
+    .record-head strong {
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      flex: 1;
+      min-height: 42px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tab.active {
+      color: var(--poly-red);
+      box-shadow: inset 0 -3px 0 var(--poly-red);
+    }
+
+    .detail-body {
+      padding: 16px;
+      overflow: auto;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      padding: 10px;
+      background: var(--panel);
+      border-radius: var(--radius);
+    }
+
+    .field span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .field strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 13px;
+    }
+
+    .relation-list,
+    .action-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .relation-card,
+    .action-card {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .relation-card strong,
+    .action-card strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .relation-card span,
+    .action-card span {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: Consolas, monospace;
+    }
+
+    .action-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: none;
+      max-width: 420px;
+      padding: 14px 16px;
+      color: #fff;
+      background: var(--ink);
+      border-left: 5px solid var(--poly-red);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 50;
+    }
+
+    .toast.active {
+      display: block;
+    }
+
+    @media (max-width: 1120px) {
+      .layout,
+      .work-area {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .module-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-meta {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .top-strip {
+        display: none;
+      }
+
+      .navbar {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 14px;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .nav-actions {
+        margin-left: 0;
+      }
+
+      .content {
+        padding: 16px;
+      }
+
+      .module-list,
+      .stats-grid,
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-strip">
+    <span><i class="fa-solid fa-shield-halved"></i> Integração Telecontrol</span>
+    <span><i class="fa-solid fa-bolt"></i> Ações Sankhya</span>
+    <span><i class="fa-solid fa-database"></i> Tabelas AD_TCL</span>
+  </div>
+
+  <header class="navbar">
+    <div class="brand">
+      <img src="https://acdn-us.mitiendanube.com/stores/005/839/688/themes/common/logo-1297653022-1743705838-bbbe0334fa873803b1231225499070071743705839-480-0.webp" alt="Polyvox">
+      <div class="brand-divider"></div>
+      <div class="brand-title">
+        <strong>Cockpit Telecontrol</strong>
+        <span>Produtos, peças, postos e integrações</span>
+      </div>
+    </div>
+
+    <label class="global-search" for="globalSearch">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="globalSearch" type="search" placeholder="Buscar por tabela, descrição, código ou ação..." oninput="applyGlobalSearch()">
+    </label>
+
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="showMatrix()"><i class="fa-solid fa-diagram-project"></i> Matriz</button>
+      <button class="btn btn-primary" onclick="showToast('Pronto para plugar as ações nativas do Sankhya quando você passar os detalhes restantes.')"><i class="fa-solid fa-plus"></i> Nova ação</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <p class="sidebar-label">Módulos</p>
+      <div id="moduleList" class="module-list"></div>
+
+      <div class="sidebar-card">
+        <strong>Como ajustar</strong>
+        <p>Todo o comportamento está no objeto <b>telecontrolConfig</b>. Para novas tabelas, basta adicionar campos, ações e relações pai/detalhe.</p>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">Central HTML5</span>
+          <h1>Operação Telecontrol</h1>
+          <p>Primeira versão do painel para consultar tabelas, visualizar vínculos pai/detalhe e executar ações da integração sem espalhar botões por várias telas.</p>
+        </div>
+        <div class="hero-meta">
+          <span class="pill"><i class="fa-solid fa-table"></i> <span id="heroTables">0</span> tabelas</span>
+          <span class="pill"><i class="fa-solid fa-play"></i> <span id="heroActions">0</span> ações</span>
+          <span class="pill"><i class="fa-solid fa-link"></i> <span id="heroRelations">0</span> relações</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><span>Telas principais</span><strong id="statMain">0</strong></div>
+        <div class="stat-card"><span>Telas detalhe</span><strong id="statDetail">0</strong></div>
+        <div class="stat-card"><span>Cadastros apoio</span><strong id="statSupport">0</strong></div>
+        <div class="stat-card"><span>Ações mapeadas</span><strong id="statActions">0</strong></div>
+      </div>
+
+      <div class="work-area">
+        <section class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <strong id="screenTitle">Produtos Telecontrol</strong>
+              <span id="screenTable">AD_TCLPRO</span>
+            </div>
+            <div class="toolbar">
+              <input id="recordSearch" type="search" placeholder="Filtrar registros..." oninput="renderRecords()">
+              <select id="statusFilter" onchange="renderRecords()">
+                <option value="">Todos</option>
+                <option value="S">Ativos</option>
+                <option value="N">Inativos</option>
+              </select>
+              <button class="btn btn-dark" onclick="showToast('No Sankhya, este botão pode chamar DbExplorerSP.executeQuery para recarregar a tabela atual.')"><i class="fa-solid fa-rotate"></i> Atualizar</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead id="recordsHead"></thead>
+              <tbody id="recordsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="panel detail-panel">
+          <div id="detailPanel">
+            <div class="detail-empty">
+              <div>
+                <i class="fa-solid fa-arrow-pointer" style="font-size: 28px; margin-bottom: 12px;"></i>
+                <p>Selecione um registro para ver campos, detalhes e ações disponíveis.</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const telecontrolConfig = [
+      {
+        id: 'produtos',
+        table: 'AD_TCLPRO',
+        title: 'Produtos Telecontrol',
+        type: 'principal',
+        icon: 'fa-box-open',
+        key: 'CODPROD',
+        descriptionField: 'DESCRICAO',
+        displayFields: ['CODPROD', 'REFERENCIA', 'DESCRICAO', 'CODFAMILIA', 'CODLINHA', 'ATIVO', 'DHINTEG'],
+        fields: [
+          ['CODPROD', 'Produto', 'I', 'P'],
+          ['REFERENCIA', 'Ref. Telecontrol', 'S', 'P'],
+          ['DESCRICAO', 'Descrição', 'S', 'P'],
+          ['CODFAMILIA', 'Código Família', 'S', 'P'],
+          ['CODLINHA', 'Linha', 'S', 'P'],
+          ['GARANTIA', 'Garantia', 'I', 'P'],
+          ['MAODEOBRA', 'Mão de Obra', 'F', 'P'],
+          ['MAODEOBRAADMIN', 'Mão de Obra Adm', 'F', 'P'],
+          ['NUMEROSERIEOBRIGATORIO', 'Nro de Série Obrigatório?', 'S', 'O S/N'],
+          ['COD_TELECONTROL', 'Cód. Telecontrol', 'I', 'P'],
+          ['DHINTEG', 'Dh. Integração', 'H', 'P'],
+          ['DTALTER', 'Dh. Alteração', 'H', 'P'],
+          ['VOLTAGEM', 'Voltagem', 'S', 'P'],
+          ['ATIVO', 'Ativo no Telecontrol', 'S', 'O S/N'],
+          ['UNID_NEGOCIO', 'Unid. Negócio', 'S', 'P'],
+          ['MARCA', 'Marca', 'S', 'P']
+        ],
+        actions: [
+          { code: 103, name: 'Envio Produto', type: 'RJ' },
+          { code: 138, name: '[ZAYA.IT] - Sincronizar Produtos', type: 'RJ' }
+        ],
+        relations: [
+          { table: 'AD_TCLLTB', title: 'Lista Básica Telecontrol', kind: 'detalhe', parentField: 'CODPROD', childField: 'CODPROD' },
+          { table: 'AD_TCLLIN', title: 'Linha Telecontrol', kind: 'apoio', parentField: 'CODLINHA', childField: 'CODLINHA' },
+          { table: 'AD_TCLFAM', title: 'Família Telecontrol', kind: 'apoio', parentField: 'CODFAMILIA', childField: 'CODFAMILIA' }
+        ]
+      },
+      {
+        id: 'lista-basica',
+        table: 'AD_TCLLTB',
+        title: 'Lista Básica Telecontrol',
+        type: 'detalhe',
+        icon: 'fa-list-check',
+        key: 'LISTABASICA',
+        parent: 'AD_TCLPRO',
+        parentField: 'CODPROD',
+        descriptionField: 'REFPRODUTO',
+        displayFields: ['LISTABASICA', 'CODPROD', 'CODPECA', 'QTD', 'POSICAO', 'DHINTEG'],
+        fields: [
+          ['CODPECA', 'Cód. Peça', 'I', 'P'],
+          ['CODPROD', 'Código', 'I', 'P'],
+          ['QTD', 'Quantidade', 'F', 'P'],
+          ['POSICAO', 'Posição', 'S', 'P'],
+          ['DHALTER', 'Data Alteração', 'H', 'P'],
+          ['DHINTEG', 'Data Integração', 'H', 'P'],
+          ['REFPRODUTO', 'Referência Produto', 'S', 'P'],
+          ['REFPECA', 'Referência Peça', 'S', 'P'],
+          ['LISTABASICA', 'Lista Básica', 'I', 'P']
+        ],
+        actions: [
+          { code: 102, name: 'Envia Lista Básica', type: 'RJ' },
+          { code: 140, name: '[ZAYA.IT] - Sincroniza Lista Básica', type: 'RJ' }
+        ],
+        relations: [
+          { table: 'AD_TCLPRO', title: 'Produto pai', kind: 'pai', parentField: 'CODPROD', childField: 'CODPROD' },
+          { table: 'AD_TCLPCA', title: 'Peça vinculada', kind: 'referência', parentField: 'CODPECA', childField: 'CODPROD' }
+        ]
+      },
+      {
+        id: 'pecas',
+        table: 'AD_TCLPCA',
+        title: 'Peças Telecontrol',
+        type: 'principal',
+        icon: 'fa-screwdriver-wrench',
+        key: 'CODPROD',
+        descriptionField: 'DESCRICAO',
+        displayFields: ['CODPROD', 'REFERENCIA', 'DESCRICAO', 'ATIVO', 'ESTOQUE', 'COD_TELECONTROL'],
+        fields: [
+          ['CODPROD', 'Peça', 'I', 'P'],
+          ['REFERENCIA', 'Referência', 'S', 'P'],
+          ['DESCRICAO', 'Descrição', 'S', 'P'],
+          ['IPI', 'Ipi', 'I', 'P'],
+          ['MULTIPLO', 'Múltiplo', 'I', 'P'],
+          ['DEVOLUCAOOBRIGATORIA', 'Devolução Obrigatória?', 'S', 'O S/N'],
+          ['GARANTIADIFERENCIADA', 'Garantia Diferenciada', 'I', 'P'],
+          ['NUMEROSERIEPECA', 'Nro Série da Peça?', 'S', 'O S/N'],
+          ['ACESSORIO', 'Acessório?', 'S', 'O S/N'],
+          ['ITEMAPARENCIA', 'Item Aparência?', 'S', 'O S/N'],
+          ['ORIGEM', 'Origem', 'S', 'O S/N'],
+          ['ATIVO', 'Ativo', 'S', 'O S/N'],
+          ['BLOQUEADAVENDA', 'Bloquear Venda?', 'S', 'O S/N'],
+          ['BLOQUEADAGARANTIA', 'Bloquear Garantia?', 'S', 'O S/N'],
+          ['ESTOQUE', 'Estoque', 'F', 'P'],
+          ['UNIDADE', 'Unid. Medida', 'S', 'P'],
+          ['DHINTEG', 'Dh. Integração', 'H', 'P'],
+          ['DTALTER', 'Dh. Alteração', 'H', 'P'],
+          ['CLASSIFICACAOFISCAL', 'Class. Fiscal', 'S', 'P'],
+          ['COD_TELECONTROL', 'Código Telecontrol', 'I', 'P'],
+          ['PRECOVEN', 'Preço Venda', 'F', 'P'],
+          ['PRECOGAR', 'Preço Garantia', 'F', 'P']
+        ],
+        actions: [
+          { code: 105, name: 'Envio Peças', type: 'RJ' },
+          { code: 137, name: '[ZAYA.IT] - Atualiza Peças', type: 'RJ' }
+        ],
+        relations: [
+          { table: 'AD_TCLLTB', title: 'Uso em Lista Básica', kind: 'referência', parentField: 'CODPROD', childField: 'CODPECA' }
+        ]
+      },
+      {
+        id: 'postos',
+        table: 'AD_TCLPST',
+        title: 'Postos Telecontrol',
+        type: 'principal',
+        icon: 'fa-store',
+        key: 'CODPARC',
+        descriptionField: 'CREDENCIAMENTO',
+        displayFields: ['CODPARC', 'POSTOID', 'CREDENCIAMENTO', 'TIPOPOSTO', 'PEDFATURADO', 'PEDGARANTIA'],
+        fields: [
+          ['CODPARC', 'Posto', 'I', 'P'],
+          ['PEDFATURADO', 'Pedido Faturado?', 'S', 'O S/N'],
+          ['PEDGARANTIA', 'Pedido Garantia?', 'S', 'O S/N'],
+          ['CREDENCIAMENTO', 'Credenciamento', 'S', 'P'],
+          ['DESCONTO', 'Desconto', 'F', 'P'],
+          ['VALORKM', 'Valor KM', 'F', 'P'],
+          ['POSTOID', 'Posto Id Telecontrol', 'I', 'P'],
+          ['DTALTER', 'Dh Alteração', 'H', 'P'],
+          ['DHINTEG', 'Dh. Integração', 'H', 'P'],
+          ['TIPOPOSTO', 'Tipo Posto', 'S', 'O S/N']
+        ],
+        actions: [
+          { code: 108, name: 'Envio Posto', type: 'RJ' }
+        ],
+        relations: []
+      },
+      {
+        id: 'linha',
+        table: 'AD_TCLLIN',
+        title: 'Linha Telecontrol',
+        type: 'apoio',
+        icon: 'fa-layer-group',
+        key: 'CODLINHA',
+        descriptionField: 'NOME',
+        displayFields: ['CODLINHA', 'NOME', 'ATIVO', 'FABRICA', 'DHINTEG'],
+        fields: [
+          ['CODLINHA', 'Linha', 'S', 'P'],
+          ['NOME', 'Nome', 'S', 'P'],
+          ['ATIVO', 'Ativo', 'S', 'O S/N'],
+          ['FABRICA', 'Fábrica', 'I', 'P'],
+          ['DHINTEG', 'Data Integração', 'H', 'P'],
+          ['DHALT', 'Data Alteração', 'H', 'P'],
+          ['LINHA', 'Linha', 'I', 'P']
+        ],
+        actions: [],
+        relations: [
+          { table: 'AD_TCLPRO', title: 'Produtos desta linha', kind: 'referência', parentField: 'CODLINHA', childField: 'CODLINHA' }
+        ]
+      },
+      {
+        id: 'familia',
+        table: 'AD_TCLFAM',
+        title: 'Família Telecontrol',
+        type: 'apoio',
+        icon: 'fa-sitemap',
+        key: 'CODFAMILIA',
+        descriptionField: 'DESCRICAO',
+        displayFields: ['CODFAMILIA', 'DESCRICAO', 'FAMILIA', 'DHINTEG'],
+        fields: [
+          ['CODFAMILIA', 'Código Família', 'S', 'P'],
+          ['DESCRICAO', 'Descrição', 'S', 'P'],
+          ['DHINTEG', 'Data Integração', 'H', 'P'],
+          ['DHALT', 'Data Alteração', 'H', 'P'],
+          ['FAMILIA', 'Família (ID)', 'I', 'P']
+        ],
+        actions: [],
+        relations: [
+          { table: 'AD_TCLPRO', title: 'Produtos desta família', kind: 'referência', parentField: 'CODFAMILIA', childField: 'CODFAMILIA' }
+        ]
+      }
+    ];
+
+    const mockRecords = {
+      AD_TCLPRO: [
+        { CODPROD: 1001, REFERENCIA: 'XB-2', DESCRICAO: 'Caixa de Som Boombox XB-2', CODFAMILIA: 'AUDIO', CODLINHA: 'BOOMBOX', ATIVO: 'S', DHINTEG: '12/06/2026 09:12', COD_TELECONTROL: 8801, MARCA: 'POLYVOX' },
+        { CODPROD: 1002, REFERENCIA: 'XT-665T', DESCRICAO: 'Torre de Som XT-665T', CODFAMILIA: 'AUDIO', CODLINHA: 'TORRES', ATIVO: 'S', DHINTEG: '12/06/2026 09:18', COD_TELECONTROL: 8802, MARCA: 'POLYVOX' },
+        { CODPROD: 1003, REFERENCIA: 'XTD-67', DESCRICAO: 'Toca Disco Belt Drive', CODFAMILIA: 'VINIL', CODLINHA: 'TOCADISCO', ATIVO: 'N', DHINTEG: '-', COD_TELECONTROL: '-', MARCA: 'POLYVOX' }
+      ],
+      AD_TCLLTB: [
+        { LISTABASICA: 501, CODPROD: 1001, CODPECA: 7001, QTD: 2, POSICAO: 'Lateral', REFPRODUTO: 'XB-2', REFPECA: 'ALTO-04', DHINTEG: '12/06/2026 09:31' },
+        { LISTABASICA: 502, CODPROD: 1002, CODPECA: 7002, QTD: 1, POSICAO: 'Painel', REFPRODUTO: 'XT-665T', REFPECA: 'LED-12', DHINTEG: '12/06/2026 09:35' }
+      ],
+      AD_TCLPCA: [
+        { CODPROD: 7001, REFERENCIA: 'ALTO-04', DESCRICAO: 'Alto-falante 4 polegadas', ATIVO: 'S', ESTOQUE: 128, COD_TELECONTROL: 9901, UNIDADE: 'UN', PRECOVEN: 89.9 },
+        { CODPROD: 7002, REFERENCIA: 'LED-12', DESCRICAO: 'Conjunto LED frontal', ATIVO: 'S', ESTOQUE: 44, COD_TELECONTROL: 9902, UNIDADE: 'UN', PRECOVEN: 59.9 },
+        { CODPROD: 7003, REFERENCIA: 'CAB-P2', DESCRICAO: 'Cabo auxiliar P2', ATIVO: 'N', ESTOQUE: 0, COD_TELECONTROL: '-', UNIDADE: 'UN', PRECOVEN: 19.9 }
+      ],
+      AD_TCLPST: [
+        { CODPARC: 30001, POSTOID: 4501, CREDENCIAMENTO: 'Autorizada SP Centro', TIPOPOSTO: 'A', PEDFATURADO: 'S', PEDGARANTIA: 'S', DHINTEG: '12/06/2026 08:20' },
+        { CODPARC: 30002, POSTOID: 4502, CREDENCIAMENTO: 'Autorizada RJ Norte', TIPOPOSTO: 'B', PEDFATURADO: 'N', PEDGARANTIA: 'S', DHINTEG: '11/06/2026 18:11' }
+      ],
+      AD_TCLLIN: [
+        { CODLINHA: 'BOOMBOX', NOME: 'Boombox', ATIVO: 'S', FABRICA: 1, DHINTEG: '10/06/2026 14:10' },
+        { CODLINHA: 'TORRES', NOME: 'Torres', ATIVO: 'S', FABRICA: 1, DHINTEG: '10/06/2026 14:12' }
+      ],
+      AD_TCLFAM: [
+        { CODFAMILIA: 'AUDIO', DESCRICAO: 'Áudio', FAMILIA: 10, DHINTEG: '10/06/2026 13:44' },
+        { CODFAMILIA: 'VINIL', DESCRICAO: 'Vinil', FAMILIA: 11, DHINTEG: '10/06/2026 13:45' }
+      ]
+    };
+
+    let currentScreen = telecontrolConfig[0];
+    let selectedRecord = null;
+    let activeTab = 'campos';
+
+    function init() {
+      renderModules();
+      renderStats();
+      selectScreen('produtos');
+    }
+
+    function renderModules() {
+      const list = document.getElementById('moduleList');
+      list.innerHTML = telecontrolConfig.map(screen => `
+        <button class="module-btn" data-id="${screen.id}" onclick="selectScreen('${screen.id}')">
+          <span class="module-icon"><i class="fa-solid ${screen.icon}"></i></span>
+          <span>
+            <span class="module-name">${screen.title}</span>
+            <span class="module-table">${screen.table}</span>
+          </span>
+          <span class="module-count">${screen.actions.length}</span>
+        </button>
+      `).join('');
+    }
+
+    function renderStats() {
+      const main = telecontrolConfig.filter(s => s.type === 'principal').length;
+      const detail = telecontrolConfig.filter(s => s.type === 'detalhe').length;
+      const support = telecontrolConfig.filter(s => s.type === 'apoio').length;
+      const actions = telecontrolConfig.reduce((sum, s) => sum + s.actions.length, 0);
+      const relations = telecontrolConfig.reduce((sum, s) => sum + s.relations.length, 0);
+
+      document.getElementById('statMain').textContent = main;
+      document.getElementById('statDetail').textContent = detail;
+      document.getElementById('statSupport').textContent = support;
+      document.getElementById('statActions').textContent = actions;
+      document.getElementById('heroTables').textContent = telecontrolConfig.length;
+      document.getElementById('heroActions').textContent = actions;
+      document.getElementById('heroRelations').textContent = relations;
+    }
+
+    function selectScreen(id) {
+      currentScreen = telecontrolConfig.find(screen => screen.id === id) || telecontrolConfig[0];
+      selectedRecord = null;
+      activeTab = 'campos';
+
+      document.querySelectorAll('.module-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.id === currentScreen.id);
+      });
+
+      document.getElementById('screenTitle').textContent = currentScreen.title;
+      document.getElementById('screenTable').textContent = currentScreen.table;
+      document.getElementById('recordSearch').value = '';
+      document.getElementById('statusFilter').value = '';
+
+      renderRecords();
+      renderDetail();
+    }
+
+    function getVisibleRecords() {
+      const search = document.getElementById('recordSearch').value.trim().toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      const records = mockRecords[currentScreen.table] || [];
+
+      return records.filter(record => {
+        const matchesSearch = !search || Object.values(record).some(value => String(value).toLowerCase().includes(search));
+        const matchesStatus = !status || record.ATIVO === status;
+        return matchesSearch && matchesStatus;
+      });
+    }
+
+    function renderRecords() {
+      const head = document.getElementById('recordsHead');
+      const body = document.getElementById('recordsBody');
+      const fields = currentScreen.displayFields;
+      const records = getVisibleRecords();
+
+      head.innerHTML = `<tr>${fields.map(field => `<th>${field}</th>`).join('')}<th>Ações</th></tr>`;
+
+      if (!records.length) {
+        body.innerHTML = `<tr><td colspan="${fields.length + 1}">Nenhum registro encontrado para ${currentScreen.table}.</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = records.map((record, index) => `
+        <tr class="${selectedRecord === record ? 'selected' : ''}" onclick="selectRecord(${index})">
+          ${fields.map(field => `<td>${formatValue(field, record[field])}</td>`).join('')}
+          <td>
+            <button class="btn btn-ghost" onclick="event.stopPropagation(); selectRecord(${index}); activeTab='acoes'; renderDetail();">
+              <i class="fa-solid fa-play"></i> Ações
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function selectRecord(index) {
+      selectedRecord = getVisibleRecords()[index];
+      activeTab = 'campos';
+      renderRecords();
+      renderDetail();
+    }
+
+    function renderDetail() {
+      const panel = document.getElementById('detailPanel');
+      if (!selectedRecord) {
+        panel.innerHTML = `
+          <div class="detail-empty">
+            <div>
+              <i class="fa-solid fa-arrow-pointer" style="font-size: 28px; margin-bottom: 12px;"></i>
+              <p>Selecione um registro para ver campos, detalhes e ações disponíveis.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const keyValue = selectedRecord[currentScreen.key] || '-';
+      const description = selectedRecord[currentScreen.descriptionField] || currentScreen.title;
+
+      panel.innerHTML = `
+        <div class="record-head">
+          <span>${currentScreen.table} / ${currentScreen.key}: ${keyValue}</span>
+          <strong>${description}</strong>
+        </div>
+        <div class="tabs">
+          <button class="tab ${activeTab === 'campos' ? 'active' : ''}" onclick="setTab('campos')">Campos</button>
+          <button class="tab ${activeTab === 'relacoes' ? 'active' : ''}" onclick="setTab('relacoes')">Relações</button>
+          <button class="tab ${activeTab === 'acoes' ? 'active' : ''}" onclick="setTab('acoes')">Ações</button>
+        </div>
+        <div class="detail-body">${renderTabContent()}</div>
+      `;
+    }
+
+    function setTab(tab) {
+      activeTab = tab;
+      renderDetail();
+    }
+
+    function renderTabContent() {
+      if (activeTab === 'relacoes') return renderRelations();
+      if (activeTab === 'acoes') return renderActions();
+      return renderFields();
+    }
+
+    function renderFields() {
+      return `
+        <div class="field-grid">
+          ${currentScreen.fields.map(([field, label, type, mode]) => `
+            <div class="field">
+              <span>${label} <b class="code">${field}</b></span>
+              <strong>${formatValue(field, selectedRecord[field] ?? '-')}</strong>
+              <span>Tipo ${type} | ${mode}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderRelations() {
+      if (!currentScreen.relations.length) {
+        return '<p style="color: var(--muted);">Nenhuma relação pai/detalhe mapeada para esta tela ainda.</p>';
+      }
+
+      return `
+        <div class="relation-list">
+          ${currentScreen.relations.map(relation => `
+            <div class="relation-card">
+              <strong>${relation.title}</strong>
+              <span>${relation.table} | ${relation.kind} | ${relation.parentField} -> ${relation.childField}</span>
+              <div style="margin-top: 10px;">
+                <button class="btn btn-ghost" onclick="openRelated('${relation.table}')"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir relação</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderActions() {
+      if (!currentScreen.actions.length) {
+        return '<p style="color: var(--muted);">Nenhuma ação mapeada para esta tela ainda.</p>';
+      }
+
+      return `
+        <div class="action-list">
+          ${currentScreen.actions.map(action => `
+            <div class="action-card">
+              <div>
+                <strong>${action.name}</strong>
+                <span>Ação ${action.code} | Tipo ${action.type} | Registro ${selectedRecord[currentScreen.key] || '-'}</span>
+              </div>
+              <button class="btn btn-primary" onclick="executeAction(${action.code}, '${action.name.replace(/'/g, "\\'")}')">
+                <i class="fa-solid fa-play"></i> Executar
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function openRelated(table) {
+      const target = telecontrolConfig.find(screen => screen.table === table);
+      if (!target) {
+        showToast(`Relação ${table} ainda não foi adicionada ao telecontrolConfig.`);
+        return;
+      }
+      selectScreen(target.id);
+      showToast(`Abrindo ${target.title}. Em produção, aplicar filtro pelo registro pai selecionado.`);
+    }
+
+    function executeAction(code, name) {
+      const keyValue = selectedRecord ? selectedRecord[currentScreen.key] : '-';
+      showToast(`Preparado para executar ação ${code} - ${name} em ${currentScreen.table}, chave ${keyValue}.`);
+    }
+
+    function applyGlobalSearch() {
+      const term = document.getElementById('globalSearch').value.trim().toLowerCase();
+      const buttons = document.querySelectorAll('.module-btn');
+
+      telecontrolConfig.forEach((screen, index) => {
+        const searchable = [
+          screen.table,
+          screen.title,
+          screen.type,
+          ...screen.actions.map(action => `${action.code} ${action.name}`)
+        ].join(' ').toLowerCase();
+        buttons[index].style.display = !term || searchable.includes(term) ? '' : 'none';
+      });
+    }
+
+    function showMatrix() {
+      const lines = telecontrolConfig.map(screen => {
+        const parent = screen.parent || '-';
+        const actions = screen.actions.map(action => action.code).join(', ') || '-';
+        return `${screen.table}: ${screen.type} | Pai: ${parent} | Ações: ${actions}`;
+      });
+      showToast(lines.join('<br>'));
+    }
+
+    function formatValue(field, value) {
+      if (value === undefined || value === null || value === '') return '-';
+      if (field === 'ATIVO' || field.startsWith('PED') || String(value) === 'S' || String(value) === 'N') {
+        if (String(value) === 'S') return '<span class="status ok"><i class="fa-solid fa-check"></i> Sim</span>';
+        if (String(value) === 'N') return '<span class="status off"><i class="fa-solid fa-minus"></i> Não</span>';
+      }
+      if (field.includes('DH') && value === '-') {
+        return '<span class="status warn"><i class="fa-solid fa-clock"></i> Pendente</span>';
+      }
+      if (/^COD|ID$|LISTABASICA/.test(field)) {
+        return `<span class="code">${value}</span>`;
+      }
+      return String(value);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = message;
+      toast.classList.add('active');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => toast.classList.remove('active'), 5200);
+    }
+
+    init();
+  </script>
+</body>
+</html>

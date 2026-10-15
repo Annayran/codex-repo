@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.zaya.polyvox'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+def baseLibPath = 'C:/zy-tools/modulos-sankhya/Dependencias'
+
+dependencies {
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    implementation 'org.apache.poi:poi:3.9'
+    implementation 'org.apache.poi:poi-ooxml:3.9'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['action', 'controller', 'helper', 'models', 'repository', 'service']
+        }
+        resources {
+            srcDirs = ['.']
+            include '*.sql'
+            include '*.md'
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    archiveFileName = 'ImportadorPVX.jar'
+}

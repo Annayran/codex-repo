@@ -1,0 +1,284 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="PERIODO" description="Data Entrada da Nota" metadata="datePeriod" required="true" keep-last="true" keep-date="false" show-inactives="false" label="PERIODO : Periodo" order="0"/>
+    <parameter id="CODPARC" description="Fornecedor" metadata="entity:Parceiro@CODPARC" required="false" keep-last="true" keep-date="false" show-inactives="false" label="CODPARC : Entidade/Tabela" order="1"/>
+  </prompt-parameters>
+  <level id="023" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="35">
+        <grid id="grd_fornecedor" useNewGrid="S">
+          <title><![CDATA[Fornecedor On-time]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[
+SELECT
+    CODPARC,
+    RAZAOSOCIAL,
+    COUNT(*) AS TOTAL_ENTREGAS,
+    SUM(CASE WHEN NOPRAZO = 'S' THEN 1 ELSE 0 END) AS TOTAL_NO_PRAZO,
+    SUM(CASE WHEN NOPRAZO = 'N' THEN 1 ELSE 0 END) AS TOTAL_FORA_PRAZO,
+    ROUND((SUM(CASE WHEN NOPRAZO = 'S' THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0)) * 100, 2) AS PERCENTUAL_ONTIME,
+    ROUND(AVG(DIAS), 2) AS LEADTIME_MEDIO,
+    MIN(DIAS) AS MELHOR_PRAZO,
+    MAX(DIAS) AS PIOR_PRAZO
+FROM (
+    SELECT
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        PAR.CODPARC,
+        PAR.RAZAOSOCIAL,
+        PRO.CODPROD,
+        PRO.USOPROD,
+        TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DATAPEDIDO,
+        MAX(TRUNC(ITC.DTENTSAI)) AS DATANOTA,
+        MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DIAS,
+        CASE
+            WHEN PRO.USOPROD = 'C' AND MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) > 15 THEN 'N'
+            WHEN PRO.USOPROD <> 'C' AND MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) > 30 THEN 'N'
+            ELSE 'S'
+        END AS NOPRAZO
+    FROM TGFCAB CAB
+    INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+    INNER JOIN TGFPRO PRO ON ITE.CODPROD = PRO.CODPROD
+    INNER JOIN TGFPAR PAR ON CAB.CODPARC = PAR.CODPARC
+    INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+    INNER JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+    INNER JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+    INNER JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+    WHERE CAB.TIPMOV = 'O'
+      AND ITC.DTENTSAI BETWEEN :PERIODO.INI AND :PERIODO.FIN
+      AND PAR.CODPARC = NVL(:CODPARC, PAR.CODPARC)
+      AND PRO.USOPROD IN ('M', 'C')
+    GROUP BY
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        PAR.CODPARC,
+        PAR.RAZAOSOCIAL,
+        PRO.CODPROD,
+        PRO.USOPROD,
+        TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT))
+)
+GROUP BY CODPARC, RAZAOSOCIAL
+ORDER BY PERCENTUAL_ONTIME DESC, TOTAL_ENTREGAS DESC, RAZAOSOCIAL
+]]></expression>
+          <metadata>
+            <field name="CODPARC" label="Cod Parceiro" type="I" visible="true" useFooter="false"/>
+            <field name="RAZAOSOCIAL" label="Razao Social" type="S" visible="true" useFooter="false"/>
+            <field name="TOTAL_ENTREGAS" label="Total Entregas" type="I" visible="true" useFooter="false"/>
+            <field name="TOTAL_NO_PRAZO" label="No Prazo" type="I" visible="true" useFooter="false"/>
+            <field name="TOTAL_FORA_PRAZO" label="Fora Prazo" type="I" visible="true" useFooter="false"/>
+            <field name="PERCENTUAL_ONTIME" label="% On-time" type="F" visible="true" useFooter="false"/>
+            <field name="LEADTIME_MEDIO" label="Lead Time Medio" type="F" visible="true" useFooter="false"/>
+            <field name="MELHOR_PRAZO" label="Melhor Prazo" type="I" visible="true" useFooter="false"/>
+            <field name="PIOR_PRAZO" label="Pior Prazo" type="I" visible="true" useFooter="false"/>
+          </metadata>
+          <on-click navigate-to="03B">
+            <param id="CODPARC_DET">$CODPARC</param>
+          </on-click>
+        </grid>
+      </container>
+      <container orientacao="V" tamanhoRelativo="30">
+        <grid id="grd_usoprod" useNewGrid="S">
+          <title><![CDATA[Lead Time por Uso Produto]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[
+SELECT
+    USOPRODUTO,
+    ROUND(AVG(DIAS), 2) AS LEADTIME
+FROM (
+    SELECT
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        PRO.USOPROD,
+        (SELECT OPC.OPCAO
+           FROM TDDCAM CAM
+           INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
+          WHERE CAM.NOMETAB = 'TGFPRO'
+            AND CAM.NOMECAMPO = 'USOPROD'
+            AND OPC.VALOR = PRO.USOPROD) AS USOPRODUTO,
+        MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DIAS
+    FROM TGFCAB CAB
+    INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+    INNER JOIN TGFPRO PRO ON ITE.CODPROD = PRO.CODPROD
+    INNER JOIN TGFPAR PAR ON CAB.CODPARC = PAR.CODPARC
+    INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+    INNER JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+    INNER JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+    INNER JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+    WHERE CAB.TIPMOV = 'O'
+      AND ITC.DTENTSAI BETWEEN :PERIODO.INI AND :PERIODO.FIN
+      AND PAR.CODPARC = NVL(:CODPARC, PAR.CODPARC)
+      AND PRO.USOPROD IN ('M', 'C')
+    GROUP BY
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        PRO.USOPROD,
+        TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT))
+)
+GROUP BY USOPRODUTO
+]]></expression>
+        </grid>
+      </container>
+      <container orientacao="V" tamanhoRelativo="35">
+        <grid id="grd_produto" useNewGrid="S">
+          <title><![CDATA[Lead Time por Produto]]></title>
+          <expression type="sql" data-source="MGEDS"><![CDATA[
+SELECT
+    CODPROD,
+    DESCRPROD,
+    ROUND(AVG(DIAS), 2) AS LEADTIME
+FROM (
+    SELECT
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        PRO.CODPROD,
+        PRO.DESCRPROD,
+        MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DIAS
+    FROM TGFCAB CAB
+    INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+    INNER JOIN TGFPRO PRO ON ITE.CODPROD = PRO.CODPROD
+    INNER JOIN TGFPAR PAR ON CAB.CODPARC = PAR.CODPARC
+    INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+    INNER JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+    INNER JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+    INNER JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+    WHERE CAB.TIPMOV = 'O'
+      AND ITC.DTENTSAI BETWEEN :PERIODO.INI AND :PERIODO.FIN
+      AND PAR.CODPARC = NVL(:CODPARC, PAR.CODPARC)
+      AND PRO.USOPROD IN ('M', 'C')
+    GROUP BY
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        PRO.CODPROD,
+        PRO.DESCRPROD,
+        TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT))
+)
+GROUP BY CODPROD, DESCRPROD
+]]></expression>
+          <on-click navigate-to="03L">
+            <param id="CODPROD">$CODPROD</param>
+          </on-click>
+        </grid>
+      </container>
+    </container>
+  </level>
+  <level id="03B" description="FORNECEDOR_DETALHE">
+    <args>
+      <arg id="CODPARC_DET" type="integer" label="CODPARC : Numero Inteiro"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_fornecedor_det" useNewGrid="S">
+        <expression type="sql" data-source="MGEDS"><![CDATA[
+SELECT
+    CAB.NUNOTA AS NUNOTA_PEDIDO,
+    ITE.SEQUENCIA AS SEQ_PEDIDO,
+    MAX(ITC.NUNOTA) AS NUNOTA_ENTRADA,
+    TOP.CODTIPOPER,
+    TOP.DESCROPER,
+    PAR.CODPARC,
+    PAR.RAZAOSOCIAL,
+    PRO.CODPROD,
+    PRO.DESCRPROD,
+    PRO.USOPROD,
+    CASE
+        WHEN PRO.USOPROD = 'C' THEN 'Uso/consumo'
+        WHEN PRO.USOPROD = 'M' THEN 'Materia-prima'
+        ELSE 'Outros'
+    END AS TIPO_PRODUTO,
+    TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DATAPEDIDO,
+    TRUNC(CAB.DTPREVENT) AS DATAPREVISTA,
+    MAX(TRUNC(ITC.DTENTSAI)) AS DATAENTRADA,
+    MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DIAS,
+    CASE WHEN PRO.USOPROD = 'C' THEN 15 ELSE 30 END AS PRAZOESPERADO,
+    CASE
+        WHEN PRO.USOPROD = 'C' AND MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) > 15 THEN 'Fora do Prazo'
+        WHEN PRO.USOPROD <> 'C' AND MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) > 30 THEN 'Fora do Prazo'
+        ELSE 'No Prazo'
+    END AS CLASSIFICACAO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFPRO PRO ON ITE.CODPROD = PRO.CODPROD
+INNER JOIN TGFPAR PAR ON CAB.CODPARC = PAR.CODPARC
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+INNER JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+INNER JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+WHERE CAB.TIPMOV = 'O'
+  AND ITC.DTENTSAI BETWEEN :PERIODO.INI AND :PERIODO.FIN
+  AND PAR.CODPARC = :CODPARC_DET
+  AND PRO.USOPROD IN ('M', 'C')
+GROUP BY
+    CAB.NUNOTA,
+    ITE.SEQUENCIA,
+    TOP.CODTIPOPER,
+    TOP.DESCROPER,
+    PAR.CODPARC,
+    PAR.RAZAOSOCIAL,
+    PRO.CODPROD,
+    PRO.DESCRPROD,
+    PRO.USOPROD,
+    TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)),
+    TRUNC(CAB.DTPREVENT)
+ORDER BY DATAENTRADA, NUNOTA_PEDIDO, SEQ_PEDIDO
+]]></expression>
+      </grid>
+    </container>
+  </level>
+  <level id="03L" description="PRODUTO">
+    <args>
+      <arg id="CODPROD" type="integer" label="CODPROD : Numero Inteiro"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <grid id="grd_produto_det" useNewGrid="S">
+        <expression type="sql" data-source="MGEDS"><![CDATA[
+SELECT
+    CAB.NUNOTA,
+    ITE.SEQUENCIA,
+    TOP.CODTIPOPER,
+    TOP.DESCROPER,
+    PAR.CODPARC,
+    PAR.RAZAOSOCIAL,
+    PRO.CODPROD,
+    PRO.DESCRPROD,
+    PRO.USOPROD,
+    (SELECT OPC.OPCAO
+       FROM TDDCAM CAM
+       INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
+      WHERE CAM.NOMETAB = 'TGFPRO'
+        AND CAM.NOMECAMPO = 'USOPROD'
+        AND OPC.VALOR = PRO.USOPROD) AS USOPRODUTO,
+    TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DATAPEDIDO,
+    MAX(TRUNC(ITC.DTENTSAI)) AS DATANOTA,
+    MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) AS DIAS,
+    CASE
+        WHEN PRO.USOPROD = 'C' AND MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) > 15 THEN 'N'
+        WHEN PRO.USOPROD <> 'C' AND MAX(TRUNC(ITC.DTENTSAI)) - TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT)) > 30 THEN 'N'
+        ELSE 'S'
+    END AS NOPRAZO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFPRO PRO ON ITE.CODPROD = PRO.CODPROD
+INNER JOIN TGFPAR PAR ON CAB.CODPARC = PAR.CODPARC
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+INNER JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+INNER JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+WHERE CAB.TIPMOV = 'O'
+  AND ITC.DTENTSAI BETWEEN :PERIODO.INI AND :PERIODO.FIN
+  AND PAR.CODPARC = NVL(:CODPARC, PAR.CODPARC)
+  AND PRO.CODPROD = :CODPROD
+  AND PRO.USOPROD IN ('M', 'C')
+GROUP BY
+    CAB.NUNOTA,
+    ITE.SEQUENCIA,
+    TOP.CODTIPOPER,
+    TOP.DESCROPER,
+    PAR.CODPARC,
+    PAR.RAZAOSOCIAL,
+    PRO.CODPROD,
+    PRO.DESCRPROD,
+    PRO.USOPROD,
+    TRUNC(NVL(ITE.DTINICIO, CAB.DTPREVENT))
+ORDER BY DATANOTA, CAB.NUNOTA, ITE.SEQUENCIA
+]]></expression>
+      </grid>
+    </container>
+  </level>
+</gadget>

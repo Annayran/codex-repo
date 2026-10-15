@@ -1,0 +1,74 @@
+<project name="SKL-Core-Model JAR" default="4 - Executar Todos" basedir=".">
+
+	<property name="NomeExtensao" value="skl-core-model" />
+
+	<property name="jarName" value="${NomeExtensao}.jar" />
+	<property name="jarFile" value="build/${jarName}" />
+	<property name="temp" value="${home.skjava}/temp/${NomeExtensao}" />
+	<property name="temp.bin" value="${temp}/bin" />
+	<property name="main.src" value="src" />
+	<property name="deploydir" value="${deploy.ext}" />
+
+	<path id="project.class.path">
+		<fileset dir="${api_sankhya}">
+			<include name="*.jar" />
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${api_outros}">
+			<include name="*.jar" />
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${api_custom}">
+			<include name="*.jar" />
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<path id="project.source.path">
+		<pathelement location="${main.src}" />
+	</path>
+	<target name="1 - Gerar JAR" depends="z-create-temp,z-javac" if="eclipse.home">
+		<mkdir dir="build" />
+		<delete file="${jarFile}" />
+		<jar destfile="${jarFile}">
+			<zipfileset dir="build/META-INF" prefix="META-INF">
+				<include name="**/*" />
+				<include name="*" />
+			</zipfileset>
+			<zipfileset dir="${temp.bin}">
+				<include name="**/*" />
+				<include name="*" />
+			</zipfileset>
+		</jar>
+		<echo message="JAR criado." />
+	</target>
+	<target name="2 - Deploy JAR" depends="z-create-temp" if="eclipse.home">
+		<echo message="Fazendo deploy do JAR ${jarFile} para pasta deploy." />
+		<copy file="${jarFile}" todir="${deploydir}" verbose="true" />
+	</target>
+	<target name="3 - API" depends="z-create-temp" if="eclipse.home">
+		<echo message="Fazendo deploy do JAR ${jarFile} para pasta deploy." />
+		<copy file="${jarFile}" todir="${api_custom}" verbose="true" />
+	</target>
+	<target name="4 - Executar Todos" depends="Deletar Temp do Projeto, 1 - Gerar JAR,2 - Deploy JAR,3 - API" />
+	<target name="5 - Executar Todos exceto 3" depends="1 - Gerar JAR,2 - Deploy JAR" />
+	<target name="Deletar Temp do Projeto">
+		<delete dir="${temp}" verbose="true" />
+	</target>
+	<target name="z-javac" description="Compilar java">
+		<echo>Limpando .class</echo>
+		<echo>Compilando Java</echo>
+		<javac debug="on" source="1.8" target="1.8" destdir="${temp.bin}" includeantruntime="false" compiler="modern" encoding="ISO-8859-1">
+			<classpath refid="project.class.path" />
+			<src refid="project.source.path" />
+		</javac>
+		<copy todir="${temp.bin}" verbose="true" includeemptydirs="false">
+			<fileset dir="${main.src}" />
+		</copy>
+	</target>
+	<target name="z-check-ant" unless="eclipse.home">
+		<echo message="Propriedades requeridas nao disponiveis (rode este ANT dentro da mesma JRE do seu Eclipse). ${line.separator}Botao direito no ant>Run As...>Ant Build...>Aba JRE>Marcar opcao 'Run in the same JRE as the workspace'." />
+	</target>
+	<target name="z-create-temp" depends="z-check-ant">
+		<mkdir dir="${temp.bin}" />
+	</target>
+</project>

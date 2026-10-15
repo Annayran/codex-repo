@@ -1,0 +1,58 @@
+.gradle/
+
+# IntelliJ
+.idea/
+
+### Java ###
+*.class
+
+## Merge ##
+*.bak
+
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local-dev.properties
+.settings/
+.loadpath
+.recommenders
+.project
+.classpath
+
+## Javascript
+
+package-lock.json
+node_modules/
+dist
+.vscode
+ 
+# dotenv environment variable files
+./.env
+
+# SonarQube
+.scannerwork
+/build/
+.sonar-scripts/lastlog
+.sonar-scripts/sonar-scanner
+.gitflow-local-hooks
+
+# Zaya.IT managed baseline
+.gradle/
+build/
+out/
+bin/
+.idea/
+*.iml
+*.class
+*.log
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx

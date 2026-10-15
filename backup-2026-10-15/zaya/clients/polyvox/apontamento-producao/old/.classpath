@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/modulosSNK/mgeprod.jar" sourcepath="D:/sk-java/git/sankhyaw/MGE-Producao-Model"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-collections.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-csv-1.5.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-httpclient-3.0.1-snk.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-io-2.1.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-jexl-2.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-math3-3.6.1.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-net-ftp-3.2.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/commons-validator.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/ConfirmarNota.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/cuckoo.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/dwf.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/dwf-model.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/h2-1.4.199.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/jape.jar" sourcepath="D:/sk-java/git/sankhyaw/JAPE"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/javax.mail-1.6.2.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/javax.persistence-api-2.2.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/javax.websocket-api-1.1.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/mgecom-model-client.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/mgefin-model.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/mge-modelcore.jar" sourcepath="D:/sk-java/git/sankhyaw/MGE-Modelcore"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/SankhyaW-extensions.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/sanutil.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/sanws.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/Jboss_326/activation.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/Jboss_326/jboss.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/Jboss_326/jbossall-client.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/Jboss_326/jboss-j2ee.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/Jboss_326/jboss-system.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/jdom.jar"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/jdom-jaxen-jboss.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80"/>
+	<classpathentry kind="lib" path="D:/sk-java/workspace - SNK/api_outros/servlet.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

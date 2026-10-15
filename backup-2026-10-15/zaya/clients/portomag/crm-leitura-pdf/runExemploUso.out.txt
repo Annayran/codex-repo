@@ -1,0 +1,115 @@
+﻿To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.4/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Task :compileJava
+
+> Task :processResources NO-SOURCE
+> Task :classes
+
+> Task :runExemploUso
+
+===== EXEMPLO 1: Processar PDF de Arquivo =====
+
+09:55:22.975 [main] INFO br.zaya.pedidocompra.parser.PedidoCompraParser -- Iniciando processamento do PDF: C:\Users\annayran.ferreira\Downloads\pedido_5500592071.pdf
+09:55:23.471 [main] DEBUG br.zaya.pedidocompra.parser.PedidoCompraParser -- Texto extraido da pagina 1:
+Documento n┬║                                   Data          P├íg.
+                          5500592071                   24.04.2026      1/1
+           Pedido de Compra O n├║mero do Pedido de Compra acima dever├í constar em todas
+as embalagens, Nota Fiscal/Fatura e correspond├¬ncias.
+Pelo presente Pedido de Compra, o qual ├® composto pelas p├íginas seguintes, de um lado a CLARO S/A, doravante denominada COMPRADOR, do outro lado, doravante denomimada FORNECEDOR,  a empresa
+abaixo qualificada, t├¬m entre si, justo e acertado, o fornecimento, objeto do presente pedido, abaixo caracterizada, o qual reger-se-├í pela Lei 8.078 de 11.09.1990 e, especialmente, pelas cl├íusulas e condi├º├Áes
+constantes na ├║ltima p├ígina deste, sem preju├¡zo de outras disposi├º├Áes de ordem legal cab├¡veis.
+ 
+                               FORNECEDOR          INFORMA├ç├òES PARA FATURAMENTO/ENTREGA/COBRAN├çA
+105179   PORTOMAG METALURGIA LTDA Todas as Notas Fiscais dever├úo ser entregues com uma c├│pia deste pedido anexada. O n├úo cumprimento
+ENDERE├çO     R APUCARANA 1218 desta exig├¬ncia acarretar├í na recusa das Notas Fiscais.    Verificar Locais de Entrega no Anexo 1.
+CIDADE       PINHAIS UF: PR CEP: 83324-450                           CONDI├ç├òES GERAIS
+CNPJ         02831257000110      INSCR. EST. 9044667948 CONDI├ç├òES PAGAMENTO : 100% - 90 dias do registro da NF
+TELEFONE     4133674676     FAX 4133674676 DADOS BANC├üRIOS     : Banco 341-7, Ag├¬ncia 3812, Conta 20989-2
+CONTATO      CONTATO  : InfraMaterialEquip          Fone: 
+                                                               DATA    QTDE   UM   PRE├çO UNIT     ICMS/ISS        VALOR ST          IPI    TOTAL DO ITEM
+ITEM  DESCRI├ç├âO                         C├ôD EAN      CENTRO   ENTREGA                  (BRL)     %     (BRL)    %    (BRL)     %    (BRL)     (BRL)
+0001
+LC-116/03 07.02
+SERV:9014433 SERV. INSTALA├çAO DE EQUIPAMENTO      4101 31.12.2026       1  SER    2.467,67 0,00      0,00   0,00       0,00  0,00      0,00      2.467,67 
+SGO:1454423>>>SITE: PRRLA05 MUNIC├ìPIO: ROLANDIA                                                                                       
+UF: PR M├èS/ANO IN├ìCIO: 01/2026 M├èS/ANO T├ëRMINO:                                                                                       
+12/2026 FORNECEDOR: PORTOMAG SERVI├çO :                                                                                                
+FORNECIMENTO E INSTALA├ç├âO DE: SERV. INSTALA├çAO                                                                                        
+DE EQUIPAMENTO - IM PRODUTIVA JUSTIFICATIVA:                                                                                          
+PROTE├ç├âO ANTIVANDALISMO PARA OS GABINETES                                                                                             
+SOLICITANTE: GILNEI CLAUDIO PASTERNAK                                                                                                 
+RESPONS├üVEL: GILNEI CLAUDIO  PASTERNAK TEL: 55                                                                                        
+48 9 8401-1965 EMAIL:                                                                                                                 
+GILNEI.PASTERNAK@CLARO.COM.                                                                                                           
+                                                                                                                                      
+ 00.00.0000                                                                                                                           
+ 0.00                                                                                                                                 
+De acordo do Fornecedor        Aprova├º├úo do Comprador Testemunha:                    Testemunha:
+                                    TOTAL        2.467,67 
+              ___/___/______                   ___/___/______               ___/___/______                  ___/___/______
+Este Pedido de Compra cont├®m duas vias, sendo assim a sua distribui├º├úo: a 1┬║ via do Departamento de Compras e a 2┬║ via do Fornecedor.
+
+09:55:23.489 [main] INFO br.zaya.pedidocompra.parser.PedidoCompraParser -- Total de itens extraidos: 1
+09:55:23.490 [main] INFO br.zaya.pedidocompra.parser.PedidoCompraParser -- Pedido processado: PedidoCompra{numeroPedido='5500592071', data=2026-04-24, fornecedor='PORTOMAG METALURGIA LTDA', cnpj='02831257000110', valorTotal=2467.67, itens=1}
+=======================================================
+           PEDIDO DE COMPRA EXTRAIDO
+=======================================================
+
+INFORMACOES DO PEDIDO
+-----------------------------------------------------
+Numero do Pedido: 5500592071
+Data do Pedido:   2026-04-24
+
+FORNECEDOR
+-----------------------------------------------------
+Nome:  PORTOMAG METALURGIA LTDA
+CNPJ:  02.831.257/0001-10
+
+ITENS DO PEDIDO
+-----------------------------------------------------
+Cod.   Descricao                               Qtd.    Un.  Valor Unit.
+-----------------------------------------------------
+0001   SERV. INSTALA´┐¢AO DE EQUIPAMENTO            1    SER      2467,67
+-----------------------------------------------------
+
+VALOR TOTAL
+-----------------------------------------------------
+R$ 2.467,67
+
+
+===== EXEMPLO 2: Processamento com Texto Mock =====
+
+=======================================================
+           PEDIDO DE COMPRA EXTRAIDO
+=======================================================
+
+INFORMACOES DO PEDIDO
+-----------------------------------------------------
+Numero do Pedido: 5500592071
+Data do Pedido:   2026-04-24
+
+FORNECEDOR
+-----------------------------------------------------
+Nome:  PORTOMAG METALURGIA LTDA
+CNPJ:  02.831.257/0001-10
+
+ITENS DO PEDIDO
+-----------------------------------------------------
+Cod.   Descricao                               Qtd.    Un.  Valor Unit.
+-----------------------------------------------------
+0001   SERV. INSTALA´┐¢´┐¢O DE EQUIPAMENTO            1    SER      2467,67
+0002   PARAFUSO INOX M8x20                      100     UN        25,50
+0003   CHAPA DE A´┐¢O CARBONO 5MM                  10     M´┐¢       150,00
+0004   LUBRIFICANTE INDUSTRIAL                    5      L        85,00
+-----------------------------------------------------
+
+VALOR TOTAL
+-----------------------------------------------------
+R$ 2.728,17
+
+
+[Incubating] Problems report is available at: file:///C:/zy-tools/workspace/Portomag/CRMLeituraPDF/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 11s
+2 actionable tasks: 2 executed

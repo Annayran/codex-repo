@@ -1,0 +1,1 @@
+package tech.skala.action.modules.wms.i18n;

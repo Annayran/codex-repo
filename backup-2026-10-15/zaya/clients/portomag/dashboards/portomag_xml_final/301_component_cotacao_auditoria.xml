@@ -1,0 +1,209 @@
+<gadget><prompt-parameters><parameter id="PERIODO" description="Data da Requisição" metadata="datePeriod" required="true" keep-last="true" keep-date="false" show-inactives="false" label="PERIODO : Período" order="0" /><parameter id="DIASPRAZO" description="Qt Dias Prazo" metadata="integer" required="true" keep-last="false" keep-date="false" show-inactives="false" default="7" range-end="30" range-ini="0" label="DIASPRAZO : Número Inteiro" order="1" /></prompt-parameters><level id="0I9" description="Principal"><container orientacao="V" tamanhoRelativo="100"><container orientacao="H" tamanhoRelativo="50.82673872482789"><container orientacao="H" tamanhoRelativo="50"><chart id="cht_0KQ" type="pizza"><title>Prazo</title><expression type="sql" data-source="MGEDS">SELECT
+PRAZO,
+COUNT(*) AS QTREQUISICAO
+FROM (
+SELECT
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+MIN(TRUNC(NVL(ITC.DTNEG, ITC.DTENTSAI))) AS DTINICIOCOTACAO,
+MAX(TRUNC(CAP.DTENTSAI)) AS DTATENDIMENTO,
+TRUNC(:PERIODO.FIN) AS DTCORTE,
+TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) AS DIAS,
+NVL(:DIASPRAZO, 7) AS PRAZOLIMITE,
+CASE WHEN MAX(CAP.NUNOTA) IS NOT NULL THEN 'Fechado'
+     WHEN MAX(ITC.NUNOTA) IS NOT NULL THEN 'Em andamento'
+     ELSE 'Aberto' END AS STATUS,
+CASE WHEN TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) &lt;= NVL(:DIASPRAZO, 7)
+     THEN 'No Prazo' ELSE 'Fora do Prazo' END AS PRAZO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD
+LEFT JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+LEFT JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+LEFT JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+LEFT JOIN TGFVAR ITA ON ITA.NUNOTAORIG = ITC.NUNOTA AND ITA.SEQUENCIAORIG = ITV.SEQUENCIA
+LEFT JOIN TGFCAB CAP ON ITA.NUNOTA = CAP.NUNOTA
+WHERE CAB.CODTIPOPER IN (400, 401)
+  AND CAB.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+GROUP BY
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG))
+)
+GROUP BY PRAZO</expression><metadata><field name="PRAZO" label="Prazo" type="S" visible="true" useFooter="false" /><field name="QTREQUISICAO" label="Qt Requisicao" type="I" visible="true" useFooter="false" /></metadata><series><serie type="pizza"><field>QTREQUISICAO</field><nameField>PRAZO</nameField><on-click navigate-to="0MH"><param id="PRAZO">$PRAZO</param></on-click></serie></series></chart></container><container orientacao="H" tamanhoRelativo="50"><chart id="cht_0IK" type="pizza"><title>Status</title><expression type="sql" data-source="MGEDS">SELECT
+STATUS,
+COUNT(*) AS QTREQUISICAO
+FROM (
+SELECT
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+MIN(TRUNC(NVL(ITC.DTNEG, ITC.DTENTSAI))) AS DTINICIOCOTACAO,
+MAX(TRUNC(CAP.DTENTSAI)) AS DTATENDIMENTO,
+TRUNC(:PERIODO.FIN) AS DTCORTE,
+TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) AS DIAS,
+NVL(:DIASPRAZO, 7) AS PRAZOLIMITE,
+CASE WHEN MAX(CAP.NUNOTA) IS NOT NULL THEN 'Fechado'
+     WHEN MAX(ITC.NUNOTA) IS NOT NULL THEN 'Em andamento'
+     ELSE 'Aberto' END AS STATUS,
+CASE WHEN TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) &lt;= NVL(:DIASPRAZO, 7)
+     THEN 'No Prazo' ELSE 'Fora do Prazo' END AS PRAZO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD
+LEFT JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+LEFT JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+LEFT JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+LEFT JOIN TGFVAR ITA ON ITA.NUNOTAORIG = ITC.NUNOTA AND ITA.SEQUENCIAORIG = ITV.SEQUENCIA
+LEFT JOIN TGFCAB CAP ON ITA.NUNOTA = CAP.NUNOTA
+WHERE CAB.CODTIPOPER IN (400, 401)
+  AND CAB.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+GROUP BY
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG))
+)
+GROUP BY STATUS</expression><metadata><field name="STATUS" label="Status" type="S" visible="true" useFooter="false" /><field name="QTREQUISICAO" label="Qt Requisicao" type="I" visible="true" useFooter="false" /></metadata><series><serie type="pizza"><field>QTREQUISICAO</field><nameField>STATUS</nameField><on-click navigate-to="0NE"><param id="STATUS">$STATUS</param></on-click></serie></series></chart></container></container><container orientacao="H" tamanhoRelativo="50.18336228527313"><grid id="grd_0M5" useNewGrid="S"><title>Em Cotação</title><expression type="sql" data-source="MGEDS">SELECT
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+MIN(TRUNC(NVL(ITC.DTNEG, ITC.DTENTSAI))) AS DTINICIOCOTACAO,
+MAX(TRUNC(CAP.DTENTSAI)) AS DTATENDIMENTO,
+TRUNC(:PERIODO.FIN) AS DTCORTE,
+TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) AS DIAS,
+NVL(:DIASPRAZO, 7) AS PRAZOLIMITE,
+CASE WHEN MAX(CAP.NUNOTA) IS NOT NULL THEN 'Fechado'
+     WHEN MAX(ITC.NUNOTA) IS NOT NULL THEN 'Em andamento'
+     ELSE 'Aberto' END AS STATUS,
+CASE WHEN TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) &lt;= NVL(:DIASPRAZO, 7)
+     THEN 'No Prazo' ELSE 'Fora do Prazo' END AS PRAZO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD
+LEFT JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+LEFT JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+LEFT JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+LEFT JOIN TGFVAR ITA ON ITA.NUNOTAORIG = ITC.NUNOTA AND ITA.SEQUENCIAORIG = ITV.SEQUENCIA
+LEFT JOIN TGFCAB CAP ON ITA.NUNOTA = CAP.NUNOTA
+WHERE CAB.CODTIPOPER IN (400, 401)
+  AND CAB.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+GROUP BY
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG))
+ORDER BY DTNEG, NUNOTA, SEQUENCIA</expression><metadata><field name="NUNOTA" label="Nro Nota" type="I" visible="true" useFooter="false" /><field name="SEQUENCIA" label="Seq." type="I" visible="true" useFooter="false" /><field name="DTNEG" label="Dt Requisicao" type="D" visible="true" useFooter="false" /><field name="CODTIPOPER" label="Cod. TOP" type="I" visible="true" useFooter="false" /><field name="DESCROPER" label="Descricao TOP" type="S" visible="true" useFooter="false" /><field name="CODPROD" label="Cod. Produto" type="I" visible="true" useFooter="false" /><field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false" /><field name="DTINICIOCOTACAO" label="Inicio Cotacao" type="D" visible="true" useFooter="false" /><field name="DTATENDIMENTO" label="Atendimento" type="D" visible="true" useFooter="false" /><field name="DTCORTE" label="Data Corte" type="D" visible="true" useFooter="false" /><field name="DIAS" label="Dias" type="I" visible="true" useFooter="false" /><field name="PRAZOLIMITE" label="Prazo Limite" type="I" visible="true" useFooter="false" /><field name="STATUS" label="Status" type="S" visible="true" useFooter="false" /><field name="PRAZO" label="Prazo" type="S" visible="true" useFooter="false" /></metadata><on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas"><NUNOTA>$NUNOTA</NUNOTA></on-click-launcher></grid></container></container></level><level id="0MH" description="PRAZO"><args><arg id="PRAZO" type="text" label="PRAZO : Texto" /></args><container orientacao="V" tamanhoRelativo="100"><grid id="grd_0MI" useNewGrid="S"><expression type="sql" data-source="MGEDS">SELECT *
+FROM (
+SELECT
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+MIN(TRUNC(NVL(ITC.DTNEG, ITC.DTENTSAI))) AS DTINICIOCOTACAO,
+MAX(TRUNC(CAP.DTENTSAI)) AS DTATENDIMENTO,
+TRUNC(:PERIODO.FIN) AS DTCORTE,
+TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) AS DIAS,
+NVL(:DIASPRAZO, 7) AS PRAZOLIMITE,
+CASE WHEN MAX(CAP.NUNOTA) IS NOT NULL THEN 'Fechado'
+     WHEN MAX(ITC.NUNOTA) IS NOT NULL THEN 'Em andamento'
+     ELSE 'Aberto' END AS STATUS,
+CASE WHEN TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) &lt;= NVL(:DIASPRAZO, 7)
+     THEN 'No Prazo' ELSE 'Fora do Prazo' END AS PRAZO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD
+LEFT JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+LEFT JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+LEFT JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+LEFT JOIN TGFVAR ITA ON ITA.NUNOTAORIG = ITC.NUNOTA AND ITA.SEQUENCIAORIG = ITV.SEQUENCIA
+LEFT JOIN TGFCAB CAP ON ITA.NUNOTA = CAP.NUNOTA
+WHERE CAB.CODTIPOPER IN (400, 401)
+  AND CAB.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+GROUP BY
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG))
+)
+WHERE PRAZO = :PRAZO
+ORDER BY DTNEG, NUNOTA, SEQUENCIA</expression><metadata><field name="NUNOTA" label="Nro Nota" type="I" visible="true" useFooter="false" /><field name="SEQUENCIA" label="Seq." type="I" visible="true" useFooter="false" /><field name="DTNEG" label="Dt Requisicao" type="D" visible="true" useFooter="false" /><field name="CODTIPOPER" label="Cod. TOP" type="I" visible="true" useFooter="false" /><field name="DESCROPER" label="Descricao TOP" type="S" visible="true" useFooter="false" /><field name="CODPROD" label="Cod. Produto" type="I" visible="true" useFooter="false" /><field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false" /><field name="DTINICIOCOTACAO" label="Inicio Cotacao" type="D" visible="true" useFooter="false" /><field name="DTATENDIMENTO" label="Atendimento" type="D" visible="true" useFooter="false" /><field name="DTCORTE" label="Data Corte" type="D" visible="true" useFooter="false" /><field name="DIAS" label="Dias" type="I" visible="true" useFooter="false" /><field name="PRAZOLIMITE" label="Prazo Limite" type="I" visible="true" useFooter="false" /><field name="STATUS" label="Status" type="S" visible="true" useFooter="false" /><field name="PRAZO" label="Prazo" type="S" visible="true" useFooter="false" /></metadata></grid></container></level><level id="0NE" description="STATUS"><args><arg id="STATUS" type="text" label="STATUS : Texto" /></args><container orientacao="V" tamanhoRelativo="100"><grid id="grd_0NV" useNewGrid="S"><expression type="sql" data-source="MGEDS">SELECT *
+FROM (
+SELECT
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+MIN(TRUNC(NVL(ITC.DTNEG, ITC.DTENTSAI))) AS DTINICIOCOTACAO,
+MAX(TRUNC(CAP.DTENTSAI)) AS DTATENDIMENTO,
+TRUNC(:PERIODO.FIN) AS DTCORTE,
+TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) AS DIAS,
+NVL(:DIASPRAZO, 7) AS PRAZOLIMITE,
+CASE WHEN MAX(CAP.NUNOTA) IS NOT NULL THEN 'Fechado'
+     WHEN MAX(ITC.NUNOTA) IS NOT NULL THEN 'Em andamento'
+     ELSE 'Aberto' END AS STATUS,
+CASE WHEN TRUNC(NVL(MAX(CAP.DTENTSAI), :PERIODO.FIN)) - TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG)) &lt;= NVL(:DIASPRAZO, 7)
+     THEN 'No Prazo' ELSE 'Fora do Prazo' END AS PRAZO
+FROM TGFCAB CAB
+INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
+INNER JOIN TGFTOP TOP ON TOP.CODTIPOPER = CAB.CODTIPOPER AND TOP.DHALTER = CAB.DHTIPOPER
+INNER JOIN TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD
+LEFT JOIN TGFVAR VAR ON VAR.NUNOTAORIG = CAB.NUNOTA AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+LEFT JOIN TGFCAB ITC ON ITC.NUNOTA = VAR.NUNOTA
+LEFT JOIN TGFITE ITV ON ITV.NUNOTA = VAR.NUNOTA AND ITV.SEQUENCIA = VAR.SEQUENCIA
+LEFT JOIN TGFVAR ITA ON ITA.NUNOTAORIG = ITC.NUNOTA AND ITA.SEQUENCIAORIG = ITV.SEQUENCIA
+LEFT JOIN TGFCAB CAP ON ITA.NUNOTA = CAP.NUNOTA
+WHERE CAB.CODTIPOPER IN (400, 401)
+  AND CAB.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+GROUP BY
+CAB.NUNOTA,
+ITE.SEQUENCIA,
+CAB.DTNEG,
+TOP.CODTIPOPER,
+TOP.DESCROPER,
+PRO.CODPROD,
+PRO.DESCRPROD,
+TRUNC(NVL(CAB.DTENTSAI, CAB.DTNEG))
+)
+WHERE STATUS = :STATUS
+ORDER BY DTNEG, NUNOTA, SEQUENCIA</expression><metadata><field name="NUNOTA" label="Nro Nota" type="I" visible="true" useFooter="false" /><field name="SEQUENCIA" label="Seq." type="I" visible="true" useFooter="false" /><field name="DTNEG" label="Dt Requisicao" type="D" visible="true" useFooter="false" /><field name="CODTIPOPER" label="Cod. TOP" type="I" visible="true" useFooter="false" /><field name="DESCROPER" label="Descricao TOP" type="S" visible="true" useFooter="false" /><field name="CODPROD" label="Cod. Produto" type="I" visible="true" useFooter="false" /><field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false" /><field name="DTINICIOCOTACAO" label="Inicio Cotacao" type="D" visible="true" useFooter="false" /><field name="DTATENDIMENTO" label="Atendimento" type="D" visible="true" useFooter="false" /><field name="DTCORTE" label="Data Corte" type="D" visible="true" useFooter="false" /><field name="DIAS" label="Dias" type="I" visible="true" useFooter="false" /><field name="PRAZOLIMITE" label="Prazo Limite" type="I" visible="true" useFooter="false" /><field name="STATUS" label="Status" type="S" visible="true" useFooter="false" /><field name="PRAZO" label="Prazo" type="S" visible="true" useFooter="false" /></metadata><on-click-launcher resource-id="br.com.sankhya.com.mov.CentralNotas"><NUNOTA>$NUNOTA</NUNOTA></on-click-launcher></grid></container></level></gadget>

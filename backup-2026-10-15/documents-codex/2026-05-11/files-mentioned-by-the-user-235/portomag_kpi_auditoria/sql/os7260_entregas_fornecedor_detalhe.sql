@@ -1,0 +1,112 @@
+/* OS 7260 / Item 14 - Numero de Entregas do Fornecedor On-time.
+   Visao detalhada auditavel por fornecedor/pedido/nota/item.
+
+   Periodo: usa a data real de entrada/entrega (TGFCAB da nota de entrada - DTENTSAI).
+   Inicio do calculo: TGFITE.DTINICIO; se nulo, TGFCAB.DTPREVENT; se nulo, TGFCAB.DTNEG do pedido.
+   Fim do calculo: data real de entrada/entrega.
+   Pendencias: nao entram nesta query para nao misturar entregue com pendente.
+   Produtos: USOPROD C e M, conforme regra validada. Outros USOPROD ficam fora ate confirmacao funcional.
+*/
+WITH PARAMS AS (
+    SELECT
+        TRUNC(:PERIODO.INI) AS DTINI,
+        TRUNC(:PERIODO.FIN) AS DTFIN
+    FROM DUAL
+),
+ENTREGA_ITEM AS (
+    SELECT
+        CAB.CODPARC,
+        PAR.RAZAOSOCIAL,
+        CAB.NUNOTA AS NUNOTA_PEDIDO,
+        ITE.SEQUENCIA AS SEQ_PEDIDO,
+        ITC.NUNOTA AS NUNOTA_ENTRADA,
+        ITV.SEQUENCIA AS SEQ_ENTRADA,
+        TOP.CODTIPOPER,
+        TOP.DESCROPER,
+        PRO.CODPROD,
+        PRO.DESCRPROD,
+        PRO.USOPROD,
+        CASE
+            WHEN PRO.USOPROD = 'C' THEN 'Uso/consumo'
+            WHEN PRO.USOPROD = 'M' THEN 'Materia-prima'
+            ELSE 'Outros'
+        END AS TIPO_PRODUTO,
+        TRUNC(NVL(ITE.DTINICIO, NVL(CAB.DTPREVENT, CAB.DTNEG))) AS DATA_PEDIDO,
+        TRUNC(CAB.DTPREVENT) AS DATA_PREVISTA,
+        TRUNC(ITC.DTENTSAI) AS DATA_ENTRADA,
+        CASE
+            WHEN PRO.USOPROD = 'C' THEN 15
+            ELSE 30
+        END AS PRAZO_ESPERADO
+    FROM TGFCAB CAB
+    INNER JOIN TGFITE ITE
+        ON ITE.NUNOTA = CAB.NUNOTA
+    INNER JOIN TGFPRO PRO
+        ON PRO.CODPROD = ITE.CODPROD
+    INNER JOIN TGFPAR PAR
+        ON PAR.CODPARC = CAB.CODPARC
+    INNER JOIN TGFTOP TOP
+        ON TOP.CODTIPOPER = CAB.CODTIPOPER
+       AND TOP.DHALTER = CAB.DHTIPOPER
+    INNER JOIN TGFVAR VAR
+        ON VAR.NUNOTAORIG = CAB.NUNOTA
+       AND VAR.SEQUENCIAORIG = ITE.SEQUENCIA
+    INNER JOIN TGFCAB ITC
+        ON ITC.NUNOTA = VAR.NUNOTA
+    INNER JOIN TGFITE ITV
+        ON ITV.NUNOTA = VAR.NUNOTA
+       AND ITV.SEQUENCIA = VAR.SEQUENCIA
+    CROSS JOIN PARAMS P
+    WHERE CAB.TIPMOV = 'O'
+      AND TRUNC(ITC.DTENTSAI) BETWEEN P.DTINI AND P.DTFIN
+      AND PAR.CODPARC = NVL(:CODPARC, PAR.CODPARC)
+      AND PRO.USOPROD IN ('M', 'C')
+    GROUP BY
+        CAB.CODPARC,
+        PAR.RAZAOSOCIAL,
+        CAB.NUNOTA,
+        ITE.SEQUENCIA,
+        ITC.NUNOTA,
+        ITV.SEQUENCIA,
+        TOP.CODTIPOPER,
+        TOP.DESCROPER,
+        PRO.CODPROD,
+        PRO.DESCRPROD,
+        PRO.USOPROD,
+        TRUNC(NVL(ITE.DTINICIO, NVL(CAB.DTPREVENT, CAB.DTNEG))),
+        TRUNC(CAB.DTPREVENT),
+        TRUNC(ITC.DTENTSAI)
+)
+SELECT
+    CODPARC,
+    RAZAOSOCIAL,
+    NUNOTA_PEDIDO,
+    SEQ_PEDIDO,
+    NUNOTA_ENTRADA,
+    SEQ_ENTRADA,
+    CODTIPOPER,
+    DESCROPER,
+    CODPROD,
+    DESCRPROD,
+    USOPROD,
+    TIPO_PRODUTO,
+    DATA_PEDIDO,
+    DATA_PREVISTA,
+    DATA_ENTRADA,
+    TRUNC(:PERIODO.FIN) AS DATA_CORTE_REFERENCIA,
+    DATA_ENTRADA - DATA_PEDIDO AS DIAS_CALCULADOS,
+    PRAZO_ESPERADO,
+    CASE
+        WHEN DATA_ENTRADA - DATA_PEDIDO <= PRAZO_ESPERADO THEN 'No Prazo'
+        ELSE 'Fora do Prazo'
+    END AS CLASSIFICACAO_PRAZO,
+    CASE
+        WHEN DATA_ENTRADA - DATA_PEDIDO <= PRAZO_ESPERADO THEN 'S'
+        ELSE 'N'
+    END AS NOPRAZO
+FROM ENTREGA_ITEM
+ORDER BY
+    RAZAOSOCIAL,
+    DATA_ENTRADA,
+    NUNOTA_PEDIDO,
+    SEQ_PEDIDO

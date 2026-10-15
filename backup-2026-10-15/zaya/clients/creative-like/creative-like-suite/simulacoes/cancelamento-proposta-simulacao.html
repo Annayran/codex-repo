@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulacao - Cancelamento de Proposta</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #1f2933;
+            background: #f5f7fa;
+            font-size: 13px;
+        }
+
+        .app {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 18px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+            color: #667085;
+            line-height: 1.4;
+        }
+
+        .badge {
+            flex: 0 0 auto;
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 4px;
+            background: #fff4d6;
+            color: #8a5a00;
+            border: 1px solid #ffd580;
+            font-weight: 700;
+        }
+
+        .toolbar,
+        .panel {
+            background: #fff;
+            border: 1px solid #e1e7ef;
+            padding: 14px;
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1fr 200px 150px;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            color: #667085;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        select,
+        input,
+        button {
+            width: 100%;
+            min-height: 36px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background: #fff;
+            color: #344054;
+            padding: 7px 10px;
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button.primary {
+            border-color: #344054;
+            background: #344054;
+            color: #fff;
+        }
+
+        button:hover {
+            filter: brightness(0.97);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .status-card {
+            background: #fff;
+            border: 1px solid #e1e7ef;
+            border-left: 8px solid #344054;
+            padding: 12px;
+            min-height: 74px;
+        }
+
+        .status-card.ok {
+            border-left-color: #00a65a;
+        }
+
+        .status-card.warn {
+            border-left-color: #f0ad4e;
+        }
+
+        .status-card.block {
+            border-left-color: #dd4b39;
+        }
+
+        .label {
+            color: #667085;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 14px;
+        }
+
+        .panel h2 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+
+        .proposal-meta {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .kv {
+            background: #f8fafc;
+            border: 1px solid #eef2f6;
+            padding: 8px;
+        }
+
+        .checklist {
+            display: grid;
+            gap: 8px;
+        }
+
+        .check {
+            border: 1px solid #e4e7ec;
+            background: #fcfcfd;
+            padding: 10px;
+        }
+
+        .check-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 7px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 7px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tag.ok {
+            background: #e8f7ef;
+            color: #087443;
+        }
+
+        .tag.warn {
+            background: #fff4d6;
+            color: #8a5a00;
+        }
+
+        .tag.block {
+            background: #fdecec;
+            color: #b42318;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .log {
+            background: #101828;
+            color: #d0d5dd;
+            min-height: 210px;
+            padding: 12px;
+            font-family: Consolas, monospace;
+            white-space: pre-wrap;
+            line-height: 1.45;
+        }
+
+        .decision {
+            border: 1px solid #e1e7ef;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+        }
+
+        @media (max-width: 920px) {
+            .toolbar,
+            .layout,
+            .proposal-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="topbar">
+        <div>
+            <h1>Simulacao de Cancelamento de Proposta</h1>
+            <div class="subtitle">
+                Ensaio do fluxo proposto para AD_TGLCAB. Esta tela simula validacoes, pendencias,
+                checklist e acoes futuras sem gravar dados.
+            </div>
+        </div>
+        <span class="badge">DRY_RUN / SIMULACAO</span>
+    </div>
+
+    <div class="toolbar">
+        <div>
+            <label for="cenario">Cenario de teste</label>
+            <select id="cenario"></select>
+        </div>
+        <div>
+            <label for="nunegociacao">NUNEGOCIACAO</label>
+            <input id="nunegociacao" value="100245">
+        </div>
+        <button class="primary" onclick="executarSimulacao()">Simular fluxo</button>
+    </div>
+
+    <div class="status-grid" id="statusGrid"></div>
+
+    <div class="layout">
+        <section class="panel">
+            <h2>Momento da negociacao</h2>
+            <div class="proposal-meta" id="proposalMeta"></div>
+            <div class="checklist" id="checklist"></div>
+        </section>
+
+        <aside class="panel">
+            <h2>Resultado da simulacao</h2>
+            <div class="decision" id="decision"></div>
+            <div class="actions">
+                <button onclick="simularAcao('Validar impedimentos')">Validar impedimentos</button>
+                <button onclick="simularAcao('Notificar areas')">Notificar areas</button>
+                <button onclick="simularAcao('Gerar checklist')">Gerar checklist</button>
+                <button onclick="simularAcao('Cancelar proposta')">Cancelar proposta</button>
+            </div>
+            <div class="log" id="log">Aguardando simulacao...</div>
+        </aside>
+    </div>
+</div>
+
+<script>
+    var cenarios = [
+        {
+            id: 'liberado',
+            nome: 'Cancelamento automatico permitido',
+            cliente: 'Creative Like - Cliente Exemplo',
+            vendedor: 'Comercial RJ',
+            statusProposta: 'Aberta',
+            areas: [
+                etapa('Producao', 'ok', 'OP criada/aberta e nao iniciada', 'Cancelar OP automaticamente e voltar estoque local de origem.', 'Responsavel Producao'),
+                etapa('Compras', 'ok', 'Sem envio ao fornecedor', 'Excluir/cancelar requisicao ou pedido ainda nao enviado.', 'Responsavel Compras'),
+                etapa('Vendas', 'ok', 'Pedido 1001 sem nota/remessa', 'Excluir pedido de venda pendente.', 'Responsavel Comercial'),
+                etapa('Mov. internas', 'ok', 'Sem movimentacao efetivada', 'Nenhum ajuste necessario.', 'Estoque'),
+                etapa('Financeiro', 'ok', 'Sem baixa/pagamento', 'Seguir cancelamento sem pendencia financeira.', 'Financeiro'),
+                etapa('Arte', 'ok', 'Trabalho nao iniciado', 'Cancelar etapa de arte automaticamente.', 'Layout/Arte')
+            ]
+        },
+        {
+            id: 'pendencias',
+            nome: 'Cancelamento com pendencias operacionais',
+            cliente: 'Creative Like - Brinde Personalizado',
+            vendedor: 'Comercial SP',
+            statusProposta: 'Em andamento',
+            areas: [
+                etapa('Producao', 'block', 'OP iniciada', 'Impedir cancelamento automatico e listar pendencia.', 'Responsavel Producao'),
+                etapa('Compras', 'warn', 'Compra em andamento com fornecedor', 'Solicitar acao manual ou confirmacao da area de compras.', 'Responsavel Compras'),
+                etapa('Vendas', 'ok', 'Pedido sem nota emitida', 'Permitir cancelamento do pedido pendente.', 'Responsavel Comercial'),
+                etapa('Mov. internas', 'warn', 'Movimentacao interna relacionada', 'Avaliar se pode desfazer; se ja efetivada, apenas registrar pendencia.', 'Estoque'),
+                etapa('Financeiro', 'ok', 'Sem baixa financeira', 'Seguir sem bloqueio financeiro.', 'Financeiro'),
+                etapa('Arte', 'block', 'Arte liberada para producao', 'Bloquear cancelamento automatico e acionar responsavel.', 'Layout/Arte')
+            ]
+        },
+        {
+            id: 'nota-financeiro',
+            nome: 'Bloqueio por nota/financeiro',
+            cliente: 'Creative Like - Pedido Faturado',
+            vendedor: 'Comercial MG',
+            statusProposta: 'Faturamento pendente de cancelamento',
+            areas: [
+                etapa('Producao', 'ok', 'Sem OP ativa', 'Nada a cancelar na producao.', 'Responsavel Producao'),
+                etapa('Compras', 'ok', 'Sem compra pendente', 'Nada a cancelar em compras.', 'Responsavel Compras'),
+                etapa('Vendas', 'block', 'Nota/remessa emitida', 'Impedir cancelamento automatico; tratar nota/remessa antes.', 'Responsavel Comercial/Fiscal'),
+                etapa('Mov. internas', 'warn', 'Movimentacao ja feita', 'Registrar que nao sera desfeita automaticamente.', 'Estoque'),
+                etapa('Financeiro', 'block', 'Ha baixa/provisao/pagamento vinculado', 'Listar pendencia financeira e exigir tratativa manual.', 'Financeiro'),
+                etapa('Arte', 'ok', 'Sem personalizacao ativa', 'Sem impedimento de arte.', 'Layout/Arte')
+            ]
+        }
+    ];
+
+    function etapa(area, severidade, status, acao, responsavel) {
+        return { area: area, severidade: severidade, status: status, acao: acao, responsavel: responsavel };
+    }
+
+    function popularCenarios() {
+        var select = document.getElementById('cenario');
+        select.innerHTML = cenarios.map(function(cenario) {
+            return '<option value="' + cenario.id + '">' + cenario.nome + '</option>';
+        }).join('');
+    }
+
+    function cenarioAtual() {
+        var id = document.getElementById('cenario').value;
+        return cenarios.filter(function(cenario) { return cenario.id === id; })[0] || cenarios[0];
+    }
+
+    function classeTexto(severidade) {
+        if (severidade === 'ok') return 'Resolvido';
+        if (severidade === 'warn') return 'Pendencia';
+        return 'Bloqueio';
+    }
+
+    function renderizar() {
+        var cenario = cenarioAtual();
+        var bloqueios = cenario.areas.filter(function(area) { return area.severidade === 'block'; });
+        var pendencias = cenario.areas.filter(function(area) { return area.severidade === 'warn'; });
+
+        document.getElementById('statusGrid').innerHTML = cenario.areas.map(function(area) {
+            return '<div class="status-card ' + area.severidade + '">'
+                + '<div class="label">' + area.area + '</div>'
+                + '<div class="value">' + classeTexto(area.severidade) + '</div>'
+                + '</div>';
+        }).join('');
+
+        document.getElementById('proposalMeta').innerHTML =
+            kv('Negociacao', '#' + document.getElementById('nunegociacao').value)
+            + kv('Cliente', cenario.cliente)
+            + kv('Vendedor', cenario.vendedor)
+            + kv('Status proposta', cenario.statusProposta);
+
+        document.getElementById('checklist').innerHTML = cenario.areas.map(function(area) {
+            return '<div class="check">'
+                + '<div class="check-head">'
+                + '<strong>' + area.area + '</strong>'
+                + '<span class="tag ' + area.severidade + '">' + classeTexto(area.severidade) + '</span>'
+                + '</div>'
+                + '<div><b>Status:</b> ' + area.status + '</div>'
+                + '<div><b>Acao esperada:</b> ' + area.acao + '</div>'
+                + '<div><b>Responsavel:</b> ' + area.responsavel + '</div>'
+                + '</div>';
+        }).join('');
+
+        var textoDecisao = '';
+        if (bloqueios.length > 0) {
+            textoDecisao = '<b>Cancelamento automatico bloqueado.</b><br>'
+                + 'Resolver ou aprovar manualmente: ' + bloqueios.map(function(a) { return a.area; }).join(', ') + '.';
+        } else if (pendencias.length > 0) {
+            textoDecisao = '<b>Cancelamento exige acompanhamento.</b><br>'
+                + 'Ha pendencias sem bloqueio duro: ' + pendencias.map(function(a) { return a.area; }).join(', ') + '.';
+        } else {
+            textoDecisao = '<b>Cancelamento automatico permitido.</b><br>'
+                + 'Todas as validacoes passaram em modo simulado.';
+        }
+
+        document.getElementById('decision').innerHTML = textoDecisao;
+    }
+
+    function kv(label, value) {
+        return '<div class="kv"><div class="label">' + label + '</div><b>' + value + '</b></div>';
+    }
+
+    function executarSimulacao() {
+        renderizar();
+        simularAcao('Fluxo completo');
+    }
+
+    function simularAcao(acao) {
+        var cenario = cenarioAtual();
+        var nunegociacao = document.getElementById('nunegociacao').value || '-';
+        var bloqueios = cenario.areas.filter(function(area) { return area.severidade === 'block'; });
+        var pendencias = cenario.areas.filter(function(area) { return area.severidade === 'warn'; });
+        var agora = new Date().toLocaleString();
+        var linhas = [];
+
+        linhas.push('[' + agora + '] ' + acao);
+        linhas.push('NUNEGOCIACAO: ' + nunegociacao);
+        linhas.push('Modo: DRY_RUN / nenhuma gravacao executada');
+        linhas.push('Cenario: ' + cenario.nome);
+        linhas.push('');
+
+        cenario.areas.forEach(function(area) {
+            linhas.push('- ' + area.area + ': ' + classeTexto(area.severidade) + ' | ' + area.status);
+        });
+
+        linhas.push('');
+        if (bloqueios.length > 0) {
+            linhas.push('Resultado: BLOQUEADO para cancelamento automatico.');
+            linhas.push('Pendencias criticas: ' + bloqueios.map(function(a) { return a.area; }).join(', '));
+        } else if (pendencias.length > 0) {
+            linhas.push('Resultado: exige acompanhamento antes da conclusao.');
+            linhas.push('Pendencias: ' + pendencias.map(function(a) { return a.area; }).join(', '));
+        } else {
+            linhas.push('Resultado: apto para cancelamento automatico simulado.');
+        }
+
+        document.getElementById('log').innerText = linhas.join('\n');
+    }
+
+    document.getElementById('cenario').addEventListener('change', renderizar);
+    document.getElementById('nunegociacao').addEventListener('input', renderizar);
+
+    popularCenarios();
+    renderizar();
+</script>
+</body>
+</html>

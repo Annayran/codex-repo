@@ -1,0 +1,1747 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cockpit Telecontrol | Zaya Preview</title>
+  <style>
+    :root {
+      --z-red: #e3343f;
+      --z-red-dark: #b91f2a;
+      --z-ink: #171a21;
+      --z-ink-2: #242936;
+      --z-muted: #6c7380;
+      --z-line: #dfe3ea;
+      --z-bg: #f4f6f9;
+      --z-panel: #ffffff;
+      --z-soft: #f9fafc;
+      --z-green: #168a5b;
+      --z-yellow: #b7791f;
+      --z-blue: #2563eb;
+      --z-violet: #6d5dfc;
+      --z-radius: 8px;
+      --shadow: 0 10px 28px rgba(20, 24, 31, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--z-bg);
+      color: var(--z-ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100%;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #151922;
+      color: #f6f7fb;
+      padding: 22px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--z-red);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .brand strong { display: block; font-size: 15px; }
+    .brand span { display: block; color: #aeb5c2; font-size: 12px; margin-top: 2px; }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #c7ceda;
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 10px;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .nav .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #858d9a;
+    }
+
+    .nav .dot.ok { background: var(--z-green); }
+    .nav .dot.warn { background: var(--z-yellow); }
+    .nav .dot.bad { background: var(--z-red); }
+    .nav small { color: #8f98a8; font-size: 11px; }
+
+    .side-footer {
+      margin-top: auto;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .05);
+      color: #c8cfdb;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .title p {
+      margin: 6px 0 0;
+      color: var(--z-muted);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .control,
+    .btn {
+      border: 1px solid var(--z-line);
+      background: #fff;
+      min-height: 38px;
+      border-radius: 8px;
+      padding: 0 12px;
+      color: var(--z-ink);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      border-color: var(--z-red);
+      background: var(--z-red);
+      color: #fff;
+    }
+
+    .health-strip {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(4, minmax(128px, .7fr));
+      gap: 12px;
+    }
+
+    .panel,
+    .metric,
+    .health-card {
+      background: var(--z-panel);
+      border: 1px solid var(--z-line);
+      border-radius: var(--z-radius);
+      box-shadow: var(--shadow);
+    }
+
+    .health-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .health-main {
+      min-height: 144px;
+      background: var(--z-ink);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .health-main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(227, 52, 63, .55), transparent 38%),
+        radial-gradient(circle at 92% 18%, rgba(255, 255, 255, .18), transparent 24%);
+      pointer-events: none;
+    }
+
+    .health-main > * { position: relative; }
+
+    .health-status {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .health-status strong {
+      font-size: 30px;
+      line-height: 1;
+      display: block;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .pill.ok { background: rgba(22, 138, 91, .12); color: #0d6b45; }
+    .pill.warn { background: rgba(183, 121, 31, .14); color: #875510; }
+    .pill.bad { background: rgba(227, 52, 63, .12); color: var(--z-red-dark); }
+    .health-main .pill { background: rgba(255, 255, 255, .14); color: #fff; }
+
+    .health-card label,
+    .metric label,
+    .panel-title span {
+      color: var(--z-muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .health-card .value {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .health-card small,
+    .metric small {
+      color: var(--z-muted);
+      font-size: 12px;
+    }
+
+    .health-main small { color: #c7ceda; }
+
+    .z-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .left-flow,
+    .right-flow {
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .panel-head {
+      min-height: 54px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--z-line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-title strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .panel-body { padding: 16px; }
+
+    .chart {
+      height: 240px;
+      display: grid;
+      grid-template-columns: 42px repeat(12, 1fr);
+      gap: 8px;
+      align-items: end;
+      border-bottom: 1px solid var(--z-line);
+      padding-top: 12px;
+    }
+
+    .axis {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--z-muted);
+      font-size: 11px;
+      padding-bottom: 8px;
+    }
+
+    .bar-stack {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 2px;
+      min-width: 16px;
+    }
+
+    .bar {
+      width: 100%;
+      border-radius: 5px 5px 2px 2px;
+      min-height: 4px;
+    }
+
+    .bar.ok { background: var(--z-green); }
+    .bar.warn { background: var(--z-yellow); }
+    .bar.bad { background: var(--z-red); }
+
+    .chart-labels {
+      display: grid;
+      grid-template-columns: 42px repeat(12, 1fr);
+      gap: 8px;
+      color: var(--z-muted);
+      font-size: 11px;
+      padding-top: 8px;
+      text-align: center;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--z-muted);
+      font-size: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      padding: 14px;
+      box-shadow: none;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .meter {
+      margin-top: 12px;
+      height: 7px;
+      background: #edf0f5;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      background: var(--z-red);
+      border-radius: inherit;
+    }
+
+    .latency {
+      display: grid;
+      gap: 12px;
+    }
+
+    .latency-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 64px;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .latency-track {
+      height: 9px;
+      border-radius: 999px;
+      background: #edf0f5;
+      overflow: hidden;
+    }
+
+    .latency-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--z-blue);
+    }
+
+    .latency-fill.warn { background: var(--z-yellow); }
+    .latency-fill.bad { background: var(--z-red); }
+
+    .routine-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .routine-table th,
+    .routine-table td {
+      border-bottom: 1px solid var(--z-line);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .routine-table th {
+      color: var(--z-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .routine-table tr:last-child td { border-bottom: 0; }
+    .routine-table tr.active { background: #fff6f7; }
+
+    .routine-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--z-green);
+      box-shadow: 0 0 0 4px rgba(22, 138, 91, .1);
+    }
+
+    .status-dot.warn {
+      background: var(--z-yellow);
+      box-shadow: 0 0 0 4px rgba(183, 121, 31, .13);
+    }
+
+    .status-dot.bad {
+      background: var(--z-red);
+      box-shadow: 0 0 0 4px rgba(227, 52, 63, .13);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .event {
+      border: 1px solid var(--z-line);
+      background: var(--z-soft);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      width: 100%;
+    }
+
+    .event:hover,
+    .event.active {
+      border-color: rgba(227, 52, 63, .45);
+      background: #fff;
+    }
+
+    .event time {
+      color: var(--z-muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .event strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .event span {
+      display: block;
+      margin-top: 2px;
+      color: var(--z-muted);
+      font-size: 12px;
+    }
+
+    .detail {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-box {
+      border: 1px solid var(--z-line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--z-soft);
+    }
+
+    .detail-box span {
+      color: var(--z-muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .detail-box strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .payload {
+      margin: 0;
+      max-height: 142px;
+      overflow: auto;
+      padding: 12px;
+      background: #171a21;
+      color: #e9edf5;
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .search-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .search-line input {
+      border: 1px solid var(--z-line);
+      border-radius: 8px;
+      min-height: 38px;
+      padding: 0 12px;
+    }
+
+    .view-tabs {
+      background: var(--z-panel);
+      border: 1px solid var(--z-line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 6px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .view-tabs button {
+      min-height: 40px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--z-muted);
+      font-weight: 800;
+    }
+
+    .view-tabs button.active {
+      background: var(--z-ink);
+      color: #fff;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: grid; gap: 18px; }
+
+    .graph-wall {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .graph-card {
+      background: var(--z-panel);
+      border: 1px solid var(--z-line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 15px;
+      min-height: 188px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .graph-card.wide { grid-column: span 2; }
+
+    .graph-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .graph-head span {
+      color: var(--z-muted);
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .graph-head strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 15px;
+    }
+
+    .spark {
+      width: 100%;
+      height: 76px;
+      overflow: visible;
+    }
+
+    .spark-grid {
+      stroke: #e8ecf2;
+      stroke-width: 1;
+    }
+
+    .spark-line {
+      fill: none;
+      stroke: var(--z-red);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .spark-area {
+      fill: rgba(227, 52, 63, .09);
+    }
+
+    .donut-wrap {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .donut {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: conic-gradient(var(--z-green) 0 78%, var(--z-yellow) 78% 91%, var(--z-red) 91% 100%);
+      display: grid;
+      place-items: center;
+    }
+
+    .donut::after {
+      content: "94.7%";
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .mini-legend {
+      display: grid;
+      gap: 7px;
+      color: var(--z-muted);
+      font-size: 12px;
+    }
+
+    .day-bars {
+      height: 78px;
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      gap: 5px;
+      align-items: end;
+    }
+
+    .day-bars i {
+      display: block;
+      border-radius: 5px 5px 2px 2px;
+      background: var(--z-green);
+      min-height: 8px;
+    }
+
+    .day-bars i.warn { background: var(--z-yellow); }
+    .day-bars i.bad { background: var(--z-red); }
+
+    .uptime-grid {
+      display: grid;
+      grid-template-columns: repeat(21, 1fr);
+      gap: 4px;
+    }
+
+    .uptime-grid i {
+      height: 12px;
+      border-radius: 3px;
+      background: var(--z-green);
+    }
+
+    .uptime-grid i.warn { background: var(--z-yellow); }
+    .uptime-grid i.bad { background: var(--z-red); }
+
+    .replicable {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .client-card {
+      background: var(--z-panel);
+      border: 1px solid var(--z-line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 15px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .client-card strong {
+      font-size: 16px;
+    }
+
+    .client-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--z-muted);
+      font-size: 12px;
+    }
+
+    .diagnostic-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .diagnostic-side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .line-chart {
+      width: 100%;
+      height: 316px;
+      display: block;
+    }
+
+    .line-chart.small {
+      height: 164px;
+    }
+
+    .chart-grid-line {
+      stroke: #e8ecf2;
+      stroke-width: 1;
+    }
+
+    .chart-axis-text {
+      fill: var(--z-muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .chart-threshold {
+      fill: rgba(227, 52, 63, .07);
+    }
+
+    .series-line {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .series-area {
+      opacity: .13;
+    }
+
+    .chart-point {
+      stroke: #fff;
+      stroke-width: 2;
+    }
+
+    .chart-callout {
+      border: 1px solid var(--z-line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      display: grid;
+      gap: 5px;
+      font-size: 12px;
+    }
+
+    .chart-callout strong {
+      font-size: 13px;
+    }
+
+    .chart-callout span {
+      color: var(--z-muted);
+    }
+
+    .diagnostic-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .diagnostic-summary .metric {
+      min-height: 116px;
+    }
+
+    .heatmap {
+      display: grid;
+      grid-template-columns: 86px repeat(7, 1fr);
+      gap: 6px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .heatmap span {
+      color: var(--z-muted);
+      font-weight: 800;
+    }
+
+    .heat-cell {
+      height: 28px;
+      border-radius: 6px;
+      background: #e9f6f0;
+      border: 1px solid #d7efe4;
+    }
+
+    .heat-cell.mid {
+      background: #fff4dd;
+      border-color: #f2d7a5;
+    }
+
+    .heat-cell.hot {
+      background: #ffe8ea;
+      border-color: #ffc9ce;
+    }
+
+    .scatter {
+      width: 100%;
+      height: 220px;
+      display: block;
+      background: linear-gradient(#fff, #fff);
+    }
+
+    .risk-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .risk-item {
+      border: 1px solid var(--z-line);
+      border-radius: 8px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 9px;
+      align-items: center;
+      background: var(--z-soft);
+    }
+
+    .risk-item strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .risk-item span {
+      display: block;
+      color: var(--z-muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 1180px) {
+      .app { grid-template-columns: 82px minmax(0, 1fr); }
+      .brand div:not(.brand-mark),
+      .nav button span.label,
+      .nav small,
+      .side-footer { display: none; }
+      .brand { padding: 0 6px 16px; justify-content: center; }
+      .nav button { grid-template-columns: 1fr; justify-items: center; }
+      .health-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .health-main { grid-column: 1 / -1; }
+      .z-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .app { display: block; }
+      .sidebar {
+        position: static;
+        padding: 14px;
+      }
+      .brand div:not(.brand-mark),
+      .nav button span.label,
+      .nav small { display: block; }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .nav button { grid-template-columns: 24px 1fr auto; justify-items: stretch; }
+      .main { padding: 14px; }
+      .topbar { grid-template-columns: 1fr; }
+      .toolbar { justify-content: flex-start; }
+      .health-strip,
+      .metrics-grid,
+      .graph-wall,
+      .replicable,
+      .diagnostic-grid,
+      .view-tabs { grid-template-columns: 1fr; }
+      .graph-card.wide { grid-column: auto; }
+      .chart { grid-template-columns: 32px repeat(6, 1fr); }
+      .chart .bar-stack:nth-of-type(n+8),
+      .chart-labels span:nth-child(n+8) { display: none; }
+      .chart-labels { grid-template-columns: 32px repeat(6, 1fr); }
+      .event { grid-template-columns: 52px 1fr; }
+      .event .pill { grid-column: 2; justify-self: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">Z</div>
+        <div>
+          <strong>Zaya Cockpit</strong>
+          <span>Telecontrol observability</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Módulos do cockpit">
+        <button class="active" data-module="geral"><i class="dot warn"></i><span class="label">Visão geral</span><small>23</small></button>
+        <button data-module="os"><i class="dot bad"></i><span class="label">Ordens de Serviço</span><small>9</small></button>
+        <button data-module="produtos"><i class="dot ok"></i><span class="label">Produtos</span><small>0</small></button>
+        <button data-module="pecas"><i class="dot warn"></i><span class="label">Peças</span><small>5</small></button>
+        <button data-module="lista"><i class="dot warn"></i><span class="label">Lista Básica</span><small>7</small></button>
+        <button data-module="logs"><i class="dot ok"></i><span class="label">Diagnóstico</span><small>184</small></button>
+      </nav>
+
+      <div class="side-footer">
+        Ambiente: homologação<br>
+        Última coleta: 17/06/2026 00:18<br>
+        Fonte: AD_TCLDIAG + AD_TCLMETRICA
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title">
+          <h1>Cockpit Telecontrol</h1>
+          <p>Visão em Z para saúde, tempo de envio, resposta da API, memória e falhas funcionais.</p>
+        </div>
+        <div class="toolbar">
+          <select id="period" class="control" aria-label="Período">
+            <option value="24">Últimas 24h</option>
+            <option value="12">Últimas 12h</option>
+            <option value="6">Últimas 6h</option>
+          </select>
+          <button class="btn" id="simulate">Simular coleta</button>
+          <button class="btn primary" id="reprocess">Reprocessar críticos</button>
+        </div>
+      </header>
+
+      <section class="health-strip" aria-label="Saúde geral">
+        <article class="health-card health-main">
+          <div class="health-status">
+            <div>
+              <label>Saúde geral</label>
+              <strong id="healthText">Atenção</strong>
+            </div>
+            <span class="pill warn">23 pendências</span>
+          </div>
+          <small>Integração ativa há 18h42min. Último sucesso há 6 minutos. Última falha em OS às 00:11.</small>
+        </article>
+        <article class="health-card">
+          <label>Tempo envio</label>
+          <div class="value" id="sendTime">2.4s</div>
+          <small>média últimas 24h</small>
+        </article>
+        <article class="health-card">
+          <label>Resposta API</label>
+          <div class="value" id="apiTime">1.8s</div>
+          <small>p95 em 4.9s</small>
+        </article>
+        <article class="health-card">
+          <label>Memória JVM</label>
+          <div class="value" id="memory">61%</div>
+          <small>742 MB usados</small>
+        </article>
+        <article class="health-card">
+          <label>Sucesso hoje</label>
+          <div class="value" id="successRate">94.7%</div>
+          <small>2.984 eventos</small>
+        </article>
+      </section>
+
+      <nav class="view-tabs" aria-label="Visões do cockpit">
+        <button class="active" data-view="prevencao">Prevenção</button>
+        <button data-view="operacao">Operação</button>
+        <button data-view="historico">Histórico</button>
+        <button data-view="clientes">Clientes</button>
+      </nav>
+
+      <section class="tab-panel active" id="view-prevencao">
+        <section class="diagnostic-grid" aria-label="Diagnóstico preventivo">
+          <article class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <span>Diagnóstico em linha</span>
+                <strong>Tempo, erro e memória por hora</strong>
+              </div>
+              <div class="legend">
+                <span><i class="swatch" style="background: var(--z-red)"></i>Resposta API</span>
+                <span><i class="swatch" style="background: var(--z-blue)"></i>Tempo total</span>
+                <span><i class="swatch" style="background: var(--z-violet)"></i>Memória JVM</span>
+                <span><i class="swatch" style="background: var(--z-yellow)"></i>Erros</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <svg class="line-chart" id="diagnosticLine" viewBox="0 0 920 316" role="img" aria-label="Gráfico de linha com diagnóstico por hora"></svg>
+              <div class="diagnostic-summary">
+                <article class="metric">
+                  <label>Ponto crítico</label>
+                  <strong>16h</strong>
+                  <small>API 4.9s, erros subindo</small>
+                </article>
+                <article class="metric">
+                  <label>Risco previsto</label>
+                  <strong>OS</strong>
+                  <small>tendência de timeout</small>
+                </article>
+                <article class="metric">
+                  <label>Janela saudável</label>
+                  <strong>04h-08h</strong>
+                  <small>baixo volume e baixa latência</small>
+                </article>
+              </div>
+            </div>
+          </article>
+
+          <aside class="diagnostic-side">
+            <article class="panel">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <span>Leitura rápida</span>
+                  <strong>Agora</strong>
+                </div>
+                <span class="pill warn">degradação leve</span>
+              </div>
+              <div class="panel-body risk-list">
+                <div class="risk-item">
+                  <i class="status-dot bad"></i>
+                  <div><strong>Resposta API acima do normal</strong><span>p95 chegou em 4.9s nas últimas 2h.</span></div>
+                  <b>alto</b>
+                </div>
+                <div class="risk-item">
+                  <i class="status-dot warn"></i>
+                  <div><strong>Memória subindo com volume de OS</strong><span>sem vazamento claro, mas merece observação.</span></div>
+                  <b>médio</b>
+                </div>
+                <div class="risk-item">
+                  <i class="status-dot warn"></i>
+                  <div><strong>Erro repetido de peça ausente</strong><span>18 ocorrências no período.</span></div>
+                  <b>médio</b>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <span>Comparativo</span>
+                  <strong>Erros x demora</strong>
+                </div>
+              </div>
+              <div class="panel-body">
+                <svg class="scatter" id="scatterChart" viewBox="0 0 360 220" role="img" aria-label="Dispersão de erros por tempo"></svg>
+              </div>
+            </article>
+          </aside>
+        </section>
+
+        <section class="graph-wall">
+          <article class="graph-card wide">
+            <div class="graph-head">
+              <div>
+                <span>Mapa de calor</span>
+                <strong>Rotina x dia da semana</strong>
+              </div>
+              <span class="pill warn">OS concentra risco</span>
+            </div>
+            <div class="heatmap" id="heatmap"></div>
+          </article>
+
+          <article class="graph-card">
+            <div class="graph-head">
+              <div>
+                <span>Disponibilidade</span>
+                <strong>Uptime dos últimos 21 dias</strong>
+              </div>
+              <span class="pill ok">99.2%</span>
+            </div>
+            <div class="uptime-grid" id="uptimeGrid"></div>
+          </article>
+
+          <article class="graph-card">
+            <div class="graph-head">
+              <div>
+                <span>Recorrência</span>
+                <strong>Erros por dia</strong>
+              </div>
+              <span class="pill bad">27 erros</span>
+            </div>
+            <svg class="line-chart small" id="dailyErrorLine" viewBox="0 0 360 164" role="img" aria-label="Linha de erros por dia"></svg>
+          </article>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="view-operacao">
+      <section class="z-grid">
+        <div class="left-flow">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <span>Volume por hora</span>
+                <strong>Execuções, alertas e erros</strong>
+              </div>
+              <div class="legend">
+                <span><i class="swatch" style="background: var(--z-green)"></i>Sucesso</span>
+                <span><i class="swatch" style="background: var(--z-yellow)"></i>Alerta</span>
+                <span><i class="swatch" style="background: var(--z-red)"></i>Erro</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="chart" id="volumeChart"></div>
+              <div class="chart-labels" id="volumeLabels"></div>
+            </div>
+          </section>
+
+          <section class="metrics-grid">
+            <article class="metric">
+              <label>Banco</label>
+              <strong>428ms</strong>
+              <small>média por consulta</small>
+              <div class="meter"><span style="width: 42%; background: var(--z-blue)"></span></div>
+            </article>
+            <article class="metric">
+              <label>API externa</label>
+              <strong>1.8s</strong>
+              <small>Telecontrol</small>
+              <div class="meter"><span style="width: 68%; background: var(--z-yellow)"></span></div>
+            </article>
+            <article class="metric">
+              <label>Fila</label>
+              <strong>23</strong>
+              <small>registros pendentes</small>
+              <div class="meter"><span style="width: 31%"></span></div>
+            </article>
+            <article class="metric">
+              <label>Heap</label>
+              <strong>742 MB</strong>
+              <small>de 1.2 GB</small>
+              <div class="meter"><span style="width: 61%"></span></div>
+            </article>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <span>Semáforo operacional</span>
+                <strong>Rotinas Telecontrol</strong>
+              </div>
+              <span class="pill warn">3 rotinas exigem atenção</span>
+            </div>
+            <div class="panel-body" style="padding: 0">
+              <table class="routine-table">
+                <thead>
+                  <tr>
+                    <th>Rotina</th>
+                    <th>Processados</th>
+                    <th>Erros</th>
+                    <th>Tempo médio</th>
+                    <th>Último sucesso</th>
+                  </tr>
+                </thead>
+                <tbody id="routineRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div class="right-flow">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <span>Performance</span>
+                <strong>Demora por etapa</strong>
+              </div>
+              <span class="pill ok">coleta ativa</span>
+            </div>
+            <div class="panel-body">
+              <div class="latency" id="latencyRows"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <span>Linha do tempo</span>
+                <strong>Últimos eventos</strong>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="timeline" id="timeline"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <span>Diagnóstico selecionado</span>
+                <strong id="detailTitle">OS com erro de peça</strong>
+              </div>
+            </div>
+            <div class="panel-body detail">
+              <div class="detail-box">
+                <span>Mensagem cliente</span>
+                <strong id="clientMessage">Peça PLW99000001CI não encontrada no cadastro Telecontrol.</strong>
+              </div>
+              <div class="detail-box">
+                <span>Ação sugerida</span>
+                <strong id="suggestion">Cadastrar a peça em AD_TCLPCA e reprocessar a OS.</strong>
+              </div>
+              <pre class="payload" id="payload">{ "correlationId": "20260617-OS-58491-A9F", "rotina": "OS", "etapa": "GRAVAR_PECA_OS", "status": "ERROR" }</pre>
+            </div>
+          </section>
+        </div>
+      </section>
+      </section>
+
+      <section class="tab-panel" id="view-historico">
+        <section class="graph-wall">
+          <article class="graph-card wide">
+            <div class="graph-head">
+              <div>
+                <span>Histórico</span>
+                <strong>Últimos 30 dias de execução</strong>
+              </div>
+              <span class="pill ok">92.481 eventos</span>
+            </div>
+            <div class="day-bars" id="historyBars"></div>
+            <small>Base para comparar hoje contra dias anteriores e detectar comportamento fora do normal.</small>
+          </article>
+          <article class="graph-card">
+            <div class="graph-head">
+              <div>
+                <span>Tempo ativo</span>
+                <strong>Funcionando há</strong>
+              </div>
+              <span class="pill ok">online</span>
+            </div>
+            <div class="value" style="font-size:34px;font-weight:900">18h42</div>
+            <small>desde a última falha crítica.</small>
+          </article>
+          <article class="graph-card">
+            <div class="graph-head">
+              <div>
+                <span>Recorrência</span>
+                <strong>Erros repetidos</strong>
+              </div>
+              <span class="pill bad">alto</span>
+            </div>
+            <div class="latency">
+              <div class="latency-row"><strong>Peça ausente</strong><div class="latency-track"><div class="latency-fill bad" style="width:92%"></div></div><span>18</span></div>
+              <div class="latency-row"><strong>Timeout</strong><div class="latency-track"><div class="latency-fill warn" style="width:54%"></div></div><span>7</span></div>
+              <div class="latency-row"><strong>Duplicado</strong><div class="latency-track"><div class="latency-fill" style="width:22%"></div></div><span>3</span></div>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="view-clientes">
+        <section class="replicable">
+          <article class="client-card">
+            <div class="client-meta"><span>Template base</span><span class="pill ok">replicável</span></div>
+            <strong>Polyvox Telecontrol</strong>
+            <div class="uptime-grid" data-mini="ok"></div>
+            <small>OS, produtos, peças, lista básica, pedidos e postos.</small>
+          </article>
+          <article class="client-card">
+            <div class="client-meta"><span>Cliente exemplo</span><span class="pill warn">atenção</span></div>
+            <strong>Integração Fiscal</strong>
+            <div class="uptime-grid" data-mini="warn"></div>
+            <small>Mesmo cockpit, outras rotinas e outra tabela de eventos.</small>
+          </article>
+          <article class="client-card">
+            <div class="client-meta"><span>Cliente exemplo</span><span class="pill ok">ok</span></div>
+            <strong>Pedidos Marketplace</strong>
+            <div class="uptime-grid" data-mini="ok"></div>
+            <small>Replica os gráficos usando config por rotina.</small>
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    var volume = [
+      { h: "00h", ok: 56, warn: 8, bad: 2 },
+      { h: "02h", ok: 42, warn: 5, bad: 1 },
+      { h: "04h", ok: 38, warn: 2, bad: 0 },
+      { h: "06h", ok: 71, warn: 6, bad: 1 },
+      { h: "08h", ok: 112, warn: 10, bad: 3 },
+      { h: "10h", ok: 148, warn: 12, bad: 4 },
+      { h: "12h", ok: 131, warn: 7, bad: 2 },
+      { h: "14h", ok: 126, warn: 11, bad: 5 },
+      { h: "16h", ok: 164, warn: 15, bad: 6 },
+      { h: "18h", ok: 118, warn: 9, bad: 3 },
+      { h: "20h", ok: 96, warn: 7, bad: 1 },
+      { h: "22h", ok: 74, warn: 8, bad: 4 }
+    ];
+
+    var routines = [
+      { name: "OS", status: "bad", processed: 418, errors: 9, avg: "6.8s", success: "há 6 min" },
+      { name: "Produtos", status: "ok", processed: 320, errors: 0, avg: "1.2s", success: "há 4 min" },
+      { name: "Peças", status: "warn", processed: 780, errors: 5, avg: "2.5s", success: "há 9 min" },
+      { name: "Lista Básica", status: "warn", processed: 246, errors: 7, avg: "3.1s", success: "há 14 min" },
+      { name: "Postos", status: "ok", processed: 80, errors: 0, avg: "0.9s", success: "há 22 min" },
+      { name: "Pedidos", status: "ok", processed: 184, errors: 0, avg: "1.4s", success: "há 11 min" }
+    ];
+
+    var latency = [
+      { name: "Leitura DB", value: "428ms", width: 32, level: "" },
+      { name: "Validação", value: "220ms", width: 18, level: "" },
+      { name: "Envio API", value: "2.4s", width: 62, level: "warn" },
+      { name: "Resposta", value: "1.8s", width: 54, level: "warn" },
+      { name: "Gravação", value: "310ms", width: 24, level: "" },
+      { name: "Total OS", value: "6.8s", width: 88, level: "bad" }
+    ];
+
+    var events = [
+      {
+        time: "00:11",
+        status: "bad",
+        title: "OS com erro de peça",
+        text: "PLW99000001CI não encontrada",
+        client: "Peça PLW99000001CI não encontrada no cadastro Telecontrol.",
+        suggestion: "Cadastrar a peça em AD_TCLPCA e reprocessar a OS.",
+        payload: { correlationId: "20260617-OS-58491-A9F", rotina: "OS", etapa: "GRAVAR_PECA_OS", status: "ERROR", nroOs: 58491 }
+      },
+      {
+        time: "00:07",
+        status: "warn",
+        title: "Lista básica ignorada",
+        text: "Composição já existente",
+        client: "Lista básica já integrada para este produto.",
+        suggestion: "Nenhuma ação necessária. O registro foi ignorado para evitar duplicidade.",
+        payload: { correlationId: "20260617-LB-1031-C2B", rotina: "LISTA_BASICA", etapa: "VALIDACAO_DUPLICIDADE", status: "WARN" }
+      },
+      {
+        time: "00:02",
+        status: "ok",
+        title: "Produtos sincronizados",
+        text: "138 registros enviados",
+        client: "Produtos enviados ao Telecontrol com sucesso.",
+        suggestion: "Acompanhar próxima coleta agendada.",
+        payload: { correlationId: "20260617-PROD-138-77D", rotina: "PRODUTOS", etapa: "FIM", status: "SUCCESS" }
+      },
+      {
+        time: "23:58",
+        status: "bad",
+        title: "Timeout Telecontrol",
+        text: "Resposta acima de 10s",
+        client: "Telecontrol demorou mais que o limite configurado para responder.",
+        suggestion: "Reprocessar após estabilização da API externa.",
+        payload: { correlationId: "20260616-API-TIMEOUT-F01", rotina: "OS", etapa: "ENVIO_API", status: "ERROR", timeoutMs: 10000 }
+      }
+    ];
+
+    var daySeries = [
+      { h: 54, s: "ok" }, { h: 38, s: "ok" }, { h: 28, s: "ok" }, { h: 64, s: "warn" },
+      { h: 42, s: "ok" }, { h: 72, s: "warn" }, { h: 34, s: "ok" }, { h: 88, s: "bad" },
+      { h: 53, s: "ok" }, { h: 47, s: "ok" }, { h: 69, s: "warn" }, { h: 36, s: "ok" },
+      { h: 92, s: "bad" }, { h: 61, s: "warn" }
+    ];
+
+    var historySeries = [
+      31, 24, 22, 28, 35, 42, 38, 26, 21, 33, 47, 55, 49, 36, 28,
+      24, 44, 52, 68, 63, 39, 31, 27, 25, 34, 48, 71, 66, 53, 41
+    ];
+
+    var uptimeSeries = [
+      "ok", "ok", "ok", "ok", "warn", "ok", "ok", "ok", "bad", "warn", "ok",
+      "ok", "ok", "ok", "ok", "ok", "warn", "ok", "ok", "ok", "ok"
+    ];
+
+    var diagnosticHours = ["00", "02", "04", "06", "08", "10", "12", "14", "16", "18", "20", "22"];
+    var diagnosticSeries = [
+      { name: "Resposta API", color: "#e3343f", values: [1.2, 1.1, .9, 1.3, 1.8, 2.2, 2.0, 3.1, 4.9, 3.7, 2.6, 2.4], max: 6, suffix: "s" },
+      { name: "Tempo total", color: "#2563eb", values: [2.1, 1.9, 1.6, 2.4, 3.0, 3.5, 3.1, 4.8, 6.8, 5.4, 4.0, 3.6], max: 8, suffix: "s" },
+      { name: "Memória JVM", color: "#6d5dfc", values: [48, 47, 46, 49, 52, 55, 57, 61, 68, 64, 62, 61], max: 100, suffix: "%" },
+      { name: "Erros", color: "#b7791f", values: [1, 0, 0, 1, 2, 3, 2, 5, 9, 6, 4, 3], max: 12, suffix: "" }
+    ];
+
+    var dailyErrors = [2, 1, 0, 3, 1, 4, 7, 2, 1, 5, 3, 8, 4, 9];
+
+    var heatmapRows = [
+      { name: "OS", values: [2, 3, 6, 8, 9, 4, 3] },
+      { name: "Peças", values: [1, 2, 3, 5, 4, 2, 1] },
+      { name: "Lista", values: [2, 3, 4, 6, 7, 3, 2] },
+      { name: "Produtos", values: [0, 1, 1, 1, 2, 1, 0] }
+    ];
+
+    var scatterPoints = [
+      { name: "Produtos", x: 1.2, y: 0, c: "#168a5b" },
+      { name: "Postos", x: .9, y: 0, c: "#168a5b" },
+      { name: "Peças", x: 2.5, y: 5, c: "#b7791f" },
+      { name: "Lista", x: 3.1, y: 7, c: "#b7791f" },
+      { name: "OS", x: 6.8, y: 9, c: "#e3343f" },
+      { name: "Pedidos", x: 1.4, y: 0, c: "#168a5b" }
+    ];
+
+    function pointsFor(values, width, height, pad, max) {
+      var step = (width - pad.left - pad.right) / (values.length - 1);
+      var pts = [];
+      for (var i = 0; i < values.length; i++) {
+        var x = pad.left + step * i;
+        var y = height - pad.bottom - (values[i] / max) * (height - pad.top - pad.bottom);
+        pts.push({ x: x, y: y, v: values[i] });
+      }
+      return pts;
+    }
+
+    function linePath(pts) {
+      return pts.map(function (p, i) { return (i ? "L" : "M") + p.x.toFixed(1) + " " + p.y.toFixed(1); }).join("");
+    }
+
+    function areaPath(pts, height, pad) {
+      return linePath(pts) + "L" + pts[pts.length - 1].x.toFixed(1) + " " + (height - pad.bottom) + "L" + pts[0].x.toFixed(1) + " " + (height - pad.bottom) + "Z";
+    }
+
+    function renderMultiLineChart() {
+      var svg = document.getElementById("diagnosticLine");
+      if (!svg) return;
+      var width = 920, height = 316;
+      var pad = { left: 46, right: 22, top: 22, bottom: 34 };
+      var html = "";
+      html += '<rect class="chart-threshold" x="' + pad.left + '" y="22" width="' + (width - pad.left - pad.right) + '" height="58"></rect>';
+      for (var g = 0; g < 5; g++) {
+        var y = pad.top + g * ((height - pad.top - pad.bottom) / 4);
+        html += '<path class="chart-grid-line" d="M' + pad.left + ' ' + y + 'H' + (width - pad.right) + '"></path>';
+      }
+      for (var h = 0; h < diagnosticHours.length; h++) {
+        var x = pad.left + h * ((width - pad.left - pad.right) / (diagnosticHours.length - 1));
+        html += '<text class="chart-axis-text" x="' + x + '" y="304" text-anchor="middle">' + diagnosticHours[h] + 'h</text>';
+      }
+      html += '<text class="chart-axis-text" x="8" y="32">risco</text><text class="chart-axis-text" x="8" y="157">normal</text><text class="chart-axis-text" x="8" y="280">baixo</text>';
+      for (var s = 0; s < diagnosticSeries.length; s++) {
+        var serie = diagnosticSeries[s];
+        var pts = pointsFor(serie.values, width, height, pad, serie.max);
+        if (s < 2) html += '<path class="series-area" fill="' + serie.color + '" d="' + areaPath(pts, height, pad) + '"></path>';
+        html += '<path class="series-line" stroke="' + serie.color + '" d="' + linePath(pts) + '"></path>';
+        for (var p = 0; p < pts.length; p++) {
+          if (p === 8 || p === pts.length - 1) {
+            html += '<circle class="chart-point" fill="' + serie.color + '" cx="' + pts[p].x + '" cy="' + pts[p].y + '" r="4"><title>' + serie.name + ': ' + pts[p].v + serie.suffix + '</title></circle>';
+          }
+        }
+      }
+      html += '<foreignObject x="676" y="28" width="210" height="78"><div xmlns="http://www.w3.org/1999/xhtml" class="chart-callout"><strong>16h: ponto de atenção</strong><span>Tempo total e resposta API cruzaram a faixa de risco. Erros acompanharam a subida.</span></div></foreignObject>';
+      svg.innerHTML = html;
+    }
+
+    function renderSingleLineChart(targetId, values, color, max) {
+      var svg = document.getElementById(targetId);
+      if (!svg) return;
+      var width = 360, height = 164;
+      var pad = { left: 24, right: 10, top: 16, bottom: 24 };
+      var pts = pointsFor(values, width, height, pad, max);
+      var html = "";
+      for (var g = 0; g < 4; g++) {
+        var y = pad.top + g * ((height - pad.top - pad.bottom) / 3);
+        html += '<path class="chart-grid-line" d="M' + pad.left + ' ' + y + 'H' + (width - pad.right) + '"></path>';
+      }
+      html += '<path class="series-area" fill="' + color + '" d="' + areaPath(pts, height, pad) + '"></path>';
+      html += '<path class="series-line" stroke="' + color + '" d="' + linePath(pts) + '"></path>';
+      for (var i = 0; i < pts.length; i++) {
+        if (values[i] >= 7) html += '<circle class="chart-point" fill="' + color + '" cx="' + pts[i].x + '" cy="' + pts[i].y + '" r="4"><title>' + values[i] + ' erros</title></circle>';
+      }
+      svg.innerHTML = html;
+    }
+
+    function renderHeatmap() {
+      var wrap = document.getElementById("heatmap");
+      if (!wrap) return;
+      var days = ["Rotina", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+      wrap.innerHTML = days.map(function (d) { return "<span>" + d + "</span>"; }).join("");
+      for (var r = 0; r < heatmapRows.length; r++) {
+        var row = heatmapRows[r];
+        wrap.innerHTML += "<span>" + row.name + "</span>";
+        for (var i = 0; i < row.values.length; i++) {
+          var v = row.values[i];
+          var cls = v >= 7 ? "hot" : v >= 4 ? "mid" : "";
+          wrap.innerHTML += '<i class="heat-cell ' + cls + '" title="' + row.name + ': ' + v + ' ocorrências"></i>';
+        }
+      }
+    }
+
+    function renderScatter() {
+      var svg = document.getElementById("scatterChart");
+      if (!svg) return;
+      var html = "";
+      var width = 360, height = 220, pad = { left: 34, right: 18, top: 16, bottom: 30 };
+      for (var g = 0; g < 4; g++) {
+        var y = pad.top + g * ((height - pad.top - pad.bottom) / 3);
+        html += '<path class="chart-grid-line" d="M' + pad.left + ' ' + y + 'H' + (width - pad.right) + '"></path>';
+      }
+      html += '<text class="chart-axis-text" x="180" y="214" text-anchor="middle">tempo médio</text>';
+      html += '<text class="chart-axis-text" x="4" y="24">erros</text>';
+      for (var i = 0; i < scatterPoints.length; i++) {
+        var p = scatterPoints[i];
+        var x = pad.left + (p.x / 7) * (width - pad.left - pad.right);
+        var y = height - pad.bottom - (p.y / 10) * (height - pad.top - pad.bottom);
+        html += '<circle class="chart-point" fill="' + p.c + '" cx="' + x + '" cy="' + y + '" r="' + (p.name === "OS" ? 8 : 6) + '"><title>' + p.name + ': ' + p.x + 's / ' + p.y + ' erros</title></circle>';
+        html += '<text class="chart-axis-text" x="' + (x + 9) + '" y="' + (y + 4) + '">' + p.name + '</text>';
+      }
+      svg.innerHTML = html;
+    }
+
+    function renderVolume() {
+      var max = 190;
+      var chart = document.getElementById("volumeChart");
+      var labels = document.getElementById("volumeLabels");
+      chart.innerHTML = '<div class="axis"><span>190</span><span>95</span><span>0</span></div>';
+      labels.innerHTML = "<span></span>";
+      for (var i = 0; i < volume.length; i++) {
+        var row = volume[i];
+        var stack = document.createElement("div");
+        stack.className = "bar-stack";
+        stack.title = row.h + " - sucesso: " + row.ok + ", alerta: " + row.warn + ", erro: " + row.bad;
+        stack.innerHTML =
+          '<div class="bar bad" style="height:' + Math.max(4, row.bad / max * 100) + '%"></div>' +
+          '<div class="bar warn" style="height:' + Math.max(4, row.warn / max * 100) + '%"></div>' +
+          '<div class="bar ok" style="height:' + Math.max(4, row.ok / max * 100) + '%"></div>';
+        chart.appendChild(stack);
+        labels.innerHTML += "<span>" + row.h + "</span>";
+      }
+    }
+
+    function renderRoutines(active) {
+      var body = document.getElementById("routineRows");
+      body.innerHTML = "";
+      for (var i = 0; i < routines.length; i++) {
+        var r = routines[i];
+        var tr = document.createElement("tr");
+        tr.className = active === r.name.toLowerCase() ? "active" : "";
+        tr.innerHTML =
+          '<td><span class="routine-name"><i class="status-dot ' + r.status + '"></i>' + r.name + '</span></td>' +
+          "<td>" + r.processed + "</td>" +
+          "<td>" + r.errors + "</td>" +
+          "<td>" + r.avg + "</td>" +
+          "<td>" + r.success + "</td>";
+        body.appendChild(tr);
+      }
+    }
+
+    function renderLatency() {
+      var wrap = document.getElementById("latencyRows");
+      wrap.innerHTML = "";
+      for (var i = 0; i < latency.length; i++) {
+        var l = latency[i];
+        var row = document.createElement("div");
+        row.className = "latency-row";
+        row.innerHTML =
+          "<strong>" + l.name + "</strong>" +
+          '<div class="latency-track"><div class="latency-fill ' + l.level + '" style="width:' + l.width + '%"></div></div>' +
+          "<span>" + l.value + "</span>";
+        wrap.appendChild(row);
+      }
+    }
+
+    function setEvent(index) {
+      var ev = events[index];
+      document.getElementById("detailTitle").textContent = ev.title;
+      document.getElementById("clientMessage").textContent = ev.client;
+      document.getElementById("suggestion").textContent = ev.suggestion;
+      document.getElementById("payload").textContent = JSON.stringify(ev.payload, null, 2);
+      var buttons = document.querySelectorAll(".event");
+      for (var i = 0; i < buttons.length; i++) buttons[i].classList.toggle("active", i === index);
+    }
+
+    function renderTimeline() {
+      var wrap = document.getElementById("timeline");
+      wrap.innerHTML = "";
+      for (var i = 0; i < events.length; i++) {
+        (function (idx) {
+          var ev = events[idx];
+          var btn = document.createElement("button");
+          btn.className = "event" + (idx === 0 ? " active" : "");
+          btn.innerHTML =
+            "<time>" + ev.time + "</time>" +
+            "<div><strong>" + ev.title + "</strong><span>" + ev.text + "</span></div>" +
+            '<span class="pill ' + ev.status + '">' + ev.status.toUpperCase() + "</span>";
+          btn.onclick = function () { setEvent(idx); };
+          wrap.appendChild(btn);
+        })(i);
+      }
+    }
+
+    function renderDayBars(targetId, series) {
+      var wrap = document.getElementById(targetId);
+      if (!wrap) return;
+      wrap.innerHTML = "";
+      for (var i = 0; i < series.length; i++) {
+        var item = typeof series[i] === "number" ? { h: series[i], s: series[i] > 62 ? "bad" : series[i] > 45 ? "warn" : "ok" } : series[i];
+        var bar = document.createElement("i");
+        bar.className = item.s === "ok" ? "" : item.s;
+        bar.style.height = Math.max(10, item.h) + "%";
+        bar.title = "Dia " + (i + 1) + ": " + item.h + "%";
+        wrap.appendChild(bar);
+      }
+    }
+
+    function renderUptime(target, mode) {
+      var wrap = typeof target === "string" ? document.getElementById(target) : target;
+      if (!wrap) return;
+      wrap.innerHTML = "";
+      var local = mode === "warn"
+        ? ["ok", "warn", "ok", "ok", "bad", "warn", "ok", "ok", "ok", "warn", "ok", "ok", "ok", "ok", "ok", "warn", "ok", "ok", "ok", "ok", "ok"]
+        : uptimeSeries;
+      for (var i = 0; i < local.length; i++) {
+        var cell = document.createElement("i");
+        cell.className = local[i] === "ok" ? "" : local[i];
+        cell.title = "Dia " + (i + 1) + ": " + local[i];
+        wrap.appendChild(cell);
+      }
+    }
+
+    function bindViewTabs() {
+      var buttons = document.querySelectorAll(".view-tabs button");
+      var panels = document.querySelectorAll(".tab-panel");
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = function () {
+          var view = this.getAttribute("data-view");
+          for (var b = 0; b < buttons.length; b++) buttons[b].classList.remove("active");
+          for (var p = 0; p < panels.length; p++) panels[p].classList.remove("active");
+          this.classList.add("active");
+          document.getElementById("view-" + view).classList.add("active");
+        };
+      }
+    }
+
+    function bindNav() {
+      var buttons = document.querySelectorAll(".nav button");
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = function () {
+          for (var j = 0; j < buttons.length; j++) buttons[j].classList.remove("active");
+          this.classList.add("active");
+          var module = this.getAttribute("data-module");
+          renderRoutines(module === "geral" ? "" : module);
+        };
+      }
+    }
+
+    function bindActions() {
+      document.getElementById("simulate").onclick = function () {
+        var mem = 55 + Math.floor(Math.random() * 18);
+        var send = (1.7 + Math.random() * 1.4).toFixed(1);
+        var api = (1.1 + Math.random() * 1.8).toFixed(1);
+        document.getElementById("memory").textContent = mem + "%";
+        document.getElementById("sendTime").textContent = send + "s";
+        document.getElementById("apiTime").textContent = api + "s";
+      };
+
+      document.getElementById("reprocess").onclick = function () {
+        document.getElementById("healthText").textContent = "Reprocessando";
+        setTimeout(function () {
+          document.getElementById("healthText").textContent = "Atenção";
+          setEvent(1);
+        }, 700);
+      };
+
+      document.getElementById("period").onchange = function () {
+        document.getElementById("successRate").textContent = this.value === "6" ? "97.1%" : this.value === "12" ? "95.8%" : "94.7%";
+      };
+    }
+
+    renderVolume();
+    renderRoutines("");
+    renderLatency();
+    renderTimeline();
+    renderMultiLineChart();
+    renderSingleLineChart("dailyErrorLine", dailyErrors, "#e3343f", 10);
+    renderHeatmap();
+    renderScatter();
+    renderDayBars("dayBars", daySeries);
+    renderDayBars("historyBars", historySeries);
+    renderUptime("uptimeGrid");
+    var miniGrids = document.querySelectorAll("[data-mini]");
+    for (var m = 0; m < miniGrids.length; m++) renderUptime(miniGrids[m], miniGrids[m].getAttribute("data-mini"));
+    bindNav();
+    bindViewTabs();
+    bindActions();
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "components": [
+    {
+      "id": "218_html5Component",
+      "files": [
+        "CrmBonusController.js",
+        "modalCrmBonus.jsp",
+        "modalCrmCampanhas.jsp"
+      ],
+      "nuGdg": 218,
+      "entryPoints": {
+        "consult": "modalCrmBonus.jsp",
+        "apply": "modalCrmCampanhas.jsp"
+      },
+      "actions": {
+        "user-verify": "109",
+        "pin-send": "110",
+        "pin-validate": "111",
+        "pin-resend": "112",
+        "bonus-available": "113",
+        "bonus-submit": "115",
+        "bonus-campaigns": "116",
+        "bonus-submit-final": "114"
+      },
+      "hub": {
+        "endpoint": "https://hub.zaya.it/webhook/crm-bonus",
+        "token": "REDACTED_IN_REPO"
+      },
+      "notes": "O componente garante AD_REQHASH na TGFCAB e passa requesthash via URL para os modals. Modal usa ActionButtonsSP.executeJava como proxy para o HUB. Contem heuristicas para parsing de respostas do Sankhya W e persistencia de campanhas via jx.executar."
+    },
+    {
+      "id": "219_html5Component",
+      "files": [
+        "CrmBonusController.js",
+        "modalCrmBonus.jsp",
+        "modalCrmCampanhas.jsp"
+      ],
+      "nuGdg": 218,
+      "notes": "Conteudo identico ao componente 218; verificar nuGdg value se o componente 219 precisar de um nuGdg diferente."
+    }
+  ]
+}
+

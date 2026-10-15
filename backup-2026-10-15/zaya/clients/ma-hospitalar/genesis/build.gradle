@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya.mahospitalar'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Base das dependencias locais Sankhya no Windows.
+def baseLibPath = 'C:/zy-tools/modulos-sankhya/Dependencias'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/sankhya/java']
+        }
+        resources {
+            srcDirs = ['src/main/java', 'src/sankhya/java']
+            exclude '**/*.java'
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+dependencies {
+    // ===== LIBS LOCAIS SANKHYA (compileOnly) =====
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.17.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'jdom:jdom:1.1'
+    implementation 'org.jdom:jdom2:2.0.6.1'
+    implementation 'commons-codec:commons-codec:1.16.0'
+
+    // ===== TESTES =====
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags 'smoke'
+    }
+}
+
+jar {
+    archiveFileName = 'MA-HOSPITALAR-GENESIS-1.0-SNAPSHOT.jar'
+}
+
+tasks.register('smokeTest', Test) {
+    group = 'verification'
+    description = 'Executa smoke tests manuais contra APIs externas quando explicitamente habilitados.'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'smoke'
+    }
+    shouldRunAfter test
+}

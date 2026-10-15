@@ -1,0 +1,6 @@
+interface:
+  display_name: "Zaya Sankhya Development"
+  short_description: "Roteia contexto mínimo para projetos Zaya e Sankhya"
+  default_prompt: "Use $zaya-sankhya-development para classificar a tarefa, carregar somente o contexto necessário e validar a mudança."
+policy:
+  allow_implicit_invocation: true

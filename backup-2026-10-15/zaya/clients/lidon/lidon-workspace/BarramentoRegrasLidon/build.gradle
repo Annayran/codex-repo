@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.projects'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+def baseLibPath = 'C:/zy-tools/modulos-sankhya/Dependencias'
+
+dependencies {
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src']
+            exclude '**/*.java'
+            exclude '**/*.class'
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    archiveFileName = 'BarramentosRegrasLidon.jar'
+}

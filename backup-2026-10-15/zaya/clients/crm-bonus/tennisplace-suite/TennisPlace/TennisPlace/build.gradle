@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.zaya'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Base das suas dependências locais no Windows
+// Novo caminho fornecido pelo usuário (substitua se quiser outro):
+// C:/zy-tools/modulos-sankhya/Dependencias
+def baseLibPath = 'C:/zy-tools/modulos-sankhya/Dependencias'
+
+// Caso você queira manter separado como antes:
+// def path1 = 'C:/Users/Casa/Desktop/Desenvolvimento/Dependencias/Jar'
+// def path2 = 'C:/Users/Casa/Desktop/Desenvolvimento/Dependencias4_35/4_35'
+
+dependencies {
+
+    // ===== LIBS LOCAIS (compileOnly) =====
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    // Assumindo que a antiga pasta Dependencias4_35/4_35 agora está sob o novo baseLibPath
+    // Ajuste este caminho caso a estrutura de pastas seja diferente.
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+
+
+    // ===== TESTES =====
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    archiveFileName = 'CRMBonusIntegration.jar'
+}

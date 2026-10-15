@@ -1,0 +1,14 @@
+<svg width="640" height="720" viewBox="0 0 640 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(64 20)">
+      <g>
+        <path d="M94 346L212 142H270L153 346H94Z" fill="#FFFFFF"/>
+        <path d="M173 346L226 253L260 311L239 346H173Z" fill="#FFFFFF"/>
+        <path d="M275 142H430L396 203H240L275 142Z" fill="#32D74B"/>
+        <path d="M230 230H374L344 284H201L230 230Z" fill="#FFFFFF"/>
+      </g></g>
+  <text x="115" y="545" font-family="Montserrat, Arial, sans-serif" font-size="74" font-weight="800" font-style="italic" fill="#FFFFFF" letter-spacing="2">AF</text>
+  <text x="230" y="545" font-family="Montserrat, Arial, sans-serif" font-size="64" font-weight="500" font-style="italic" fill="#FFFFFF" letter-spacing="2">HEALTH</text>
+  <line x1="125" y1="600" x2="235" y2="600" stroke="#32D74B" stroke-width="5"/>
+  <text x="265" y="617" font-family="Montserrat, Arial, sans-serif" font-size="44" font-weight="500" fill="#32D74B" letter-spacing="30">LAB</text>
+  <line x1="438" y1="600" x2="548" y2="600" stroke="#32D74B" stroke-width="5"/>
+</svg>

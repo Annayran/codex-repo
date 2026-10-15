@@ -1,0 +1,114 @@
+plugins {
+    id 'base'
+}
+
+allprojects {
+    group = 'br.com.zaya.skala'
+    version = '1.0-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'windows-1252'
+        options.compilerArgs << '-Xlint:unchecked'
+    }
+
+    def sankhyaLibPath = System.getenv('SANKHYA_LIBS') ?: 'C:/zy-tools/modulos-sankhya/Dependencias'
+
+    dependencies {
+        compileOnly fileTree(dir: "${sankhyaLibPath}/Jar", include: ['*.jar'])
+        compileOnly fileTree(dir: "${sankhyaLibPath}/4_35", include: ['*.jar'])
+        compileOnly fileTree(dir: "${sankhyaLibPath}/4_35/4_35", include: ['*.jar'])
+        compileOnly fileTree(dir: "${sankhyaLibPath}/jrepository", include: ['*.jar'])
+        compileOnly fileTree(dir: "${sankhyaLibPath}/platina", include: ['*.jar'])
+
+        testImplementation fileTree(dir: "${sankhyaLibPath}/Jar", include: ['*.jar'])
+        testImplementation fileTree(dir: "${sankhyaLibPath}/4_35", include: ['*.jar'])
+        testImplementation fileTree(dir: "${sankhyaLibPath}/4_35/4_35", include: ['*.jar'])
+        testImplementation fileTree(dir: "${sankhyaLibPath}/jrepository", include: ['*.jar'])
+        testImplementation fileTree(dir: "${sankhyaLibPath}/platina", include: ['*.jar'])
+
+        implementation 'com.google.code.gson:gson:2.10.1'
+        implementation 'commons-codec:commons-codec:1.16.0'
+        implementation 'org.apache.commons:commons-lang3:3.12.0'
+        implementation 'org.jdom:jdom:1.1.3'
+        implementation 'org.modelmapper:modelmapper:3.0.0'
+
+        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src']
+            }
+            resources {
+                srcDirs = ['src']
+                exclude '**/*.java'
+                exclude '**/*.class'
+            }
+        }
+        test {
+            java {
+                srcDirs = ['test']
+            }
+            resources {
+                srcDirs = ['test/resources']
+            }
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+project(':SKL-Core-Model') {
+    sourceSets {
+        main {
+            java {
+                srcDirs = ['src', 'ejbsrc']
+            }
+            resources {
+                srcDirs = ['src', 'ejbsrc']
+                exclude '**/*.java'
+                exclude '**/*.class'
+            }
+        }
+    }
+
+    jar {
+        archiveBaseName = 'skl-core-model'
+    }
+}
+
+project(':SKL-Core-Action') {
+    dependencies {
+        implementation project(':SKL-Core-Model')
+    }
+
+    jar {
+        archiveBaseName = 'skl-core-action'
+    }
+}
+
+project(':SKL-Core-VC') {
+    jar {
+        archiveBaseName = 'skl-core-vc'
+    }
+}
+
+tasks.register('distAll') {
+    group = 'build'
+    description = 'Build all Skala/Sankhya module jars.'
+    dependsOn subprojects.collect { it.tasks.named('jar') }
+}

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"tech.skala.core.commons.constants"},{"l":"tech.skala.core.util.string"}]

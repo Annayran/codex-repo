@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "0.1",
+  "requestId": "example-request-001",
+  "caseType": "REPORTED_INSUFFICIENT_STOCK",
+  "environment": {"clientRef": "fictitious-client", "environmentRef": "fictitious-test", "stage": "HOMOLOGATION"},
+  "document": {"id": "EXAMPLE-123", "companyRef": "EXAMPLE-1"},
+  "report": {
+    "attemptedOperation": "Confirmação de pedido - exemplo fictício",
+    "description": "Usuário relata impedimento por estoque. Não há diagnóstico confirmado.",
+    "displayedMessage": "Estoque insuficiente - mensagem ilustrativa",
+    "occurredAt": "2026-09-28T10:00:00-03:00"
+  },
+  "collectedAt": "2026-09-28T10:05:00-03:00",
+  "evidence": [{
+    "id": "example-evidence-001",
+    "category": "STOCK",
+    "source": "Exemplo sem consulta real",
+    "capturedAt": "2026-09-28T10:05:00-03:00",
+    "status": "UNAVAILABLE",
+    "summary": "Fonte e regra de disponibilidade ainda não homologadas; nenhum saldo foi inferido."
+  }],
+  "gaps": ["Regra de disponibilidade pendente", "Versão ERP desconhecida", "Exceção original não capturada"]
+}

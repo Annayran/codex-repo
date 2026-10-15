@@ -1,0 +1,24 @@
+.gradle/
+build/
+**/.gradle/
+**/build/
+.idea/
+*.iml
+.DS_Store
+*.class
+
+# Zaya.IT managed baseline
+.gradle/
+build/
+out/
+bin/
+.idea/
+*.iml
+*.class
+*.log
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx

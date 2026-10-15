@@ -1,0 +1,82 @@
+plugins {
+    id 'java'
+}
+
+group = providers.gradleProperty('projectGroup').getOrElse('br.com.zaya')
+version = providers.gradleProperty('projectVersion').getOrElse('1.0')
+
+def companyCode = providers.gradleProperty('companyCode').getOrElse('ZAYA')
+def projectCode = providers.gradleProperty('projectCode').getOrElse('PROJ')
+def projectTitle = providers.gradleProperty('projectTitle').getOrElse(rootProject.name)
+
+if (!(companyCode ==~ /[A-Z0-9]+/)) {
+    throw new GradleException('companyCode deve usar somente A-Z e 0-9')
+}
+if (!(projectCode ==~ /[A-Z0-9]+/)) {
+    throw new GradleException('projectCode deve usar somente A-Z e 0-9')
+}
+if (!(version.toString() ==~ /[0-9]+\.[0-9]+/)) {
+    throw new GradleException('projectVersion deve seguir MAJOR.MINOR, por exemplo 1.0')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+tasks.named('processResources') {
+    exclude '**/README.md'
+}
+
+repositories {
+    mavenCentral()
+}
+
+def sankhyaDependenciesDir = providers.gradleProperty('sankhyaDependenciesDir')
+        .orElse(providers.environmentVariable('SANKHYA_DEPENDENCIES_DIR'))
+        .getOrElse('C:/dev/zaya/platform/modulos-sankhya/Dependencias')
+def sankhyaVersionDir = providers.gradleProperty('sankhyaVersionDir').getOrElse('')
+
+if (!file(sankhyaDependenciesDir).isDirectory()) {
+    throw new GradleException(
+            "Diretorio de dependencias Sankhya nao encontrado: ${sankhyaDependenciesDir}"
+    )
+}
+
+dependencies {
+    compileOnly fileTree(
+            dir: "${sankhyaDependenciesDir}/Jar",
+            include: ['*.jar'],
+            exclude: ['pdfbox*.jar', 'fontbox*.jar']
+    )
+
+    if (sankhyaVersionDir) {
+        compileOnly fileTree(
+                dir: "${sankhyaDependenciesDir}/${sankhyaVersionDir}",
+                include: ['*.jar'],
+                exclude: ['pdfbox*.jar', 'fontbox*.jar']
+        )
+    }
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+jar {
+    archiveFileName = "${companyCode}-${projectCode}-V${version}.jar"
+    manifest {
+        attributes(
+                'Implementation-Title': projectTitle,
+                'Implementation-Version': version,
+                'Implementation-Vendor': 'Zaya.IT',
+                'Built-By': 'Zaya.IT Build'
+        )
+    }
+}

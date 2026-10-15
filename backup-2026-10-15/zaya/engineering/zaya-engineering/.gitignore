@@ -1,0 +1,50 @@
+# Runtime / telemetry
+.zaya/runtime/
+.zaya/telemetry/
+
+# Secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+credentials.*
+secrets.*
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build
+build/
+target/
+out/
+.gradle/
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Database dumps / exports
+*.dump
+*.dmp
+*.bak
+*.sql.gz
+
+# Potential local client data
+local/
+private/
+tmp/
+
+# Other temporary editor files
+*.tmp
+*.swp
+*~
