@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <exportInfo>
+    <exportTime>13/10/2026 15:33:13</exportTime>
+    <systemVersion>4.36b159</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser></dbUser>
+      <urlConnection></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 23.26.3.0.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 19c EE High Perf Release 19.0.0.0.0 - Production
+Version 19.26.0.0.0]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <instances>
+    <instance name="AD_GENREQLOG" isUpdate="false">
+      <instanceDescription>Historico HTTP Genesis</instanceDescription>
+      <tableInfo name="AD_GENREQLOG" sequenceType="M">
+        <category><![CDATA[Integração Genesis]]></category>
+        <tableDescription>Historico HTTP Genesis</tableDescription>
+        <primaryKey>
+          <IDREQ />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREQ" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="36">
+          <description>Identificador da requisicao</description>
+        </field>
+        <field name="EXECUCAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="36">
+          <description>Identificador da execucao</description>
+        </field>
+        <field name="FLUXO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="50">
+          <description>Fluxo da integracao</description>
+        </field>
+        <field name="CONTEXTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="1000">
+          <description>Contexto da operacao</description>
+        </field>
+        <field name="CHAVE_CONTROLE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Chave do controle tecnico</description>
+        </field>
+        <field name="CHAVE_MOVIMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Chave do movimento de nota</description>
+        </field>
+        <field name="ENTIDADE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="50">
+          <description>Entidade consultada</description>
+        </field>
+        <field name="IDCONSULTADO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="100">
+          <description>ID utilizado na consulta</description>
+        </field>
+        <field name="METODO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Metodo HTTP</description>
+        </field>
+        <field name="ENDPOINT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="1000">
+          <description>Caminho do endpoint sem autenticacao</description>
+        </field>
+        <field name="DH_INICIO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Inicio da requisicao</description>
+        </field>
+        <field name="DH_FIM" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Fim da requisicao</description>
+        </field>
+        <field name="DURACAO_MS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="19">
+          <description>Duracao em milissegundos</description>
+        </field>
+        <field name="HTTP_STATUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description>Codigo HTTP retornado</description>
+        </field>
+        <field name="CLASSIFICACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="30">
+          <description>Classificacao do retorno</description>
+        </field>
+        <field name="IDRETORNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="100">
+          <description>ID retornado pela Genesis</description>
+        </field>
+        <field name="REQUISICAO" systemField="N" dataType="C" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description>Corpo enviado sanitizado</description>
+        </field>
+        <field name="RESPOSTA" systemField="N" dataType="C" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description>Corpo recebido sanitizado</description>
+        </field>
+        <field name="IDENTIDADE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Estado da validacao de identidade</description>
+        </field>
+        <field name="PERSISTENCIA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Estado da persistencia local</description>
+        </field>
+        <field name="DH_PERSISTENCIA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora de persistencia</description>
+        </field>
+        <field name="DETALHE" systemField="N" dataType="C" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description>Detalhe da aplicacao local</description>
+        </field>
+      </fields>
+    </instance>
+  </instances>
+</metadata>

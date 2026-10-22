@@ -1,0 +1,1171 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<metadata>
+  <exportInfo>
+    <exportTime>27/08/2026 11:14:39</exportTime>
+    <systemVersion>4.36b126</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser />
+      <urlConnection />
+      <jdbcDriver>Oracle JDBC driver 19.26.0.0.0</jdbcDriver>
+      <DBMS>Oracle Database 19c</DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <instances>
+    <instance name="GENBASE" isUpdate="false">
+      <instanceDescription>Base Instalada Genesis</instanceDescription>
+      <tableInfo name="AD_GENBASE" sequenceType="A" sequenceField="IDBASE" presentationField="DESCRICAO">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Base Instalada Genesis</tableDescription>
+        <primaryKey>
+          <IDBASE />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Identificador da carga</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="DESCRICAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="120">
+          <description>Descricao da base</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="AMBIENTE" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Ambiente de origem</description>
+          <options>
+            <option value="HML">Homologacao</option>
+            <option value="PRD">Producao</option>
+            <option value="A_CONFIRMAR">A confirmar</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="DTREFERENCIA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Data de referencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="STATUS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da carga</description>
+          <options>
+            <option value="PREPARACAO">Preparacao</option>
+            <option value="IMPORTADA">Importada</option>
+            <option value="CONCILIADA">Conciliada</option>
+            <option value="ATIVA">Ativa</option>
+            <option value="INATIVA">Inativa</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="ORIGEM" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="30">
+          <description>Origem dos dados</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="ARQUIVOORIGEM" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="255">
+          <description>Nome do arquivo de origem</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCARGA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Data e hora da carga</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CODUSUCARGA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Usuario responsavel pela carga</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="OBSERVACAO" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Observacoes da carga</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="GENDOMINIO" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENDOMINIO" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+        <relation entityName="GENCLIENTE" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENCLIENTE" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+        <relation entityName="GENSECTOR" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENSECTOR" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+        <relation entityName="GENMATERIAL" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENMATERIAL" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+        <relation entityName="GENEMPRESA" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENEMPRESA" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+        <relation entityName="GENMODELO" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENMODELO" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+        <relation entityName="GENITEMMAT" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="AD_GENITEMMAT" />
+          <fields>
+            <field localName="IDBASE" targetName="IDBASE" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+    <instance name="GENDOMINIO" isUpdate="false">
+      <instanceDescription>Dominios da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENDOMINIO" sequenceType="A" sequenceField="IDREGDOM" presentationField="NOME">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Dominios da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGDOM />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGDOM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="TIPODOMINIO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Tipo do dominio</description>
+          <options>
+            <option value="PROPRIEDADE">Propriedade</option>
+            <option value="SITUACAO">Situacao</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID do dominio na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="NOME" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Nome</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODIGOSANKHYA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Codigo correspondente no Sankhya</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="GENCLIENTE" isUpdate="false">
+      <instanceDescription>Clientes da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENCLIENTE" sequenceType="A" sequenceField="IDREGCLI" presentationField="RAZAOSOCIAL">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Clientes da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGCLI />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGCLI" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID do cliente na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CODIGOEXTERNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Codigo externo legado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="RAZAOSOCIAL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Razao social</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="NOMEFANTASIA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Nome fantasia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CNPJ" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>CNPJ</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CPF" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="14">
+          <description>CPF</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="ENDERECO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="255">
+          <description>Logradouro</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="ENDERECONUMERO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="30">
+          <description>Numero</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="ENDERECOBAIRRO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="120">
+          <description>Bairro</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="ENDERECOCIDADE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="120">
+          <description>Cidade</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="ENDERECOUF" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="2">
+          <description>UF</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CEP" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>CEP</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="TELEFONE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="30">
+          <description>Telefone</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="EMAIL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="255">
+          <description>E-mail</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Parceiro Sankhya conciliado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCONCILIACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora da conciliacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="GENSECTOR" isUpdate="false">
+      <instanceDescription>Setores da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENSECTOR" sequenceType="A" sequenceField="IDREGSET" presentationField="NOME">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Setores da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGSET />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGSET" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID do setor na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDCLIENTEGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID Genesis do cliente</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CODIGOEXTERNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Codigo externo do setor</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="NOME" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Nome do setor</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Parceiro Sankhya conciliado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="PADRAO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="1">
+          <description>Setor padrao para novos envios</description>
+          <options>
+            <option value="S">Sim</option>
+            <option value="N">Nao</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCONCILIACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora da conciliacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="GENMATERIAL" isUpdate="false">
+      <instanceDescription>Materiais da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENMATERIAL" sequenceType="A" sequenceField="IDREGMAT" presentationField="NOME">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Materiais da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGMAT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGMAT" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID do material na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CODIGOEXTERNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Codigo externo legado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="NOME" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Nome do material</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="TIPO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="30">
+          <description>Tipo do material</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="GRAURISCO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="30">
+          <description>Grau de risco</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODGRUPOPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Grupo de produto Sankhya</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCONCILIACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora da conciliacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="GENEMPRESA" isUpdate="false">
+      <instanceDescription>Empresas da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENEMPRESA" sequenceType="A" sequenceField="IDREGEMP" presentationField="NOMEFANTASIA">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Empresas da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGEMP />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID da empresa na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CODIGOEXTERNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Codigo externo legado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="RAZAOSOCIAL" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Razao social</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="NOMEFANTASIA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Nome fantasia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="FORNECEDOR" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="1">
+          <description>Indicador de fornecedor</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="FABRICANTE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="1">
+          <description>Indicador de fabricante</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="MARCASANKHYA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="100">
+          <description>Marca correspondente no Sankhya</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCONCILIACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora da conciliacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="GENMODELO" isUpdate="false">
+      <instanceDescription>Modelos da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENMODELO" sequenceType="A" sequenceField="IDREGMOD" presentationField="NOME">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Modelos da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGMOD />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGMOD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID do modelo na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDEMPRESAGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID Genesis do fabricante</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDMATERIALGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID Genesis do material</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="CODIGOEXTERNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Codigo externo legado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="NOME" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Nome do modelo</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status na Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="NRANVISA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="50">
+          <description>Registro ANVISA</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Produto Sankhya conciliado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCONCILIACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora da conciliacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+    <instance name="GENITEMMAT" isUpdate="false">
+      <instanceDescription>Itens instalados da Base Genesis</instanceDescription>
+      <tableInfo name="AD_GENITEMMAT" sequenceType="A" sequenceField="IDREGITEM" presentationField="NSERIE">
+        <category>[ZAYA.IT] - Base Instalada Genesis</category>
+        <tableDescription>Itens instalados da Base Genesis</tableDescription>
+        <primaryKey>
+          <IDREGITEM />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGITEM" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>Identificador local</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDBASE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Base instalada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">S</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID do item-material Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDMODELOGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="18">
+          <description>ID Genesis do modelo</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="IDCLIENTEGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="18">
+          <description>ID Genesis do cliente</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="IDSETORGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="18">
+          <description>ID Genesis do setor</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODIGOEXTERNO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Codigo externo legado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="NSERIE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="150">
+          <description>Numero de serie</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="RM" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="100">
+          <description>Identificador RM legado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSGENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="20">
+          <description>Status do item</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="VALORUNITARIO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Valor unitario</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DATAAQUISICAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data de aquisicao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DATAINSTALACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data de instalacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="ULTIMAINSTALACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Ultima instalacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="MARCA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="100">
+          <description>Marca informada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="OUTROS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="255">
+          <description>Referencia ou observacao legada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="GARANTIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Garantia em meses</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="IDPROPRIEDADEGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="18">
+          <description>ID da propriedade Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DONO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="50">
+          <description>Descricao da propriedade</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="IDSITUACAOGEN" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="18">
+          <description>ID da situacao Genesis</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="SITUACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="50">
+          <description>Descricao da situacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Empresa Sankhya conciliada</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODPARC" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Parceiro Sankhya conciliado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Produto Sankhya conciliado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="NUNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Numero unico relacionado</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="SEQUENCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Sequencia do item</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="CHAVEMOVIMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S" size="200">
+          <description>Chave do movimento Sankhya</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="STATUSCONC" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="20">
+          <description>Status da conciliacao</description>
+          <options>
+            <option value="PENDENTE">Pendente</option>
+            <option value="CONCILIADO">Conciliado</option>
+            <option value="ERRO">Erro</option>
+          </options>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">S</prop>
+          </properties>
+        </field>
+        <field name="MENSAGEMCONC" systemField="N" dataType="C" presentationType="T" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Motivo da pendencia</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+        <field name="DHCONCILIACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora da conciliacao</description>
+          <properties>
+            <prop name="visivel">S</prop>
+            <prop name="readOnly">N</prop>
+            <prop name="requerido">N</prop>
+          </properties>
+        </field>
+      </fields>
+    </instance>
+  </instances>
+</metadata>

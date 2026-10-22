@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <exportInfo>
+    <exportTime>13/10/2026 15:33:13</exportTime>
+    <systemVersion>4.36b159</systemVersion>
+    <systemCharSet>ISO-8859-1</systemCharSet>
+    <dbMetadata>
+      <dbUser></dbUser>
+      <urlConnection></urlConnection>
+      <jdbcDriver><![CDATA[Oracle JDBC driver 23.26.3.0.0]]></jdbcDriver>
+      <DBMS><![CDATA[Oracle - Oracle Database 19c EE High Perf Release 19.0.0.0.0 - Production
+Version 19.26.0.0.0]]></DBMS>
+    </dbMetadata>
+  </exportInfo>
+  <instances>
+    <instance name="AD_GENAPICTRL" isUpdate="false">
+      <instanceDescription>Controle de Cadastros Genesis</instanceDescription>
+      <tableInfo name="AD_GENAPICTRL" sequenceType="M">
+        <category><![CDATA[Integração Genesis]]></category>
+        <tableDescription>Controle de Cadastros Genesis</tableDescription>
+        <primaryKey>
+          <IDINTGENESIS />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDINTGENESIS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N" size="19">
+          <description>Identificador do controle</description>
+        </field>
+        <field name="CHAVE_MOVIMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="200">
+          <description>Chave unica do controle</description>
+        </field>
+        <field name="TIPO_MOVIMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Tipo do controle</description>
+        </field>
+        <field name="STATUS_INTEGRACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="30">
+          <description>Estado atual da integracao</description>
+        </field>
+        <field name="TENTATIVAS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="10">
+          <description>Quantidade de tentativas</description>
+        </field>
+        <field name="HTTP_STATUS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="5">
+          <description>Codigo HTTP retornado</description>
+        </field>
+        <field name="MENSAGEM_ERRO" systemField="N" dataType="C" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="N" allowNull="S">
+          <description>Mensagem da integracao</description>
+        </field>
+        <field name="PAYLOAD_HASH" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="64">
+          <description>Hash do payload confirmado</description>
+        </field>
+        <field name="PROTOCOLO_GENESIS" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="100">
+          <description>ID confirmado na Genesis</description>
+        </field>
+        <field name="ORIGEM_ITEM" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="30">
+          <description>Origem do item</description>
+        </field>
+        <field name="DH_INCLUSAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Data e hora de inclusao</description>
+        </field>
+        <field name="DH_ATUALIZACAO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Data e hora de atualizacao</description>
+        </field>
+        <field name="DH_ENVIO" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S">
+          <description>Data e hora de envio</description>
+        </field>
+        <field name="NUNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="S" size="10">
+          <description>Nota de origem sem relacionamento</description>
+        </field>
+      </fields>
+    </instance>
+  </instances>
+</metadata>
