@@ -1,0 +1,126 @@
+// Copia de entrega ajustada: somente Genesis, SDK via SNK_LIB; sem tarefas de outro modulo.
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// Layout legado: src/ flat (sem src/main/java)
+// Migrar para src/main/java quando conveniente
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']; include 'br/com/zaya/mahospitalar/genesis/**'
+        }
+        resources {
+            srcDirs = ['src']; include 'br/com/zaya/mahospitalar/genesis/**'
+            exclude '**/*.java'
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test']; include 'br/com/zaya/mahospitalar/genesis/**'
+        }
+    }
+}
+
+// Caminho para as libs Sankhya (Sankhya SDK nao esta no Maven Central)
+def baseLibPath = System.getenv('SNK_LIB')
+if (!baseLibPath) throw new GradleException('Defina SNK_LIB para o SDK licenciado local.')
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Sankhya SDK - JARs locais (compileOnly pois sao fornecidos pelo servidor)
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    // Libs javax locais (fallback se SNK_LIB nao estiver disponivel)
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+}
+
+test {
+    useJUnitPlatform { excludeTags 'smoke' }
+}
+
+tasks.register('smokeTest', Test) {
+    description = 'Executa smoke tests Genesis opt-in (requer propriedades e segredo externos).'
+    group = 'verification'
+    useJUnitPlatform { includeTags 'smoke' }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    systemProperties System.properties.findAll { key, value ->
+        key.toString().startsWith('mah.genesis.smoke.')
+    }
+    shouldRunAfter test
+    onlyIf { System.getenv('MAH_GENESIS_SMOKE') == 'S' }
+}
+
+jar {
+    archiveFileName = 'MAHospitalar.jar'
+}
+
+
+tasks.register('genesisPackage', Zip) {
+    dependsOn test, jar
+    archiveFileName = 'MAHospitalar-Genesis.zip'
+    from(jar.archiveFile) { into 'java' }
+    from('webapp/genesis') { into 'webapp/genesis' }
+    from('sql/genesis') { into 'sql/genesis' }
+    from('docs/genesis') { into 'docs/genesis' }
+}
+def generatedGenesisDashboard = file("${buildDir}/generated/genesis-dashboard")
+
+tasks.register('prepareGenesisDashboard') {
+    inputs.files('webapp/genesis/index.jsp', 'webapp/genesis/assets/genesis.css',
+            'webapp/genesis/assets/genesis.js', 'webapp/genesis/assets/diagnosis.js')
+    outputs.file(file("${generatedGenesisDashboard}/index.jsp"))
+    doLast {
+        generatedGenesisDashboard.mkdirs()
+        def jsp = file('webapp/genesis/index.jsp').getText('UTF-8')
+        def css = file('webapp/genesis/assets/genesis.css').getText('UTF-8')
+        def javascript = file('webapp/genesis/assets/genesis.js').getText('UTF-8')
+        def diagnosis = file('webapp/genesis/assets/diagnosis.js').getText('UTF-8')
+        jsp = jsp.replace('<script src="assets/diagnosis.js"></script>',
+                '<script type="text/javascript">\n' + diagnosis + '\n</script>')
+        jsp = jsp.replace('<link rel="stylesheet" href="assets/genesis.css">',
+                '<style type="text/css">\n' + css + '\n</style>')
+        jsp = jsp.replace('<script src="assets/genesis.js"></script>',
+                '<script type="text/javascript">\n' + javascript + '\n</script>')
+        file("${generatedGenesisDashboard}/index.jsp").write(jsp, 'UTF-8')
+    }
+}
+
+tasks.register('genesisDashboardPackage', Zip) {
+    dependsOn tasks.named('prepareGenesisDashboard')
+    includeEmptyDirs = false
+    archiveFileName = 'MAHospitalar-Genesis-Dashboard-JSP-Corrigido.zip'
+    destinationDirectory = file("${buildDir}/genesis-dashboard-package")
+    from(generatedGenesisDashboard)
+}
+
