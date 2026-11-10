@@ -1,0 +1,84 @@
+/*
+  Diagnóstico somente leitura para uma baixa de inventário.
+  Preencher P_NUNOTA abaixo. Não é a regra final de bloqueio.
+
+  Limitações conhecidas:
+  - agrega lote/controle;
+  - usa ESTOQUE - RESERVADO da TGFEST;
+  - depende da validação de empresa/local e do significado de RESERVADO;
+  - não substitui a homologação da regra 26.
+*/
+
+WITH PARAMETROS AS (
+    SELECT CAST(NULL AS NUMBER) AS P_NUNOTA
+      FROM DUAL
+),
+MOVIMENTO AS (
+    SELECT CAB.NUNOTA,
+           CAB.CODEMP,
+           ITE.CODPROD,
+           ITE.CODLOCALORIG AS CODLOCAL,
+           SUM(NVL(ITE.QTDNEG, 0)) AS QTD_MOVIMENTO
+      FROM PARAMETROS P
+      JOIN TGFCAB CAB
+        ON CAB.NUNOTA = P.P_NUNOTA
+      JOIN TGFITE ITE
+        ON ITE.NUNOTA = CAB.NUNOTA
+     GROUP BY CAB.NUNOTA,
+              CAB.CODEMP,
+              ITE.CODPROD,
+              ITE.CODLOCALORIG
+),
+FILA AS (
+    SELECT CODPROD,
+           CODLOCALORIG AS CODLOCAL,
+           SUM(NVL(QTDPENDENTE, 0)) AS QTD_RESERVADA_FILA
+      FROM TESTE.AD_VGFRESEST
+     GROUP BY CODPROD,
+              CODLOCALORIG
+),
+ESTOQUE AS (
+    SELECT EST.CODEMP,
+           EST.CODPROD,
+           EST.CODLOCAL,
+           SUM(NVL(EST.ESTOQUE, 0) - NVL(EST.RESERVADO, 0)) AS SALDO_FISICO_LIQUIDO
+      FROM TGFEST EST
+      JOIN TGFLOC LOC
+        ON LOC.CODLOCAL = EST.CODLOCAL
+     WHERE EST.TIPO = 'P'
+       AND EST.CODPARC = 0
+       AND EST.ATIVO = 'S'
+       AND NVL(LOC.AD_ESTCOM, 'N') = 'S'
+     GROUP BY EST.CODEMP,
+              EST.CODPROD,
+              EST.CODLOCAL
+)
+SELECT M.NUNOTA,
+       M.CODEMP,
+       M.CODPROD,
+       M.CODLOCAL,
+       M.QTD_MOVIMENTO,
+       NVL(E.SALDO_FISICO_LIQUIDO, 0) AS SALDO_FISICO_LIQUIDO,
+       NVL(F.QTD_RESERVADA_FILA, 0) AS QTD_RESERVADA_FILA,
+       NVL(E.SALDO_FISICO_LIQUIDO, 0) - NVL(F.QTD_RESERVADA_FILA, 0) AS SALDO_LIVRE_ANTES_MOV,
+       NVL(E.SALDO_FISICO_LIQUIDO, 0)
+           - NVL(F.QTD_RESERVADA_FILA, 0)
+           - M.QTD_MOVIMENTO AS SALDO_LIVRE_APOS_MOV,
+       CASE
+           WHEN NVL(E.SALDO_FISICO_LIQUIDO, 0)
+                  - NVL(F.QTD_RESERVADA_FILA, 0)
+                  - M.QTD_MOVIMENTO < 0
+               THEN 'REVISAR_BLOQUEIO'
+           ELSE 'SALDO_APARENTE_SUFICIENTE'
+       END AS RESULTADO_DIAGNOSTICO
+  FROM MOVIMENTO M
+  LEFT JOIN FILA F
+    ON F.CODPROD = M.CODPROD
+   AND F.CODLOCAL = M.CODLOCAL
+  LEFT JOIN ESTOQUE E
+    ON E.CODEMP = M.CODEMP
+   AND E.CODPROD = M.CODPROD
+   AND E.CODLOCAL = M.CODLOCAL
+ ORDER BY M.CODPROD,
+          M.CODLOCAL;
+

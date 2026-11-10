@@ -1,0 +1,56 @@
+sourceSets.main.java.srcDir('ejbsrc')
+tasks.named('compileJava') {
+    dependsOn('gerarInterfaces')
+    doFirst { source(fileTree('ejbsrc') { include '**/*.java' }.files) }
+}
+def snk = rootProject.findProperty('snkLib') ?: System.getenv('SNK_LIB')
+def sdkOficial = rootProject.findProperty('zycbSdkOficial')?.toString()?.toBoolean() ?: false
+def nfeJar = rootProject.findProperty('zycbNfeJar') ?: System.getenv('ZYCB_NFE_JAR')
+if (nfeJar && (!file(nfeJar).isFile() || !nfeJar.toString().toLowerCase().endsWith('.jar'))) {
+    throw new GradleException('Informe um JAR NF-e licenciado existente para complementar o SDK oficial.')
+}
+if (snk && sdkOficial) throw new GradleException('Escolha o SDK local ou o SDK oficial; não misture os dois perfis de compilação.')
+if (!snk && !sdkOficial) {
+    throw new GradleException('Informe SNK_LIB/-PsnkLib com 4_36 e api_outros, ou escolha explicitamente -PzycbSdkOficial=true para compilar com o SDK fornecido pelo Add-on Studio (sem comprovar runtime 4.36b88).')
+}
+if (snk) {
+    ['4_36', 'api_outros'].each { pasta ->
+        def diretorio = file("${snk}/${pasta}")
+        if (!diretorio.isDirectory() || fileTree(dir: diretorio, include: ['*.jar']).isEmpty()) {
+            throw new GradleException('SDK local incompleto: são necessários JARs em 4_36 e api_outros.')
+        }
+    }
+} else {
+    logger.lifecycle('SDK oficial do Add-on Studio selecionado. A compatibilidade com o runtime 4.36b88 continua pendente de homologação.')
+}
+dependencies {
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    if (snk) {
+        compileOnly fileTree(dir: "${snk}/4_36", include: ['*.jar'])
+        compileOnly fileTree(dir: "${snk}/api_outros", include: ['*.jar'])
+        testImplementation fileTree(dir: "${snk}/4_36", include: ['*.jar'])
+        testImplementation fileTree(dir: "${snk}/api_outros", include: ['*.jar'])
+    } else {
+        // O SDK Maven não contém necessariamente a API NF-e. Origem/versão do complemento
+        // devem ser registradas na validação; isso não comprova o runtime 4.36b88.
+        if (nfeJar) { compileOnly files(nfeJar) }
+        // Tipos ERP são necessários nos testes de certificado; nunca empacotar SDK no produto.
+        testImplementation files(configurations.compileClasspath)
+    }
+    compileOnly fileTree(dir: rootProject.projectDir.parentFile.path + '/lib', include: ['*.jar'])
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'com.h2database:h2:2.2.224'
+}
+test { useJUnitPlatform() }
+tasks.matching { it.name == 'copyLibs' }.configureEach {
+    doLast {
+        copy {
+            from configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.findAll {
+                it.moduleVersion.id.group in ['com.google.code.gson', 'org.apache.httpcomponents', 'commons-codec', 'commons-logging']
+            }.collect { it.file }
+            into file("${buildDir}/libsProject")
+        }
+    }
+}

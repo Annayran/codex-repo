@@ -1,0 +1,8 @@
+[
+  {
+    "principal": "integracao-exemplo",
+    "tenant": "cliente-exemplo",
+    "environment": "homologacao",
+    "approvedPolicies": []
+  }
+]

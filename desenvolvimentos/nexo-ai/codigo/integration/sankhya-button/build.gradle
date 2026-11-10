@@ -1,0 +1,104 @@
+plugins { id 'java' }
+
+// Only the explicit temporary-session build includes an individual expiring fixture credential.
+if (providers.gradleProperty('nexoProvisioningDir').isPresent()) {
+    def provisionDir = file(providers.gradleProperty('nexoProvisioningDir').get())
+    sourceSets.main.resources.srcDir(provisionDir)
+    // Keep credential-bearing intermediate classes/resources and JAR inside the private session ACL.
+    layout.buildDirectory = new File(provisionDir.parentFile, 'build')
+}
+
+group = providers.gradleProperty('projectGroup').get()
+version = providers.gradleProperty('projectVersion').get()
+def companyCode = providers.gradleProperty('companyCode').get()
+def projectCode = providers.gradleProperty('projectCode').get()
+def projectTitle = providers.gradleProperty('projectTitle').get()
+if (!(companyCode ==~ /[A-Z0-9]+/) || !(projectCode ==~ /[A-Z0-9]+/) || !(version.toString() ==~ /[0-9]+\.[0-9]+/)) {
+    throw new GradleException('Invalid corporate artifact identity/version')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 8
+}
+
+def dependencyRoot = providers.gradleProperty('sankhyaDependenciesDir')
+        .orElse(providers.environmentVariable('SANKHYA_DEPENDENCIES_DIR'))
+        .getOrElse('C:/dev/zaya/platform/modulos-sankhya/Dependencias')
+def versionDir = providers.gradleProperty('sankhyaVersionDir').get()
+def sdkDir = file("${dependencyRoot}/${versionDir}")
+def explicitSdk = providers.gradleProperty('sankhyaExtensionsJar')
+if (explicitSdk.isPresent() && !file(explicitSdk.get()).isFile()) {
+    throw new GradleException('Explicit extensions JAR does not exist')
+}
+if (!explicitSdk.isPresent() && !sdkDir.isDirectory()) {
+    throw new GradleException('Configured local Sankhya SDK directory does not exist')
+}
+// Never package ERP runtime dependencies or pick up a second, older modelcore from Jar/.
+dependencies {
+    if (explicitSdk.isPresent()) compileOnly files(explicitSdk.get())
+    else compileOnly fileTree(dir: sdkDir, include: ['*.jar'], exclude: ['pdfbox*.jar', 'fontbox*.jar'])
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+jar {
+    archiveFileName = "${companyCode}-${projectCode}-V${version}.jar"
+    manifest {
+        attributes('Implementation-Title': projectTitle, 'Implementation-Version': version,
+                'Implementation-Vendor': 'Zaya.IT', 'Built-By': 'Zaya.IT Build')
+    }
+}
+// Existing dependency-free transport checks, without adding JUnit or changing the ERP SDK.
+def transportCheck = tasks.register('transportCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.ButtonTransportChecks'
+    systemProperty 'jdk.net.unixdomain.tmpdir', layout.buildDirectory.get().asFile.absolutePath
+}
+tasks.named('check') { dependsOn transportCheck }
+def monitoringCheck = tasks.register('monitoringCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.MonitoringTelemetryChecks'
+}
+tasks.named('check') { dependsOn monitoringCheck }
+def scheduledLogCheck = tasks.register('scheduledLogCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath + sourceSets.main.compileClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.monitoring.ScheduledLogChecks'
+    systemProperty 'nexo.test.dir', layout.buildDirectory.dir('log-monitor-checks').get().asFile.absolutePath
+}
+tasks.named('check') { dependsOn scheduledLogCheck }
+def logSignalCheck = tasks.register('logSignalCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.LogSignalChecks'
+}
+tasks.named('check') { dependsOn logSignalCheck }
+def temporarySessionCheck = tasks.register('temporarySessionCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath + sourceSets.main.compileClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.TemporarySessionChecks'
+}
+tasks.named('check') { dependsOn temporarySessionCheck }
+def stockCollectorCheck = tasks.register('stockCollectorCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath + sourceSets.main.compileClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.StockCollectorChecks'
+}
+tasks.named('check') { dependsOn stockCollectorCheck }
+def incidentLogCheck = tasks.register('incidentLogCheck', JavaExec) {
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.engineering.nexobutton.IncidentLogChecks'
+}
+tasks.named('check') { dependsOn incidentLogCheck }
+// Tests are dependency-free executable assertions, run by transportCheck instead of a JUnit engine.
+tasks.named('test') { enabled = false }

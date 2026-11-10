@@ -1,0 +1,8 @@
+-- ARQUIVO DESCONTINUADO PARA O DEPLOY EM DOIS NIVEIS.
+--
+-- Nao executar. A primeira homologacao nao cria tabelas, campos ou indices.
+-- A janela confirmada permanece em 120 dias uteis no pacote de automacao.
+-- O bloqueio utiliza os registros existentes de AD_TGFSEQENT.
+--
+-- Qualquer parametrizacao futura deve ser cadastrada pelo mecanismo suportado
+-- pelo modelo de personalizacao Sankhya efetivamente adotado no ambiente.

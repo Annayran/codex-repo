@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rateio de despesas</title><link rel="stylesheet" href="modal-rateio.css"></head>
+<body>
+<main id="rateio">
+  <header><p class="eyebrow">BELMICRO</p><h1>Rateio de despesas</h1><p id="contexto">Carregando documento…</p></header>
+  <p id="mensagem" role="status" aria-live="polite"></p>
+  <fieldset id="entrada" disabled>
+    <legend>Composição</legend>
+    <label>Modalidade<select id="modalidade"><option value="MANUAL">Manual</option><option value="CRITERIO">Critério cadastrado</option></select></label>
+    <div id="painel-criterio" hidden><label>Critério e versão<select id="criterio"><option value="">Selecione</option></select></label></div>
+    <div id="painel-manual"><table><thead><tr><th>Empresa</th><th>Centro de resultado</th><th>Percentual global</th><th></th></tr></thead><tbody id="destinos"></tbody></table><button id="adicionar" type="button">Adicionar destino</button><p class="ajuda">Inclua a parcela da empresa de origem. Os percentuais devem somar 100%.</p></div>
+    <label id="painel-motivo" hidden>Motivo do recálculo<textarea id="motivo" maxlength="255" rows="2"></textarea></label>
+  </fieldset>
+  <div class="acoes"><button id="simular" type="button" disabled>Simular</button><button id="atualizar" type="button" disabled>Atualizar contexto</button><button type="button" disabled title="Disponível após a integração e homologação da efetivação.">Efetivar rateio</button></div>
+  <section aria-labelledby="titulo-resultado"><h2 id="titulo-resultado">Análise da simulação</h2><p id="situacao">Nenhuma simulação carregada.</p><div id="resultado"></div></section>
+</main>
+<script src="modal-rateio.js"></script>
+<!-- The registered Sankhya component must supply rateioBridge and rateioOrigem before starting. -->
+</body></html>

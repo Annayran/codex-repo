@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <exportInfo>
+    <exportTime>13/07/2026 00:00:00</exportTime>
+    <systemVersion>4.35</systemVersion>
+    <systemCharSet>UTF-8</systemCharSet>
+    <dbMetadata><dbUser>SANKHYA</dbUser><DBMS>Oracle</DBMS></dbMetadata>
+  </exportInfo>
+  <instances>
+    <instance name="AD_MAH_PD_CONFIG" isUpdate="false">
+      <instanceDescription><![CDATA[MAH - Configuracao Preco Dinamico]]></instanceDescription>
+      <tableInfo name="AD_MAH_PD_CONFIG" sequenceType="M">
+        <category><![CDATA[MAH_PRECO_DINAMICO]]></category>
+        <telaDescription><![CDATA[MA Hospitalar - Preco Dinamico]]></telaDescription>
+        <tableDescription><![CDATA[Configuracao do motor por empresa]]></tableDescription>
+        <primaryKey><CODEMP /></primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Empresa]]></description><properties><prop name="PKOrder"><![CDATA[1]]></prop><prop name="UIGroupName"><![CDATA[Configuracao]]></prop></properties></field>
+        <field name="EVENTOLIB" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Evento Liberacao]]></description><properties><prop name="UIGroupName"><![CDATA[Liberacao]]></prop></properties></field>
+        <field name="CAMPO_MCMIN" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Campo Fisico MC Minima]]></description><properties><prop name="UIGroupName"><![CDATA[Liberacao]]></prop></properties></field>
+        <field name="FORMULAVERSAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Versao Formula]]></description><properties><prop name="UIGroupName"><![CDATA[Controle]]></prop></properties></field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Ativo]]></description><options><option value="S" default="S"><![CDATA[Sim]]></option><option value="N"><![CDATA[Nao]]></option></options><properties><prop name="UIGroupName"><![CDATA[Controle]]></prop></properties></field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Data Alteracao]]></description><properties><prop name="UIGroupName"><![CDATA[Auditoria]]></prop></properties></field>
+        <field name="CODUSUALTER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Usuario Alteracao]]></description><properties><prop name="UIGroupName"><![CDATA[Auditoria]]></prop></properties></field>
+      </fields>
+      <relationShip>
+        <relation entityName="Empresa" type="I" insert="N" update="N" remove="N"><targetInfo systemInstance="S" tableName="TSIEMP"/><fields><field localName="CODEMP" targetName="CODEMP"/></fields></relation>
+        <relation entityName="Usuario" type="I" insert="N" update="N" remove="N"><targetInfo systemInstance="S" tableName="TSIUSU"/><fields><field localName="CODUSUALTER" targetName="CODUSU"/></fields></relation>
+      </relationShip>
+    </instance>
+
+    <instance name="AD_MAH_PD_REGRA" isUpdate="false">
+      <instanceDescription><![CDATA[MAH - Regras de Preco Dinamico]]></instanceDescription>
+      <tableInfo name="AD_MAH_PD_REGRA" sequenceType="A" sequenceField="IDREGRA">
+        <category><![CDATA[MAH_PRECO_DINAMICO]]></category>
+        <telaDescription><![CDATA[MA Hospitalar - Preco Dinamico]]></telaDescription>
+        <tableDescription><![CDATA[Creditos, fundos, despesas e vigencias por cenario]]></tableDescription>
+        <primaryKey><IDREGRA /></primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDREGRA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[ID]]></description><properties><prop name="PKOrder"><![CDATA[1]]></prop><prop name="UIGroupName"><![CDATA[Identificacao]]></prop></properties></field>
+        <field name="CODEMP" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Empresa]]></description><properties><prop name="UIGroupName"><![CDATA[Cenario]]></prop></properties></field>
+        <field name="GRUPOPRECO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Grupo Preco]]></description><options><option value="PR1"><![CDATA[PR1]]></option><option value="PR2"><![CDATA[PR2]]></option><option value="PR3"><![CDATA[PR3]]></option><option value="PR4"><![CDATA[PR4]]></option></options><properties><prop name="UIGroupName"><![CDATA[Cenario]]></prop></properties></field>
+        <field name="ORIGEMAQUISICAO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Origem Aquisicao]]></description><options><option value="NACIONAL"><![CDATA[Nacional]]></option><option value="IMPORTACAO_DIRETA"><![CDATA[Importacao Direta]]></option><option value="IMPORTADO_INTERNO"><![CDATA[Importado Mercado Interno]]></option></options><properties><prop name="UIGroupName"><![CDATA[Cenario]]></prop></properties></field>
+        <field name="ESCOPODESTINO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Escopo Destino]]></description><options><option value="QUALQUER"><![CDATA[Qualquer]]></option><option value="INTERNA"><![CDATA[Interna]]></option><option value="INTERESTADUAL"><![CDATA[Interestadual]]></option><option value="UF"><![CDATA[UF Especifica]]></option></options><properties><prop name="UIGroupName"><![CDATA[Cenario]]></prop></properties></field>
+        <field name="UFDESTINO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[UF Destino]]></description><properties><prop name="UIGroupName"><![CDATA[Cenario]]></prop></properties></field>
+        <field name="BASECREDICMS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Base Credito ICMS]]></description><options><option value="N"><![CDATA[Nao aplica]]></option><option value="V"><![CDATA[Venda]]></option><option value="C"><![CDATA[Custo]]></option></options><properties><prop name="UIGroupName"><![CDATA[ICMS]]></prop></properties></field>
+        <field name="PERCCREDICMS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Credito ICMS]]></description><properties><prop name="UIGroupName"><![CDATA[ICMS]]></prop></properties></field>
+        <field name="PERCFUNDES" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% FUNDes]]></description><properties><prop name="UIGroupName"><![CDATA[ICMS]]></prop></properties></field>
+        <field name="PERCFUNDOSOCIAL" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Fundo Social]]></description><properties><prop name="UIGroupName"><![CDATA[ICMS]]></prop></properties></field>
+        <field name="BASECREDPIS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Base Credito PIS]]></description><options><option value="N"><![CDATA[Nao aplica]]></option><option value="V"><![CDATA[Venda]]></option><option value="C"><![CDATA[Custo]]></option></options><properties><prop name="UIGroupName"><![CDATA[PIS/COFINS]]></prop></properties></field>
+        <field name="PERCCREDPIS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Credito PIS]]></description><properties><prop name="UIGroupName"><![CDATA[PIS/COFINS]]></prop></properties></field>
+        <field name="BASECREDCOFINS" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Base Credito COFINS]]></description><options><option value="N"><![CDATA[Nao aplica]]></option><option value="V"><![CDATA[Venda]]></option><option value="C"><![CDATA[Custo]]></option></options><properties><prop name="UIGroupName"><![CDATA[PIS/COFINS]]></prop></properties></field>
+        <field name="PERCCREDCOFINS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Credito COFINS]]></description><properties><prop name="UIGroupName"><![CDATA[PIS/COFINS]]></prop></properties></field>
+        <field name="PERCDESPEXTRA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Despesas Extras]]></description><properties><prop name="UIGroupName"><![CDATA[Operacional]]></prop></properties></field>
+        <field name="PERCFRETEPADRAO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Frete Padrao]]></description><properties><prop name="UIGroupName"><![CDATA[Operacional]]></prop></properties></field>
+        <field name="PERCCOMISSAOPADRAO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[% Comissao Padrao]]></description><properties><prop name="UIGroupName"><![CDATA[Operacional]]></prop></properties></field>
+        <field name="DTINIVIGENCIA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Inicio Vigencia]]></description><properties><prop name="UIGroupName"><![CDATA[Vigencia]]></prop></properties></field>
+        <field name="DTFIMVIGENCIA" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Fim Vigencia]]></description><properties><prop name="UIGroupName"><![CDATA[Vigencia]]></prop></properties></field>
+        <field name="PRIORIDADE" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Prioridade]]></description><properties><prop name="UIGroupName"><![CDATA[Vigencia]]></prop></properties></field>
+        <field name="ATIVO" systemField="N" dataType="S" presentationType="O" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Ativo]]></description><options><option value="S"><![CDATA[Sim]]></option><option value="N"><![CDATA[Nao]]></option></options><properties><prop name="UIGroupName"><![CDATA[Vigencia]]></prop></properties></field>
+        <field name="DHALTER" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Data Alteracao]]></description><properties><prop name="UIGroupName"><![CDATA[Auditoria]]></prop></properties></field>
+        <field name="CODUSUALTER" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Usuario Alteracao]]></description><properties><prop name="UIGroupName"><![CDATA[Auditoria]]></prop></properties></field>
+      </fields>
+      <relationShip><relation entityName="Empresa" type="I" insert="N" update="N" remove="N"><targetInfo systemInstance="S" tableName="TSIEMP"/><fields><field localName="CODEMP" targetName="CODEMP"/></fields></relation></relationShip>
+    </instance>
+
+    <instance name="AD_MAH_PD_AUDITORIA" isUpdate="false">
+      <instanceDescription><![CDATA[MAH - Auditoria Preco Dinamico]]></instanceDescription>
+      <tableInfo name="AD_MAH_PD_AUDITORIA" sequenceType="A" sequenceField="IDAUDITORIA"><category><![CDATA[MAH_PRECO_DINAMICO]]></category><telaDescription><![CDATA[MA Hospitalar - Auditoria de Preco]]></telaDescription><tableDescription><![CDATA[Memorias persistidas e confirmacoes]]></tableDescription><primaryKey><IDAUDITORIA /></primaryKey></tableInfo>
+      <fields>
+        <field name="IDAUDITORIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[ID]]></description><properties><prop name="PKOrder"><![CDATA[1]]></prop></properties></field>
+        <field name="ORIGEMCALCULO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Origem Calculo]]></description></field>
+        <field name="NUNOTA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Pedido/Nota]]></description></field>
+        <field name="SEQUENCIA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Sequencia]]></description></field>
+        <field name="CODPROD" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Produto]]></description></field>
+        <field name="CENARIO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Cenario]]></description></field>
+        <field name="PRECOBASE" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Preco Base]]></description></field>
+        <field name="PRECOAPLICADO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Preco Aplicado]]></description></field>
+        <field name="RECEITALIQUIDA" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Receita Liquida]]></description></field>
+        <field name="RESULTADO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Resultado]]></description></field>
+        <field name="MARGEMCONTRIB" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Margem Contribuicao]]></description></field>
+        <field name="MARGEMALVO" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Margem Alvo/Minima]]></description></field>
+        <field name="CALCHASH" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Hash Calculo]]></description></field>
+        <field name="FORMULAVERSAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Versao Formula]]></description></field>
+        <field name="STATUSCALC" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="S"><description><![CDATA[Status]]></description></field>
+        <field name="DHCALC" systemField="N" dataType="H" presentationType="P" calculated="N" allowSearch="S" allowDefault="S" visibleOnSearch="S" allowNull="N"><description><![CDATA[Data Calculo]]></description></field>
+      </fields>
+      <relationShip />
+    </instance>
+  </instances>
+</metadata>
+

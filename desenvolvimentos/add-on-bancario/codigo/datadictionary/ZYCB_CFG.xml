@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadados xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../.gradle/metadados.xsd">
+<table name="ZYCB_CFG"><description>Configurações bancárias</description><primaryKey><field name="ID"/></primaryKey><instances><instance name="ZycbConfiguracao"><description>Configurações bancárias</description></instance></instances><fields>
+<field name="ID" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Identificador</description></field>
+<field name="CODEMP" dataType="INTEIRO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Empresa</description></field>
+<field name="CODCTABCOINT" dataType="INTEIRO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Conta interna</description></field>
+<field name="BANCO" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Banco</description></field>
+<field name="ATIVO" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Ativa</description></field>
+<field name="REVISAO" dataType="INTEIRO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Revisão</description></field>
+</fields></table>
+</metadados>

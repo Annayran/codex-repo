@@ -1,0 +1,221 @@
+{
+  "ZPM_PEDITE": {
+    "IDPED": {
+      "type": "I",
+      "size": null,
+      "label": "Pedido recebido"
+    },
+    "SEQEXT": {
+      "type": "S",
+      "size": 100,
+      "label": "Sequencia no PDF"
+    },
+    "TIPO": {
+      "type": "S",
+      "size": 100,
+      "label": "Material ou servico"
+    },
+    "CODEXT": {
+      "type": "S",
+      "size": 100,
+      "label": "Codigo externo Claro"
+    },
+    "DESCRICAO": {
+      "type": "S",
+      "size": 2000,
+      "label": "Descricao e execucao no PDF"
+    },
+    "CENTROEXT": {
+      "type": "S",
+      "size": 100,
+      "label": "Centro externo Claro"
+    },
+    "DTENTREGA": {
+      "type": "D",
+      "size": null,
+      "label": "Entrega prevista"
+    },
+    "QTDE": {
+      "type": "F",
+      "size": null,
+      "label": "Quantidade"
+    },
+    "UNEXT": {
+      "type": "S",
+      "size": 100,
+      "label": "Unidade no PDF"
+    },
+    "VLRUNIT": {
+      "type": "F",
+      "size": null,
+      "label": "Preco unitario no PDF"
+    },
+    "ALIQICMS": {
+      "type": "F",
+      "size": null,
+      "label": "Aliquota ICMS ou ISS informada"
+    },
+    "VLRICMS": {
+      "type": "F",
+      "size": null,
+      "label": "Valor ICMS ou ISS informado"
+    },
+    "ALIQST": {
+      "type": "F",
+      "size": null,
+      "label": "Aliquota ST informada"
+    },
+    "VLRST": {
+      "type": "F",
+      "size": null,
+      "label": "Valor ST informado"
+    },
+    "ALIQIPI": {
+      "type": "F",
+      "size": null,
+      "label": "Aliquota IPI informada"
+    },
+    "VLRIPI": {
+      "type": "F",
+      "size": null,
+      "label": "Valor IPI informado"
+    },
+    "TOTALITEM": {
+      "type": "F",
+      "size": null,
+      "label": "Total impresso do item"
+    },
+    "SITE": {
+      "type": "S",
+      "size": 255,
+      "label": "Identificadores de site no PDF"
+    },
+    "MUNICIPIO": {
+      "type": "S",
+      "size": 100,
+      "label": "Municipio de execucao"
+    },
+    "INICIO": {
+      "type": "S",
+      "size": 100,
+      "label": "Mes e ano inicial"
+    },
+    "TERMINO": {
+      "type": "S",
+      "size": 100,
+      "label": "Mes e ano final"
+    },
+    "PAGINA": {
+      "type": "I",
+      "size": null,
+      "label": "Pagina do item"
+    },
+    "CNPJCLI": {
+      "type": "S",
+      "size": 100,
+      "label": "CNPJ de faturamento do item"
+    },
+    "FATURAMENTO": {
+      "type": "S",
+      "size": 2000,
+      "label": "Bloco de faturamento do anexo"
+    },
+    "LOCENTREGA": {
+      "type": "S",
+      "size": 2000,
+      "label": "Bloco de entrega do anexo"
+    },
+    "PAGANEXO": {
+      "type": "I",
+      "size": null,
+      "label": "Pagina do anexo"
+    }
+  },
+  "ZPM_PEDREC": {
+    "ID": {
+      "type": "I",
+      "size": null,
+      "label": "Identificador"
+    },
+    "NUMPED": {
+      "type": "S",
+      "size": 100,
+      "label": "Numero do pedido externo"
+    },
+    "DTEMISSAO": {
+      "type": "D",
+      "size": null,
+      "label": "Data de emissao"
+    },
+    "CNPJFORN": {
+      "type": "S",
+      "size": 100,
+      "label": "CNPJ fornecedor no PDF"
+    },
+    "FORNECEDOR": {
+      "type": "S",
+      "size": 100,
+      "label": "Fornecedor no PDF"
+    },
+    "COMPRADOR": {
+      "type": "S",
+      "size": 100,
+      "label": "Comprador no PDF"
+    },
+    "CONDPAG": {
+      "type": "S",
+      "size": 255,
+      "label": "Condicao de pagamento no PDF"
+    },
+    "TOTALPDF": {
+      "type": "F",
+      "size": null,
+      "label": "Total impresso no PDF"
+    },
+    "LAYOUT": {
+      "type": "S",
+      "size": 100,
+      "label": "Versao do leitor"
+    },
+    "CNPJCLI": {
+      "type": "S",
+      "size": 100,
+      "label": "CNPJ de faturamento"
+    },
+    "ARQUIVO": {
+      "type": "S",
+      "size": 255,
+      "label": "Nome do arquivo de origem"
+    },
+    "SHA256": {
+      "type": "S",
+      "size": 100,
+      "label": "SHA256 informado pelo leitor"
+    },
+    "PAGINAS": {
+      "type": "I",
+      "size": null,
+      "label": "Quantidade de paginas"
+    },
+    "CHAVEIMP": {
+      "type": "S",
+      "size": 100,
+      "label": "Chave unica de recebimento"
+    },
+    "SITUACAO": {
+      "type": "S",
+      "size": 100,
+      "label": "Situacao do recebimento"
+    },
+    "CODUSU": {
+      "type": "I",
+      "size": null,
+      "label": "Usuario da importacao"
+    },
+    "DHIMPORT": {
+      "type": "D",
+      "size": null,
+      "label": "Data e hora da importacao - validar precisao no ambiente"
+    }
+  }
+}

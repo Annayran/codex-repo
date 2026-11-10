@@ -1,0 +1,9 @@
+target/
+**/target/
+**/build/
+**/.gradle/
+config/private/
+data/
+.env
+*.log
+knowledge/

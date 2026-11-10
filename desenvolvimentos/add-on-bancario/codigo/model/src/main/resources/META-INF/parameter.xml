@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE parameters>
+<parameters group-name="mge.zycb" data-source="br.com.sankhya.modelcore.util.MGECoreParameter" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../.gradle/parameters.xsd">
+  <parameter name="mge.zycb.habilitado" key="ZYCBHABIL" type="string" default="N" cacheable="false" required="false" module="S" description="Habilitar processamento Zaya API Boletos após homologação"/>
+</parameters>

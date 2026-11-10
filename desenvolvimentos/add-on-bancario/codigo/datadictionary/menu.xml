@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadados xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../.gradle/metadados.xsd">
+ <menu id="ZYCB_MENU" description="Zaya API Boletos" icon="/$ctx/assets/zycb.svg">
+  <ui id="ZYCB_CENTRAL" url="/$ctx/zycb.xhtml5" description="Integração bancária"/>
+  <folder id="ZYCB_TECNICO" description="Consultas técnicas">
+   <dynamicForm id="ZYCB_CFG_DF" instance="ZycbConfiguracao" description="Configurações bancárias"/>
+   <dynamicForm id="ZYCB_COB_DF" instance="ZycbCobranca" description="Cobranças"/>
+   <dynamicForm id="ZYCB_OPER_DF" instance="ZycbOperacao" description="Operações"/>
+   <dynamicForm id="ZYCB_REC_DF" instance="ZycbRecebimento" description="Recebimentos"/>
+   <dynamicForm id="ZYCB_AUDIT_DF" instance="ZycbAuditoria" description="Auditoria"/>
+  </folder>
+ </menu>
+</metadados>

@@ -1,0 +1,14 @@
+-- V1.0 / Oracle / executar SOMENTE apos importar e validar metadados em homologacao.
+-- Nao cria nem altera tabelas padrao Sankhya. DDL Oracle tem commit implicito.
+-- As duas tabelas devem ser novas e vazias. Interromper se houver objetos preexistentes.
+DECLARE
+  n NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO n FROM USER_TABLES WHERE TABLE_NAME IN ('ZPM_PEDREC','ZPM_PEDITE');
+  IF n <> 2 THEN RAISE_APPLICATION_ERROR(-20001,'Importe e valide as duas tabelas ZPM antes das constraints.'); END IF;
+  SELECT COUNT(*) INTO n FROM USER_CONSTRAINTS WHERE CONSTRAINT_NAME='ZPM_PEDREC_UK1';
+  IF n=0 THEN EXECUTE IMMEDIATE 'ALTER TABLE ZPM_PEDREC ADD CONSTRAINT ZPM_PEDREC_UK1 UNIQUE (CHAVEIMP)'; END IF;
+  SELECT COUNT(*) INTO n FROM USER_CONSTRAINTS WHERE CONSTRAINT_NAME='ZPM_PEDITE_FK1';
+  IF n=0 THEN EXECUTE IMMEDIATE 'ALTER TABLE ZPM_PEDITE ADD CONSTRAINT ZPM_PEDITE_FK1 FOREIGN KEY (IDPED) REFERENCES ZPM_PEDREC(ID)'; END IF;
+END;
+/

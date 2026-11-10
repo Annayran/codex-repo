@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadados xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../.gradle/metadados.xsd">
+<table name="ZYCB_OPER"><description>Operações bancárias</description><primaryKey><field name="ID"/></primaryKey><instances><instance name="ZycbOperacao"><description>Operações bancárias</description></instance></instances><fields>
+<field name="ID" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Identificador</description></field>
+<field name="IDCOB" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Cobrança</description></field>
+<field name="TIPO" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Tipo de operação</description></field>
+<field name="STATUS" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Situação</description></field>
+<field name="TENTATIVAS" dataType="INTEIRO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Tentativas</description></field>
+<field name="PROXEXEC" dataType="DATA_HORA" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Próxima execução</description></field>
+<field name="ERRO" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Motivo da exceção</description></field>
+</fields></table>
+</metadados>

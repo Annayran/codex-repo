@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../.gradle/scripts.xsd">
+<sql nomeTabela="ZYCB_OPER" ordem="1" executar="SE_NAO_EXISTIR" tipoObjeto="INDEX" nomeObjeto="IX_ZYCB_OPER_FILA" descricao="Indice operacional IX_ZYCB_OPER_FILA">
+<oracle><![CDATA[CREATE INDEX IX_ZYCB_OPER_FILA ON ZYCB_OPER (STATUS,PROXEXEC,DHCAD)]]></oracle>
+<mssql><![CDATA[CREATE INDEX IX_ZYCB_OPER_FILA ON ZYCB_OPER (STATUS,PROXEXEC,DHCAD)]]></mssql>
+</sql>
+<sql nomeTabela="ZYCB_OPER" ordem="2" executar="SE_NAO_EXISTIR" tipoObjeto="INDEX" nomeObjeto="IX_ZYCB_OPER_COB" descricao="Indice operacional IX_ZYCB_OPER_COB">
+<oracle><![CDATA[CREATE INDEX IX_ZYCB_OPER_COB ON ZYCB_OPER (IDCOB,SEQUENCIA)]]></oracle>
+<mssql><![CDATA[CREATE INDEX IX_ZYCB_OPER_COB ON ZYCB_OPER (IDCOB,SEQUENCIA)]]></mssql>
+</sql>
+<sql nomeTabela="ZYCB_COB" ordem="3" executar="SE_NAO_EXISTIR" tipoObjeto="INDEX" nomeObjeto="IX_ZYCB_COB_CFG" descricao="Indice operacional IX_ZYCB_COB_CFG">
+<oracle><![CDATA[CREATE INDEX IX_ZYCB_COB_CFG ON ZYCB_COB (IDCFG,ESTADO)]]></oracle>
+<mssql><![CDATA[CREATE INDEX IX_ZYCB_COB_CFG ON ZYCB_COB (IDCFG,ESTADO)]]></mssql>
+</sql>
+<sql nomeTabela="ZYCB_AUDIT" ordem="4" executar="SE_NAO_EXISTIR" tipoObjeto="INDEX" nomeObjeto="IX_ZYCB_AUDIT_CFG" descricao="Indice operacional IX_ZYCB_AUDIT_CFG">
+<oracle><![CDATA[CREATE INDEX IX_ZYCB_AUDIT_CFG ON ZYCB_AUDIT (IDCFG,DHCAD)]]></oracle>
+<mssql><![CDATA[CREATE INDEX IX_ZYCB_AUDIT_CFG ON ZYCB_AUDIT (IDCFG,DHCAD)]]></mssql>
+</sql>
+</scripts>

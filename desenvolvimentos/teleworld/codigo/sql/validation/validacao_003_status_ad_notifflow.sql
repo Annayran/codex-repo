@@ -1,0 +1,18 @@
+-- Todos os registros devem utilizar apenas os codigos configurados na lista.
+SELECT STATUS,
+       COUNT(*) AS QUANTIDADE
+  FROM AD_NOTIFFLOW
+ GROUP BY STATUS
+ ORDER BY STATUS;
+
+-- O resultado esperado e zero.
+SELECT COUNT(*) AS STATUS_INVALIDOS
+  FROM AD_NOTIFFLOW
+ WHERE STATUS IS NULL
+    OR STATUS NOT IN ('PE', 'PR', 'EN', 'ER');
+
+SELECT DATA_DEFAULT
+  FROM USER_TAB_COLUMNS
+ WHERE TABLE_NAME = 'AD_NOTIFFLOW'
+   AND COLUMN_NAME = 'STATUS';
+

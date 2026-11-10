@@ -1,0 +1,36 @@
+plugins { id 'java' }
+group = 'br.com.zaya.portomag.importador'
+version = providers.gradleProperty('projectVersion').get()
+java { sourceCompatibility = JavaVersion.VERSION_1_8; targetCompatibility = JavaVersion.VERSION_1_8 }
+def depsDir = providers.gradleProperty('sankhyaDependenciesDir').orElse(providers.environmentVariable('SANKHYA_DEPENDENCIES_DIR'))
+if (!depsDir.isPresent()) throw new GradleException('Informe -PsankhyaDependenciesDir=<diretorio da biblioteca validada>.')
+def extensionsJar = providers.gradleProperty('sankhyaExtensionsJar').orElse(providers.environmentVariable('SANKHYA_EXTENSIONS_JAR'))
+if (!extensionsJar.isPresent()) throw new GradleException('Informe -PsankhyaExtensionsJar=<SankhyaW-extensions.jar baixado do ambiente>.')
+dependencies {
+    compileOnly files(extensionsJar.get())
+    compileOnly fileTree(dir: depsDir.get(), include: ['jape-*.jar', 'mge-modelcore-*.jar'])
+}
+def java8Home = providers.gradleProperty('java8Home')
+if (!java8Home.isPresent()) throw new GradleException('Informe -Pjava8Home=<JDK 8 existente>.')
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.fork = true
+    options.forkOptions.executable = "${java8Home.get()}/bin/javac.exe"
+    options.forkOptions.jvmArgs = ['-J-Dfile.encoding=UTF-8']
+    options.compilerArgs << '-Xlint:unchecked'
+}
+tasks.withType(AbstractArchiveTask).configureEach { preserveFileTimestamps=false; reproducibleFileOrder=true }
+jar {
+    archiveFileName = "ZAYA-${providers.gradleProperty('projectCode').get()}-V${version}.jar"
+    manifest { attributes('Implementation-Version':version,'Implementation-Vendor':'Zaya.IT','Implementation-Status':'HOMOLOGACAO-PENDENTE') }
+}
+tasks.register('testModel',JavaExec) {
+    dependsOn testClasses
+    classpath=sourceSets.test.runtimeClasspath
+    mainClass='br.com.zaya.portomag.importador.model.LeituraXmlTest'
+    executable="${java8Home.get()}/bin/java.exe"
+    args file('build/test-input.xml').absolutePath
+}
+tasks.named('check') { dependsOn 'testModel' }
+// Testes independentes de JUnit: a tarefa testModel executa o contrato real em Java 8.
+tasks.named('test') { enabled=false }

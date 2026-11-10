@@ -1,0 +1,83 @@
+{
+  "id": "40d4ad39-c901-45b0-8539-24e32b158200",
+  "simulated": true,
+  "symptom": "Erro sintético de estoque",
+  "action": "CONFIRMAR_NOTA",
+  "process": "confirmation-stock",
+  "state": "HIPOTESE",
+  "facts": [
+    "Dimensões e quantidades sintéticas; nenhuma consulta Sankhya foi executada.",
+    "Reported item: product=SYNTHETIC-PRODUCT; company=SYNTHETIC-COMPANY; location=L1; expectedLocation=L1; unit=UN; stockUnit=UN; control=; stockControl=; required=10; suppliedAvailability=1; serverApprovedPolicy=true; policy=fixture-rule-v1",
+    "Collection timestamp=2026-10-06T19:11:30.707605400Z; ERP version reported=unverified-demo-version; note=987654; no ERP query executed by central service"
+  ],
+  "divergences": [
+    {
+      "kind": "DISPONIBILIDADE",
+      "detail": "Availability supplied by validated policy is below required quantity; origin not established",
+      "evidenceIds": [
+        "collected-item-1"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "kind": "ORIGEM",
+      "detail": "Origin requires event history and historical configuration",
+      "evidenceIds": [
+        "collected-item-1"
+      ]
+    }
+  ],
+  "rootCause": null,
+  "missing": [
+    "Histórico de eventos e configurações não coletado",
+    "Button collection is reported evidence; no direct ERP access or transaction-time snapshot was verified",
+    "Root-cause origin requires reviewed historical evidence; no submitted verdict is accepted",
+    "Client-specific reviewed library has not been imported"
+  ],
+  "nextVerification": "Validate dimension mappings and availability policy; obtain historical events in homologation",
+  "evidence": [
+    {
+      "id": "collected-item-1",
+      "source": "fixture://button/note/987654/item/1",
+      "version": "1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "Dimensões e quantidades sintéticas; nenhuma consulta Sankhya foi executada."
+    },
+    {
+      "id": "nexo-item-1",
+      "source": "collection://normalized-item/1",
+      "version": "fixture-button-v1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "Reported item: product=SYNTHETIC-PRODUCT; company=SYNTHETIC-COMPANY; location=L1; expectedLocation=L1; unit=UN; stockUnit=UN; control=; stockControl=; required=10; suppliedAvailability=1; serverApprovedPolicy=true; policy=fixture-rule-v1"
+    },
+    {
+      "id": "nexo-package",
+      "source": "collection://action-button",
+      "version": "fixture-button-v1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "Collection timestamp=2026-10-06T19:11:30.707605400Z; ERP version reported=unverified-demo-version; note=987654; no ERP query executed by central service"
+    }
+  ],
+  "tools": [
+    {
+      "tool": "receiveEvidencePackage",
+      "nunota": 987654,
+      "outcome": "RECEIVED_PACKAGE",
+      "elapsedMs": 1
+    },
+    {
+      "tool": "retrieveReviewedKnowledge",
+      "nunota": 987654,
+      "outcome": "documents=0",
+      "elapsedMs": 1
+    }
+  ],
+  "explanation": "Deterministic report; no model invoked."
+}

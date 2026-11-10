@@ -64,3 +64,5 @@ As páginas de cada projeto apontam para a fonte versionada disponível. A conso
 ## JARs e código decompilado
 
 A importação requer identificar a origem e a versão de cada artefato, agrupar cópias por hash e verificar as condições de redistribuição. Artefatos grandes precisam de um destino compatível com seu tamanho.
+
+[Arquivos importados e cobertura](IMPORTACAO.md)

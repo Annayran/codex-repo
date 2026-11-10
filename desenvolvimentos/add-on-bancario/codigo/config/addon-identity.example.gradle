@@ -1,0 +1,7 @@
+// Copie para .local/addon-identity.gradle e obtenha a identidade com o mantenedor.
+// Nunca use uma identidade diferente para atualizar o mesmo add-on.
+addon {
+    autoDDL=false
+    appKey = System.getenv('ZYCB_APP_KEY') ?: ''
+    parceiroNome = System.getenv('ZYCB_PARCEIRO_NOME') ?: 'Zaya'
+}

@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya.skala'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Base das dependencias locais Sankhya no Windows.
+def configuredLibPath = providers.gradleProperty('sankhyaLibPath').orNull ?: System.getenv('SANKHYA_LIB_PATH')
+def knownLibPaths = [
+        configuredLibPath,
+        'C:/dev/zaya/platform/modulos-sankhya/Dependencias',
+        'C:/dev/zy-tools/modulos-sankhya/Dependencias',
+        'C:/zy-tools/modulos-sankhya/Dependencias'
+].findAll { it }
+def baseLibPath = knownLibPaths.find { file(it).isDirectory() } ?: knownLibPaths.last()
+def sankhya435Path = file("${baseLibPath}/4_35/4_35").isDirectory()
+        ? "${baseLibPath}/4_35/4_35"
+        : "${baseLibPath}/4_35"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/sankhya/java']
+        }
+    }
+}
+
+dependencies {
+    // ===== LIBS LOCAIS SANKHYA (compileOnly) =====
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: sankhya435Path, include: ['*.jar'])
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+
+    // ===== TESTES =====
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: sankhya435Path, include: ['*.jar'])
+
+}
+
+test {
+    failOnNoDiscoveredTests = false
+}
+
+tasks.register('runScenarios', JavaExec) {
+    group = 'verification'
+    description = 'Executa os cenarios de teste do algoritmo de particionamento sem dependencias externas.'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.skala.particionamento.ParticionamentoServiceTestRunner'
+}
+
+check.dependsOn tasks.named('runScenarios')
+
+jar {
+    archiveFileName = 'PARTICIONAMENTOSKALA-1.0-SNAPSHOT.JAR'
+}
