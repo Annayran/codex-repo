@@ -1,0 +1,53 @@
+<sk-application ng-controller="ZycbController as ctrl" creation-complete="ctrl.init()">
+ <main class="zycb" id="zycb-app">
+  <header><h1>Zaya API Boletos</h1><p>Registro e recebimentos de Itaú e Santander</p></header>
+  <div class="scope"><label>Empresa <input id="company" type="number" min="1"/></label><button id="load">Carregar contas</button><select id="accounts" aria-label="Conta configurada"><option value="">Nova configuração</option></select><button id="new">Nova conta</button></div>
+  <p id="status" role="status" aria-live="polite">Informe a empresa para consultar suas configurações.</p>
+  <nav id="tabs" aria-label="Área de trabalho"><button data-tab="setup">Configuração</button><button data-tab="COBRANCAS">Cobranças</button><button data-tab="OPERACOES">Operações</button><button data-tab="RECEBIMENTOS">Recebimentos</button><button data-tab="AUDITORIA">Auditoria</button></nav>
+  <section id="setup"><h2>Ativação por conta</h2>
+   <p>Preencha os parâmetros, salve e valide a conexão. A ativação exige homologação do banco e armazenamento seguro disponível.</p>
+   <form id="config-form">
+    <fieldset><legend>1 Banco e conta</legend><div class="grid">
+     <label>Banco<select id="bank"><option value="ITAU">Itaú</option><option value="SANTANDER">Santander</option></select></label>
+     <label>Conta interna<input id="account" type="number" min="1" required/></label>
+     <label>Ambiente<select id="environment"><option value="HOMOLOGACAO">Homologação</option><option value="PRODUCAO">Produção</option></select></label>
+    </div></fieldset>
+    <fieldset><legend>2 Contrato bancário</legend><div class="grid">
+     <label data-bank="ITAU">Beneficiário Itaú<input id="beneficiary" inputmode="numeric" maxlength="12"/></label>
+     <label data-bank="ITAU">Carteira Itaú<input id="wallet" inputmode="numeric" maxlength="3"/></label>
+     <label data-bank="SANTANDER">Convênio Santander<input id="covenant" inputmode="numeric" maxlength="9"/></label>
+     <label data-bank="SANTANDER">Workspace Santander<input id="workspace" maxlength="80"/></label>
+     <label>Próximo nosso número inicial<input id="initialNumber" type="number" min="1" max="99999999" required/></label>
+    </div><p>A numeração inicial deve ser conferida com o banco. Não reutilize números do CNAB. O automático começa somente após a ativação.</p></fieldset>
+    <fieldset><legend>3 Regras financeiras</legend><div class="grid">
+     <label>Usuário técnico<input id="technicalUser" type="number" min="1" required/></label>
+     <label>TOP de baixa<input id="settlementTop" type="number" min="1" required/></label>
+     <label>Lançamento bancário<input id="bankEntry" type="number" min="1" required/></label>
+     <label>Tipos de título habilitados<input id="titleTypes" placeholder="Ex.: 3,7" required/></label>
+     <label>TOP e autorização fiscal<input id="fiscalRules" placeholder="Ex.: 1100:NFSE,1101:NFE" required/></label>
+     <label>Juros mensais em %<input id="monthlyInterestPct" type="number" min="0" max="999.99" step="0.01" value="0"/></label><label>Multa em %<input id="finePct" type="number" min="0" max="999.99" step="0.01" value="0"/></label><label>Dias após vencimento para multa<input id="fineDays" type="number" min="1" max="999" value="1"/></label><label>Quantidade por lote<input id="batchSize" type="number" min="1" max="100" value="20"/></label>
+     <label>Intervalo da consulta em minutos<input id="collectMinutes" type="number" min="1" max="1440" value="15"/></label>
+    </div><p>Regras permitidas: NFE, NFSE e CONFIRMADA. Configure somente o estágio fiscal aprovado para cada TOP.</p></fieldset>
+    <fieldset><legend>4 Entrega e homologação</legend><div class="grid">
+     <label>Conta SMTP<input id="smtp" type="number" min="0" value="0"/></label>
+     <label>Assunto do e-mail<input id="emailSubject" value="Boleto de cobrança" maxlength="120"/></label>
+     <label>Mensagem<textarea id="emailBody">Segue o boleto registrado em anexo.</textarea></label>
+    </div><label class="check"><input id="contractApproved" type="checkbox"/> Contrato, carteira, numeração, modelo de boleto e regras financeiras homologados nesta conta</label></fieldset>
+    <button type="submit">Salvar configuração</button>
+   </form>
+   <fieldset><legend>5 Credenciais protegidas</legend><p>Somente gravação. Os valores não serão exibidos novamente. Salve a configuração antes de enviar as credenciais.</p><div class="grid">
+    <label>Client ID<input id="clientId" autocomplete="off"/></label><label>Client secret<input id="clientSecret" type="password" autocomplete="new-password"/></label>
+    <label>Origem do certificado<select id="certificateSource"><option value="SANKHYA">Certificado da empresa no Sankhya</option><option value="UPLOAD">Upload protegido P12/PFX</option></select></label>
+    <p id="native-certificate-info">Usa o certificado da empresa configurada no Console NF-e do Sankhya. Não exige arquivo ou senha. Confirme o vínculo deste certificado com o banco.</p>
+    <label data-certificate-upload>Certificado A1 P12 ou PFX<input id="certificate" type="file" accept=".p12,.pfx"/></label><label data-certificate-upload>Senha do certificado<input id="certificatePassword" type="password" autocomplete="new-password"/></label>
+   </div><button id="save-credentials">Gravar credenciais</button></fieldset>
+   <fieldset><legend>6 Diagnóstico e ativação</legend><div class="actions"><button id="diagnose">Testar conexão sem emitir boleto</button><button id="health">Consultar diagnóstico</button><button id="activate">Ativar conta</button><button id="pause">Pausar novas emissões</button><button id="toggle-collection">Alternar coleta de recebimentos</button></div><pre id="health-result" aria-live="polite"></pre></fieldset>
+  </section>
+  <section id="monitor" hidden><h2 id="monitor-title"></h2><p>Até 200 registros recentes da empresa selecionada.</p><button id="refresh">Atualizar</button><div class="table-scroll"><table id="results"><thead></thead><tbody></tbody></table></div>
+   <fieldset><legend>Ação sobre o identificador selecionado</legend><div class="grid"><label>Identificador<input id="target-id"/></label><label>Comando<select id="action"><option value="ENTREGAR">Entregar ou reenviar boleto</option><option value="CANCELAR">Cancelar boleto no banco</option><option value="VENCIMENTO">Alterar vencimento</option><option value="VALOR">Alterar valor nominal</option><option value="JUROS">Alterar juros mensais em percentual</option><option value="MULTA">Alterar multa em percentual</option><option value="DESCONTO">Conceder desconto fixo até uma data</option><option value="ABATIMENTO">Alterar abatimento</option><option value="REPROCESSAR">Reprocessar falha sem envio anterior</option><option value="RESULTADO">Consultar resultado incerto sem reenviar</option><option value="REEMITIR">Reemitir após cancelamento confirmado</option></select></label><label>Valor, percentual ou vencimento<input id="action-value"/></label><label>Data limite do desconto ou início da multa<input id="action-date" type="date"/></label></div><button id="run-action">Enfileirar ação</button></fieldset>
+  </section>
+  <section><h2>Inclusão manual e acesso</h2><div class="grid"><label>NUFIN<input id="manual-fin" type="number" min="1"/></label><button id="manual-register">Validar e solicitar registro na conta selecionada</button></div>
+   <details><summary>Permissões por empresa</summary><div class="grid"><label>Usuário<input id="grant-user" type="number" min="1"/></label><label>Perfil<select id="grant-profile"><option>CONSULTA</option><option>OPERADOR</option><option>ADMIN</option></select></label><button id="grant">Conceder acesso</button></div></details>
+  </section>
+ </main>
+</sk-application>
