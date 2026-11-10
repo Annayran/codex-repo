@@ -1,0 +1,66 @@
+# Desenvolvimentos
+
+Catálogo de projetos do Codex e de fontes versionadas no backup de outubro de 2026. Cada página identifica o material disponível e as lacunas da importação.
+
+- [Add-on Bancário](add-on-bancario/README.md)
+- [Aplicativo Flutter](aplicativo-flutter/README.md)
+- [apontamento-producao](apontamento-producao/README.md)
+- [att-telecontrol](att-telecontrol/README.md)
+- [BarramentoRegrasLidon](barramentoregraslidon/README.md)
+- [Bellmicro](bellmicro/README.md)
+- [Concreaço](concreaco/README.md)
+- [Creative Like](creative-like/README.md)
+- [creative-like-suite](creative-like-suite/README.md)
+- [CriacaoNotaEst](criacaonotaest/README.md)
+- [crm-bonus](crm-bonus/README.md)
+- [crm-leitura-pdf](crm-leitura-pdf/README.md)
+- [CRMBonus](crmbonus/README.md)
+- [dashboard-os-tlc](dashboard-os-tlc/README.md)
+- [dashboards](dashboards/README.md)
+- [engineering](engineering/README.md)
+- [Exemplo de módulo Java](exemplo-de-modulo-java/README.md)
+- [Fazenda Sequoia](fazenda-sequoia/README.md)
+- [flow-contratos-servicos](flow-contratos-servicos/README.md)
+- [FlowContratosServicos](flowcontratosservicos/README.md)
+- [Font Life - Logistica](font-life-logistica/README.md)
+- [genesis](genesis/README.md)
+- [Genesis Integração](genesis-integracao/README.md)
+- [html5-dashboard](html5-dashboard/README.md)
+- [Imperial Baker](imperial-baker/README.md)
+- [importador-pedido](importador-pedido/README.md)
+- [koncili](koncili/README.md)
+- [lidon](lidon/README.md)
+- [lidon-workspace](lidon-workspace/README.md)
+- [ma-hospitalar](ma-hospitalar/README.md)
+- [momento-negociacao](momento-negociacao/README.md)
+- [NAC](nac/README.md)
+- [Nexo AI](nexo-ai/README.md)
+- [Obsidian Config](obsidian-config/README.md)
+- [Obsidian Vault](obsidian-vault/README.md)
+- [Polyvox](polyvox/README.md)
+- [polyvox-gitlab](polyvox-gitlab/README.md)
+- [polyvox-telecontrol](polyvox-telecontrol/README.md)
+- [PortoMag](portomag/README.md)
+- [Proauto](proauto/README.md)
+- [proauto-workspace](proauto-workspace/README.md)
+- [Rio Grande](rio-grande/README.md)
+- [Sankhya - MA Hospitalar](sankhya-ma-hospitalar/README.md)
+- [shared-context](shared-context/README.md)
+- [Skala](skala/README.md)
+- [skala-om-platform](skala-om-platform/README.md)
+- [teleword](teleword/README.md)
+- [Teleworld](teleworld/README.md)
+- [tennisplace](tennisplace/README.md)
+- [tennisplace-suite](tennisplace-suite/README.md)
+- [TOP Nutri](top-nutri/README.md)
+- [TQI](tqi/README.md)
+- [unclassified](unclassified/README.md)
+- [workspace-audits](workspace-audits/README.md)
+
+## Arquitetura e decisões
+
+As páginas de cada projeto apontam para a fonte versionada disponível. A consolidação do Obsidian, das instruções de agentes e das skills segue a origem de cada documento.
+
+## JARs e código decompilado
+
+A importação requer identificar a origem e a versão de cada artefato, agrupar cópias por hash e verificar as condições de redistribuição. Artefatos grandes precisam de um destino compatível com seu tamanho.
