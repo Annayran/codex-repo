@@ -18,11 +18,13 @@
 - [Teleworld](teleworld/codigo/) recebeu 82 arquivos novos ou atualizados.
 - [Skala](skala/codigo/) recebeu 42 arquivos novos ou atualizados.
 - [Polyvox](polyvox/codigo/) recebeu 57 arquivos novos ou atualizados.
-- [Sankhya - MA Hospitalar](sankhya-ma-hospitalar/codigo/) recebeu 184 arquivos novos ou atualizados.
+- [Sankhya - MA Hospitalar](sankhya-ma-hospitalar/codigo/) recebeu 269 arquivos novos ou atualizados, incluindo código React.
 
 Os caminhos internos de cada projeto preservam a estrutura da fonte. A triagem foi estática. Os builds e as validações em ambiente seguem pendentes.
 
 ## Conhecimento e artefatos
+
+- [Instruções para agentes](../conhecimento/AGENTS.md) e duas skills adaptadas estão no [conhecimento compartilhado](../conhecimento/).
 
 - [Notas técnicas do Obsidian](../conhecimento/obsidian/) preservam o texto de origem. Os templates estão no [workspace do Obsidian](obsidian-vault/codigo/).
 - [Artefatos de MA Hospitalar](sankhya-ma-hospitalar/artefatos/2026-11-03/) incluem o JAR candidato e o ZIP React com hashes verificados.
