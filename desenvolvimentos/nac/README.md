@@ -4,4 +4,8 @@ Desenvolvimento identificado no catálogo de projetos do Codex. O código local 
 
 ## Inventário local
 
-O inventário local inicial encontrou 493 arquivos, incluindo 47 de código, 12 documentos e 1 JARs. A contagem exclui diretórios de build e dependências comuns.
+O levantamento inicial encontrou 493 arquivos, incluindo 47 de código, 12 documentos e 1 JARs. A contagem exclui diretórios de build e dependências comuns.
+
+## Arquivos importados
+
+O [diretório de código e documentação](codigo/) recebeu 47 arquivos novos ou atualizados nesta etapa.

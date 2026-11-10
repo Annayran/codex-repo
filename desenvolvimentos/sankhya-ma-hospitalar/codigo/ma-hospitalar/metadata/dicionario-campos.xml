@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exportInfo>
+  <module id="MAH_PRECO_DIN_DIC" name="MA Hospitalar - Preco Dinamico" version="1.0.0" database="ORACLE" erp="SANKHYA">
+    <description>Dicionario declarativo da customizacao de preco dinamico.</description>
+    <data-dictionary package="MAHospitalar.PrecoDinamico" version="1.0">
+      <entity table="AD_MAH_PD_CONFIG" title="Configuracao de Preco Dinamico" primary-key="CODEMP">
+        <field name="CODEMP" type="NUMBER(10)" label="Empresa" required="true" lookup="Empresa"/>
+        <field name="EVENTOLIB" type="NUMBER(10)" label="Evento de Liberacao" required="true" default="48"/>
+        <field name="CAMPO_MCMIN" type="VARCHAR2(30)" label="Campo Fisico MC Minima" required="true"/>
+        <field name="FORMULAVERSAO" type="VARCHAR2(30)" label="Versao da Formula" required="true"/>
+        <field name="ATIVO" type="CHAR(1)" label="Ativo" required="true" default="S" values="S,N"/>
+      </entity>
+      <entity table="AD_MAH_PD_REGRA" title="Regras de Preco Dinamico" primary-key="IDREGRA">
+        <field name="IDREGRA" type="NUMBER(10)" label="ID" generated="identity"/>
+        <field name="CODEMP" type="NUMBER(10)" label="Empresa" required="true" lookup="Empresa"/>
+        <field name="GRUPOPRECO" type="VARCHAR2(3)" label="Grupo de Preco" required="true" values="PR1,PR2,PR3,PR4"/>
+        <field name="ORIGEMAQUISICAO" type="VARCHAR2(20)" label="Origem da Aquisicao" required="true" values="NACIONAL,IMPORTACAO_DIRETA,IMPORTADO_INTERNO"/>
+        <field name="ESCOPODESTINO" type="VARCHAR2(15)" label="Escopo Destino" required="true" values="QUALQUER,INTERNA,INTERESTADUAL,UF"/>
+        <field name="UFDESTINO" type="VARCHAR2(2)" label="UF Destino"/>
+        <field name="BASECREDICMS" type="CHAR(1)" label="Base Credito ICMS" values="N,V,C"/>
+        <field name="PERCCREDICMS" type="NUMBER(18,8)" label="% Credito ICMS"/>
+        <field name="PERCFUNDES" type="NUMBER(18,8)" label="% FUNDes"/>
+        <field name="PERCFUNDOSOCIAL" type="NUMBER(18,8)" label="% Fundo Social"/>
+        <field name="BASECREDPIS" type="CHAR(1)" label="Base Credito PIS" values="N,V,C"/>
+        <field name="PERCCREDPIS" type="NUMBER(18,8)" label="% Credito PIS"/>
+        <field name="BASECREDCOFINS" type="CHAR(1)" label="Base Credito COFINS" values="N,V,C"/>
+        <field name="PERCCREDCOFINS" type="NUMBER(18,8)" label="% Credito COFINS"/>
+        <field name="PERCDESPEXTRA" type="NUMBER(18,8)" label="% Despesas Extras"/>
+        <field name="PERCFRETEPADRAO" type="NUMBER(18,8)" label="% Frete Padrao"/>
+        <field name="PERCCOMISSAOPADRAO" type="NUMBER(18,8)" label="% Comissao Padrao"/>
+        <field name="DTINIVIGENCIA" type="DATE" label="Inicio Vigencia" required="true"/>
+        <field name="DTFIMVIGENCIA" type="DATE" label="Fim Vigencia"/>
+        <field name="PRIORIDADE" type="NUMBER(5)" label="Prioridade" default="0"/>
+        <field name="ATIVO" type="CHAR(1)" label="Ativo" required="true" default="S" values="S,N"/>
+      </entity>
+      <entity table="AD_MAH_PD_AUDITORIA" title="Auditoria de Preco Dinamico" primary-key="IDAUDITORIA" read-only="true">
+        <field name="IDAUDITORIA" type="NUMBER(18)" label="ID" generated="identity"/>
+        <field name="ORIGEMCALCULO" type="VARCHAR2(20)" label="Origem"/>
+        <field name="NUNOTA" type="NUMBER(10)" label="Pedido/Nota"/>
+        <field name="SEQUENCIA" type="NUMBER(5)" label="Sequencia"/>
+        <field name="CODUSU" type="NUMBER(10)" label="Usuario" lookup="Usuario"/>
+        <field name="CODPROD" type="NUMBER(10)" label="Produto" lookup="Produto"/>
+        <field name="CENARIO" type="VARCHAR2(100)" label="Cenario"/>
+        <field name="PRECOBASE" type="NUMBER(18,6)" label="Preco Base"/>
+        <field name="PRECOAPLICADO" type="NUMBER(18,6)" label="Preco Aplicado"/>
+        <field name="RECEITALIQUIDA" type="NUMBER(18,6)" label="Receita Liquida"/>
+        <field name="RESULTADO" type="NUMBER(18,6)" label="Resultado"/>
+        <field name="MARGEMCONTRIB" type="NUMBER(18,8)" label="Margem de Contribuicao"/>
+        <field name="MARGEMALVO" type="NUMBER(18,8)" label="Margem Alvo/Minima"/>
+        <field name="CALCHASH" type="VARCHAR2(64)" label="Hash do Calculo"/>
+        <field name="FORMULAVERSAO" type="VARCHAR2(30)" label="Versao da Formula"/>
+        <field name="STATUSCALC" type="VARCHAR2(30)" label="Status"/>
+        <field name="DHCALC" type="DATE" label="Data do Calculo"/>
+      </entity>
+      <extension table="TGFPRO"><field name="AD_MAH_GRUPOPRECO" type="VARCHAR2(3)" label="Grupo de Preco MAH" values="PR1,PR2,PR3,PR4"/></extension>
+      <extension table="TGFITE"><field name="AD_MAH_MC" type="NUMBER(18,8)" label="MC Preco Dinamico"/></extension>
+      <extension table="TGFCAB"><field name="AD_MAH_MC" type="NUMBER(18,8)" label="MC Consolidada MAH"/></extension>
+    </data-dictionary>
+  </module>
+</exportInfo>
+

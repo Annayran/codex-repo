@@ -8,4 +8,8 @@ Desenvolvimento com fonte localizada no backup ou em branch dedicada. As referê
 
 ## Inventário local
 
-O inventário local inicial encontrou 6457 arquivos, incluindo 2982 de código, 70 documentos e 396 JARs. A contagem exclui diretórios de build e dependências comuns.
+O levantamento inicial encontrou 6457 arquivos, incluindo 2982 de código, 70 documentos e 396 JARs. A contagem exclui diretórios de build e dependências comuns.
+
+## Arquivos importados
+
+O [diretório de código e documentação](codigo/) recebeu 42 arquivos novos ou atualizados nesta etapa.

@@ -1,0 +1,178 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// Layout legado: src/ flat (sem src/main/java)
+// Migrar para src/main/java quando conveniente
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src']
+            exclude '**/*.java'
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
+
+// Caminho para as libs Sankhya (Sankhya SDK nao esta no Maven Central)
+def defaultSankhyaLib = file('C:/zy-tools/modulos-sankhya/Dependencias').exists()
+        ? 'C:/zy-tools/modulos-sankhya/Dependencias'
+        : 'C:/dev/zy-tools/modulos-sankhya/Dependencias'
+def baseLibPath = System.getenv('SNK_LIB') ?: defaultSankhyaLib
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Sankhya SDK - JARs locais (compileOnly pois sao fornecidos pelo servidor)
+    compileOnly fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    compileOnly fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+
+    // Libs javax locais (fallback se SNK_LIB nao estiver disponivel)
+    compileOnly fileTree(dir: rootDir.parentFile.path + '/lib', include: ['*.jar'])
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation fileTree(dir: "${baseLibPath}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/4_35/4_35", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/jrepository", include: ['*.jar'])
+    testImplementation fileTree(dir: "${baseLibPath}/platina", include: ['*.jar'])
+}
+
+test {
+    useJUnitPlatform { excludeTags 'smoke' }
+}
+
+tasks.register('smokeTest', Test) {
+    description = 'Executa smoke tests Genesis opt-in (requer propriedades e segredo externos).'
+    group = 'verification'
+    useJUnitPlatform { includeTags 'smoke' }
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    systemProperties System.properties.findAll { key, value ->
+        key.toString().startsWith('mah.genesis.smoke.')
+    }
+    shouldRunAfter test
+    onlyIf { System.getenv('MAH_GENESIS_SMOKE') == 'S' }
+}
+
+jar {
+    archiveFileName = 'MAHospitalar.jar'
+}
+
+tasks.register('metadataPackage', Zip) {
+    dependsOn jar
+    archiveFileName = 'MAHospitalar-PrecoDinamico.zip'
+    destinationDirectory = file("${buildDir}/metadata-package")
+    from('sql') { into 'sql'; exclude 'genesis/**' }
+    from('metadata') { into 'metadata'; exclude 'metadata_mah_genesis.xml', 'dicionario-genesis.xml' }
+    from('docs') { into 'docs'; exclude 'genesis/**' }
+    from(jar.archiveFile) { into 'java' }
+}
+
+tasks.register('genesisPackage', Zip) {
+    dependsOn test, jar, 'genesisImporterPackage'
+    includeEmptyDirs = false
+    archiveFileName = 'MAHospitalar-Genesis.zip'
+    destinationDirectory = file("${buildDir}/genesis-package")
+    from('sql/genesis') { into 'sql/genesis' }
+    from('docs/genesis') { into 'docs/genesis'; include 'arquitetura.md', 'configuracao.md', 'implantacao-consolidada.md' }
+    from('webapp/genesis') { into 'webapp/genesis' }
+    from(file("${buildDir}/genesis-importer-package/MAHospitalar-Genesis-Importador-JSP.zip")) {
+        into 'webapp/genesis-importador'
+    }
+    from(jar.archiveFile) { into 'java' }
+}
+
+def generatedGenesisDashboard = file("${buildDir}/generated/genesis-dashboard")
+
+tasks.register('prepareGenesisDashboard') {
+    inputs.files('webapp/genesis/index.jsp', 'webapp/genesis/assets/genesis.css',
+            'webapp/genesis/assets/genesis.js')
+    outputs.file(file("${generatedGenesisDashboard}/index.jsp"))
+    doLast {
+        generatedGenesisDashboard.mkdirs()
+        def jsp = file('webapp/genesis/index.jsp').getText('UTF-8')
+        def css = file('webapp/genesis/assets/genesis.css').getText('UTF-8')
+        def javascript = file('webapp/genesis/assets/genesis.js').getText('UTF-8')
+        jsp = jsp.replace('<link rel="stylesheet" href="assets/genesis.css">',
+                '<style type="text/css">\n' + css + '\n</style>')
+        jsp = jsp.replace('<script src="assets/genesis.js"></script>',
+                '<script type="text/javascript">\n' + javascript + '\n</script>')
+        file("${generatedGenesisDashboard}/index.jsp").write(jsp, 'UTF-8')
+    }
+}
+
+tasks.register('genesisDashboardPackage', Zip) {
+    dependsOn tasks.named('prepareGenesisDashboard')
+    includeEmptyDirs = false
+    archiveFileName = 'MAHospitalar-Genesis-Dashboard-JSP-Corrigido.zip'
+    destinationDirectory = file("${buildDir}/genesis-dashboard-package")
+    from(generatedGenesisDashboard)
+}
+
+def generatedGenesisImporter = file("${buildDir}/generated/genesis-importador")
+
+tasks.register('prepareGenesisImporter') {
+    inputs.files('webapp/genesis-importador/importarBaseGenesis.jsp',
+            'webapp/genesis-importador/assets/importador.css',
+            'webapp/genesis-importador/assets/importador.js',
+            'webapp/genesis-importador/assets/vendor/xlsx.full.min.js',
+            'webapp/genesis-importador/assets/vendor/LICENSE.xlsx.txt')
+    outputs.files(file("${generatedGenesisImporter}/importarBaseGenesis.jsp"),
+            file("${generatedGenesisImporter}/LICENSE.xlsx.txt"))
+    doLast {
+        delete generatedGenesisImporter
+        generatedGenesisImporter.mkdirs()
+        def jsp = file('webapp/genesis-importador/importarBaseGenesis.jsp').getText('UTF-8')
+        def css = file('webapp/genesis-importador/assets/importador.css').getText('UTF-8')
+        def javascript = file('webapp/genesis-importador/assets/importador.js').getText('UTF-8')
+        def xlsx = file('webapp/genesis-importador/assets/vendor/xlsx.full.min.js').getText('UTF-8')
+        jsp = jsp.replace('<link rel="stylesheet" href="assets/importador.css">',
+                '<style type="text/css">\n' + css + '\n</style>')
+        jsp = jsp.replace('<script src="assets/vendor/xlsx.full.min.js"></script>',
+                '<script type="text/javascript">\n' + xlsx + '\n</script>')
+        jsp = jsp.replace('<script src="assets/importador.js"></script>',
+                '<script type="text/javascript">\n' + javascript + '\n</script>')
+        file("${generatedGenesisImporter}/importarBaseGenesis.jsp").write(jsp, 'UTF-8')
+        copy {
+            from('webapp/genesis-importador/assets/vendor/LICENSE.xlsx.txt')
+            into(generatedGenesisImporter)
+        }
+    }
+}
+
+tasks.register('genesisImporterPackage', Zip) {
+    dependsOn tasks.named('prepareGenesisImporter')
+    includeEmptyDirs = false
+    archiveFileName = 'MAHospitalar-Genesis-Importador-JSP.zip'
+    destinationDirectory = file("${buildDir}/genesis-importer-package")
+    from(generatedGenesisImporter)
+}

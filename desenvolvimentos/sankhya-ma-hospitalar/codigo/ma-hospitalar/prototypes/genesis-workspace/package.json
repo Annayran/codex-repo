@@ -1,0 +1,8 @@
+{
+  "name": "ma-genesis-workspace-demo",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": { "build": "node build.cjs", "build:readonly": "node build-readonly.cjs", "start": "node server.cjs" },
+  "dependencies": { "react": "19.2.0", "react-dom": "19.2.0", "lucide-react": "0.468.0" },
+  "devDependencies": { "esbuild": "0.25.11" }
+}

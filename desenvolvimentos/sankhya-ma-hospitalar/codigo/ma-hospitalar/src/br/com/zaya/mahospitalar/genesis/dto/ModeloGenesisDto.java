@@ -1,0 +1,13 @@
+package br.com.zaya.mahospitalar.genesis.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public final class ModeloGenesisDto {
+    public String codigoExterno;
+    public String nome;
+    public String idEmpresaFabricante;
+    public String idMaterial;
+    public String status;
+    public String nranvisa;
+}
