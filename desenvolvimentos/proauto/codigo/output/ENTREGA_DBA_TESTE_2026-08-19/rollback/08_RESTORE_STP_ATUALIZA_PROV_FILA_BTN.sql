@@ -1,0 +1,21 @@
+-- Read-only baseline extracted from TESTE on 2026-08-17.
+-- Source: B3_03_02_FONTES_ACOES_COMPLEMENTARES; do not edit as deployment source.
+CREATE OR REPLACE PROCEDURE "STP_ATUALIZA_PROV_FILA_BTN" (
+    P_CODUSU NUMBER,
+    P_IDSESSAO VARCHAR2,
+    P_QTDLINHAS NUMBER,
+    P_MENSAGEM OUT VARCHAR2
+) AS
+    FIELD_CODPROD NUMBER;
+    FIELD_NUNOTA NUMBER;
+    FIELD_SEQPREV NUMBER;
+    FIELD_SEQUENCIA NUMBER;
+BEGIN
+    BEGIN
+        STP_ATUALIZA_PROV_FILA_PRA();
+    END;
+
+    P_MENSAGEM := '<b>Registro Atualizado com sucesso!</b>';
+END;
+/
+

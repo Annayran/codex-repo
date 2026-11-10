@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya.portomag.lancamentoos'
+version = providers.gradleProperty('projectVersion').get()
+def companyCode = 'ZAYA'
+def projectCode = providers.gradleProperty('projectCode').get()
+
+if (!(projectCode ==~ /[A-Z0-9]+/) || !(version.toString() ==~ /[0-9]+\.[0-9]+/)) {
+    throw new GradleException('Codigo/versao do artefato invalidos.')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+def dependenciesRoot = providers.gradleProperty('sankhyaDependenciesDir')
+        .orElse(providers.environmentVariable('SANKHYA_DEPENDENCIES_DIR'))
+        .getOrElse('C:/dev/zaya/platform/modulos-sankhya/Dependencias')
+def versionDir = providers.gradleProperty('sankhyaVersionDir').getOrElse('Jar')
+def libraries = file("${dependenciesRoot}/${versionDir}")
+if (!libraries.isDirectory()) {
+    throw new GradleException("Diretorio de dependencias nao encontrado: ${libraries}")
+}
+
+// Reproduz a biblioteca de diretorio do projeto IntelliJ original.
+// Nao mistura conjuntos de versoes e nao empacota bibliotecas proprietarias.
+dependencies {
+    compileOnly fileTree(dir: libraries, include: ['*.jar'])
+}
+
+def java8Home = providers.gradleProperty('java8Home')
+if (!java8Home.isPresent() || !file("${java8Home.get()}/bin/javac.exe").isFile()) {
+    throw new GradleException('Informe -Pjava8Home=<JDK 8 existente> para preservar o compilador legado.')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+    options.fork = true
+    options.forkOptions.executable = "${java8Home.get()}/bin/javac.exe"
+    // Gradle 9 escreve o argfile em UTF-8; Java 8 no Windows usa outro charset
+    // por padrao, corrompendo caminhos com acentos no classpath.
+    options.forkOptions.jvmArgs = ['-J-Dfile.encoding=UTF-8']
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+jar {
+    archiveFileName = "${companyCode}-${projectCode}-V${version}.jar"
+    manifest {
+        attributes(
+                'Implementation-Title': 'PortoMag Lancamento OS - diagnostico',
+                'Implementation-Version': version,
+                'Implementation-Vendor': 'Zaya.IT',
+                'Built-By': 'Zaya.IT Build',
+                'Implementation-Status': 'DIAGNOSTIC-LEGACY-LOGIC-NOT-FOR-PRODUCTION'
+        )
+    }
+}

@@ -1,0 +1,4 @@
+-- ARQUIVO DESCONTINUADO PARA O DEPLOY EM DOIS NIVEIS.
+--
+-- Nao executar. O estoque futuro do Nivel 2 e calculado diretamente nas views
+-- AD_VGFRESEST e AD_VGFPROVEST, evitando novos objetos de banco.

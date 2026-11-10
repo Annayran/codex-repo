@@ -1,0 +1,41 @@
+-- Executar apos compilar o pacote, sem DML.
+-- Ajustar CODEMP_TESTE para uma empresa retornada na coleta.
+VAR CODEMP_TESTE NUMBER;
+EXEC :CODEMP_TESTE := 1;
+
+SELECT DATA,
+       PRA_PKG_FILARES.EH_DIA_UTIL(DATA, :CODEMP_TESTE) AS DIA_UTIL
+  FROM (
+        SELECT TRUNC(SYSDATE) + LEVEL - 1 AS DATA
+          FROM DUAL
+       CONNECT BY LEVEL <= 15
+       )
+ ORDER BY DATA;
+
+SELECT TRUNC(SYSDATE) AS DATA_BASE,
+       PRA_PKG_FILARES.SOMAR_DIAS_UTEIS(
+           TRUNC(SYSDATE),
+           120,
+           :CODEMP_TESTE
+       ) AS LIMITE_120_DIAS_UTEIS
+  FROM DUAL;
+
+SELECT PRA_PKG_FILARES.CALCULAR_PROVISAO(
+           PRA_PKG_FILARES.SOMAR_DIAS_UTEIS(TRUNC(SYSDATE), 120, :CODEMP_TESTE),
+           :CODEMP_TESTE,
+           TRUNC(SYSDATE)
+       ) AS NO_LIMITE,
+       PRA_PKG_FILARES.CALCULAR_PROVISAO(
+           PRA_PKG_FILARES.SOMAR_DIAS_UTEIS(TRUNC(SYSDATE), 120, :CODEMP_TESTE) + 1,
+           :CODEMP_TESTE,
+           TRUNC(SYSDATE)
+       ) AS APOS_LIMITE
+  FROM DUAL;
+
+-- Compatibilidade comprovada pelo legado: data nula permanece ativa.
+SELECT PRA_PKG_FILARES.CALCULAR_PROVISAO(
+           NULL,
+           :CODEMP_TESTE,
+           TRUNC(SYSDATE)
+       ) AS SEM_PREVISAO_ESPERADO_N
+  FROM DUAL;

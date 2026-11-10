@@ -1,0 +1,8 @@
+.gradle/
+.gradle-user/
+build/
+out/
+*.local.properties
+tests/private/
+web/vendor/
+!web/vendor/README.md

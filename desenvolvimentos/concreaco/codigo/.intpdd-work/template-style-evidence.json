@@ -1,0 +1,107 @@
+{
+  "input": "C:\\Users\\annayran.ferreira\\Downloads\\[CONCREA\u00c7O] Escopo - Cancelamento de Parcelas Financeiras.docx",
+  "fonts_by_char_count": {
+    "Arial": 2314,
+    "Segoe UI": 259,
+    "Roboto": 91
+  },
+  "direct_run_formatting_runs": 167,
+  "direct_paragraph_formatting_paragraphs": 94,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 53,
+      "text": "Exemplo",
+      "style": "Normal"
+    },
+    {
+      "para_index": 81,
+      "text": "Dados do Projeto ",
+      "style": "Normal"
+    },
+    {
+      "para_index": 82,
+      "text": "Dados do Projeto ",
+      "style": "Normal"
+    },
+    {
+      "para_index": 87,
+      "text": "Parcela",
+      "style": "Normal"
+    },
+    {
+      "para_index": 88,
+      "text": "Valor",
+      "style": "Normal"
+    },
+    {
+      "para_index": 93,
+      "text": "Parcela",
+      "style": "Normal"
+    },
+    {
+      "para_index": 94,
+      "text": "Valor",
+      "style": "Normal"
+    }
+  ],
+  "examples": {
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 1,
+        "text": "Levantamento de Requisitos para Customiza\u00e7\u00e3o ",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 2,
+        "text": "",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 3,
+        "text": "1. Necessidade de Cancelamento de Parcelas Financeiras",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 6,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 7,
+        "text": "Objetivo",
+        "style": "Heading 2"
+      }
+    ],
+    "direct_run_formatting": [
+      {
+        "para_index": 1,
+        "run_text": "Levantamento de Requisitos para Customiza\u00e7\u00e3o ",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 3,
+        "run_text": "1",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 3,
+        "run_text": ".",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 3,
+        "run_text": " ",
+        "style": "Heading 1"
+      },
+      {
+        "para_index": 3,
+        "run_text": "N",
+        "style": "Heading 1"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}

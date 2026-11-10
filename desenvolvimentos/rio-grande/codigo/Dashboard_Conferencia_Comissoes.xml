@@ -1,0 +1,458 @@
+<gadget >
+  <prompt-parameters>
+    <parameter  id="CODVEND" description="Vendedor" metadata="entity:Vendedor@undefined" required="true" keep-last="true" keep-date="false" show-inactives="false" label="CODVEND : Entidade/Tabela" order="0"/>
+    <parameter  id="Periodo" description="Período (Baixa/Neg./Exec.)" metadata="datePeriod" required="true" keep-last="true" keep-date="false" show-inactives="false" label="Periodo : Período" order="1"/>
+  </prompt-parameters>
+  <level id="04S" description="Principal">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="146">
+        <grid id="grd_04R" useNewGrid="S">
+          <expression type="sql" data-source="MGEDS">
+            <![CDATA[WITH BASE_COMISSOES AS (
+    SELECT
+        COM.CODVEND,
+        COM.NUFINORIG,
+        COM.NUNOTAORIG,
+        COM.NUFIN,
+        COM.NUMOSORIG,
+        COM.NUMITEMORIG,
+        COM.TIPO,
+        COM.CODFORM,
+        CASE
+            WHEN NVL(COM.AD_REVISADO, 'N') = 'S' THEN 'S'
+            ELSE 'N'
+        END AS AD_REVISADO,
+        MAX(NVL(VCOM.COMLIQ, 0)) AS VALOR_COMISSAO
+    FROM VGFCOM_FECH VCOM
+    INNER JOIN TGFCOM COM
+        ON COM.CODVEND = VCOM.CODVEND
+       AND NVL(COM.NUNOTAORIG, -1) = NVL(VCOM.NUNOTAORIG, -1)
+       AND NVL(COM.NUFINORIG, -1) = NVL(VCOM.NUFINORIG, -1)
+       AND NVL(COM.NUMOSORIG, -1) = NVL(VCOM.NUMOSORIG, -1)
+       AND NVL(COM.NUMITEMORIG, -1) = NVL(VCOM.NUMITEMORIG, -1)
+       AND NVL(COM.TIPO, '#') = NVL(VCOM.TIPO, '#')
+       AND NVL(COM.CODFORM, -1) = NVL(VCOM.CODFORM, -1)
+    WHERE (
+        (
+            VCOM.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+            AND VCOM.POSICAO_QUERY = '1'
+        )
+        OR
+        (
+            (
+                (
+                    VCOM.TIPCALC = 'N'
+                    AND VCOM.DTNEG BETWEEN :PERIODO.INI AND :PERIODO.FIN
+                )
+                OR
+                (
+                    VCOM.DHBAIXA BETWEEN :PERIODO.INI AND :PERIODO.FIN
+                )
+            )
+            AND VCOM.POSICAO_QUERY = '2'
+        )
+        OR
+        (
+            VCOM.DHBAIXA BETWEEN :PERIODO.INI AND :PERIODO.FIN
+            AND VCOM.POSICAO_QUERY IN ('3', '4', '5', '6')
+        )
+        OR
+        (
+            (
+                VCOM.DHBAIXA BETWEEN :PERIODO.INI AND :PERIODO.FIN
+                OR
+                (
+                    VCOM.TIPFATSERV IN ('S', 'U')
+                    AND VCOM.DHBAIXA < :PERIODO.INI
+                    AND VCOM.INICEXEC BETWEEN :PERIODO.INI AND :PERIODO.FIN
+                )
+            )
+            AND VCOM.POSICAO_QUERY IN ('7', '8')
+        )
+    )
+      AND VCOM.CODVEND = :CODVEND
+    GROUP BY
+        COM.CODVEND,
+        COM.NUFINORIG,
+        COM.NUNOTAORIG,
+        COM.NUFIN,
+        COM.NUMOSORIG,
+        COM.NUMITEMORIG,
+        COM.TIPO,
+        COM.CODFORM,
+        CASE
+            WHEN NVL(COM.AD_REVISADO, 'N') = 'S' THEN 'S'
+            ELSE 'N'
+        END
+),
+SITUACOES AS (
+    SELECT
+        'S' AS AD_REVISADO,
+        'Revisadas' AS STATUS_REVISAO,
+        '#28A745' AS FAROL_REVISAO,
+        1 AS ORDEM
+    FROM DUAL
+    UNION ALL
+    SELECT
+        'N' AS AD_REVISADO,
+        'Pendentes' AS STATUS_REVISAO,
+        '#DC3545' AS FAROL_REVISAO,
+        2 AS ORDEM
+    FROM DUAL
+)
+SELECT
+    SIT.FAROL_REVISAO,
+    SIT.STATUS_REVISAO,
+    COUNT(BASE.CODVEND) AS QUANTIDADE_COMISSOES,
+    NVL(SUM(BASE.VALOR_COMISSAO), 0) AS VALOR_COMISSAO
+FROM SITUACOES SIT
+LEFT JOIN BASE_COMISSOES BASE
+    ON BASE.AD_REVISADO = SIT.AD_REVISADO
+GROUP BY
+    SIT.FAROL_REVISAO,
+    SIT.STATUS_REVISAO,
+    SIT.ORDEM
+ORDER BY
+    SIT.ORDEM]]>
+          </expression>
+          <metadata>
+            <field name="FAROL_REVISAO" label="Farol" type="LP" visible="true" useFooter="false">
+            </field>
+            <field name="STATUS_REVISAO" label="Situação da Revisão" type="S" visible="true" useFooter="false">
+            </field>
+            <field name="QUANTIDADE_COMISSOES" label="Quantidade de Comissões" type="I" visible="true" useFooter="false" mask="###0">
+            </field>
+            <field name="VALOR_COMISSAO" label="Valor das Comissões" type="F" visible="true" useFooter="false" mask="#.##0,00">
+            </field>
+          </metadata>
+        </grid>
+      </container>
+      <container orientacao="V" tamanhoRelativo="393">
+        <grid id="grd_04T" entityName="ValorComissaoVendedor" useNewGrid="S">
+        <expression type="sql" data-source="MGEDS">
+          <![CDATA[SELECT
+    /* Controle da revisão: manter no início da grade */
+    COM.AD_REVISADO AS AD_REVISADO,
+    CASE
+        WHEN NVL(COM.AD_REVISADO, 'N') = 'S'
+            THEN 'Revisada'
+        ELSE 'Pendente'
+    END AS STATUS_REVISAO,
+    REV.NOMEUSU AS NOME_REVISOR,
+    COM.AD_DHREV AS AD_DHREV,
+
+    CASE
+        WHEN NVL(COM.AD_REVISADO, 'N') = 'S'
+            THEN '#28A745'
+        ELSE '#DC3545'
+    END AS FAROL_REVISAO,
+
+    /* Mesma ordem funcional da tela Fechamento de Comissões */
+    VCOM.NOMEPARC AS NOMEPARC,
+    VCOM.COMISSAO AS COMISSAO,
+    VCOM.PERCCOM AS PERCCOM,
+    VCOM.VLRBAIXA AS VLRBAIXA,
+    VCOM.NUMNOTA AS NUMNOTA,
+    VCOM.NUNOTA AS NUNOTA,
+    VCOM.COMLIQ AS COMLIQ,
+    VCOM.VLRCOM AS VLRCOM,
+    VCOM.COMLIQ AS COMISSAO_PARCELA,
+    VCOM.DESCROPER AS DESCROPER,
+    VCOM.FINNUFIN AS FINNUFIN,
+    VCOM.DESCRFORM AS DESCRFORM,
+    VCOM.VLRDESDOB AS VLRDESDOB,
+    VCOM.DHBAIXA AS DHBAIXA,
+    COM.CODVEND AS CODVEND,
+    VCOM.APELIDO AS APELIDO,
+    COM.NUNOTAORIG AS NUNOTAORIG,
+    VCOM.CODEMP AS CODEMP,
+    EMP.NOMEFANTASIA AS NOMEFANTASIA,
+    VCOM.CODPARC AS CODPARC,
+    VCOM.CODPARCVEN AS CODPARCVEN,
+    COM.TIPO AS TIPO,
+    VCOM.VLRDESC AS VLRDESC,
+    VCOM.DESCRNAT AS DESCRNAT,
+    NVL(OPC_TIPCALC.OPCAO, VCOM.TIPCALC) AS TIPCALC_DESCRICAO,
+    VCOM.DESDOBRAMENTO AS DESDOBRAMENTO,
+    VCOM.DTVENC AS DTVENC,
+    VCOM.CODTIPTIT AS CODTIPTIT,
+    VCOM.DHCONCILIACAO AS DHCONCILIACAO,
+    VCOM.NOSSONUM AS NOSSONUM,
+    VCOM.DTNEG AS DTNEG,
+    VCOM.DTFATUR AS DTFATUR,
+    VCOM.CODTIPVENDA AS CODTIPVENDA,
+    COM.NUMOSORIG AS NUMOSORIG,
+    COM.NUMITEMORIG AS NUMITEMORIG,
+    NVL(OPC_TIPMOV.OPCAO, VCOM.TIPMOV) AS TIPMOV_DESCRICAO,
+    COM.NUFINORIG AS NUFINORIG,
+    VCOM.TAXA AS TAXA,
+    VCOM.CODEVENTO AS CODEVENTO,
+    VCOM.TIPINTEGRA AS TIPINTEGRA,
+    COM.CODFORM AS CODFORM,
+    VCOM.INICEXEC AS INICEXEC,
+    VCOM.DTMOV AS DTMOV,
+    VCOM.CODCENCUSPAD AS CODCENCUSPAD,
+    NVL(OPC_RECDESP.OPCAO, TO_CHAR(FIN.RECDESP)) AS RECDESP_DESCRICAO,
+
+    /* Campos técnicos: manter no SELECT e ocultar na grade */
+    :PERIODO.INI AS PERIODO_INI,
+    :PERIODO.FIN AS PERIODO_FIN,
+    COM.NUFIN AS NUFIN,
+    COM.AD_CODUSUREV AS AD_CODUSUREV,
+    REV.EMAIL AS EMAIL_USUARIO_REVISOR,
+    VCOM.POSICAO_QUERY AS POSICAO_QUERY,
+    VCOM.TIPFATSERV AS TIPFATSERV
+
+FROM VGFCOM_FECH VCOM
+
+INNER JOIN TGFCOM COM
+    ON COM.CODVEND = VCOM.CODVEND
+   AND NVL(COM.NUNOTAORIG, -1)
+       = NVL(VCOM.NUNOTAORIG, -1)
+   AND NVL(COM.NUFINORIG, -1)
+       = NVL(VCOM.NUFINORIG, -1)
+   AND NVL(COM.NUMOSORIG, -1)
+       = NVL(VCOM.NUMOSORIG, -1)
+   AND NVL(COM.NUMITEMORIG, -1)
+       = NVL(VCOM.NUMITEMORIG, -1)
+   AND NVL(COM.TIPO, '#')
+       = NVL(VCOM.TIPO, '#')
+   AND NVL(COM.CODFORM, -1)
+       = NVL(VCOM.CODFORM, -1)
+
+LEFT JOIN TSIEMP EMP
+    ON EMP.CODEMP = VCOM.CODEMP
+
+LEFT JOIN TGFFIN FIN
+    ON FIN.NUFIN = VCOM.FINNUFIN
+
+LEFT JOIN TGFPAR PAR
+    ON PAR.CODPARC = VCOM.CODPARC
+
+LEFT JOIN TGFVEN VEN
+    ON VEN.CODVEND = VCOM.CODVEND
+
+LEFT JOIN TSIUSU REV
+    ON REV.CODUSU = COM.AD_CODUSUREV
+
+LEFT JOIN (
+    SELECT
+        OPC.VALOR,
+        MAX(OPC.OPCAO) AS OPCAO
+    FROM TDDCAM CAM
+    INNER JOIN TDDOPC OPC
+        ON OPC.NUCAMPO = CAM.NUCAMPO
+    WHERE CAM.NOMETAB = 'TGFVEN'
+      AND CAM.NOMECAMPO = 'TIPCALC'
+    GROUP BY OPC.VALOR
+) OPC_TIPCALC
+    ON OPC_TIPCALC.VALOR = VCOM.TIPCALC
+
+LEFT JOIN (
+    SELECT
+        OPC.VALOR,
+        MAX(OPC.OPCAO) AS OPCAO
+    FROM TDDCAM CAM
+    INNER JOIN TDDOPC OPC
+        ON OPC.NUCAMPO = CAM.NUCAMPO
+    WHERE CAM.NOMETAB = 'TGFCAB'
+      AND CAM.NOMECAMPO = 'TIPMOV'
+    GROUP BY OPC.VALOR
+) OPC_TIPMOV
+    ON OPC_TIPMOV.VALOR = VCOM.TIPMOV
+
+LEFT JOIN (
+    SELECT
+        OPC.VALOR,
+        MAX(OPC.OPCAO) AS OPCAO
+    FROM TDDCAM CAM
+    INNER JOIN TDDOPC OPC
+        ON OPC.NUCAMPO = CAM.NUCAMPO
+    WHERE CAM.NOMETAB = 'TGFFIN'
+      AND CAM.NOMECAMPO = 'RECDESP'
+    GROUP BY OPC.VALOR
+) OPC_RECDESP
+    ON OPC_RECDESP.VALOR = TO_CHAR(FIN.RECDESP)
+
+WHERE
+(
+    (
+        VCOM.DTNEG
+            BETWEEN :PERIODO.INI AND :PERIODO.FIN
+        AND VCOM.POSICAO_QUERY = '1'
+    )
+
+    OR
+
+    (
+        (
+            (
+                VCOM.TIPCALC = 'N'
+                AND VCOM.DTNEG
+                    BETWEEN :PERIODO.INI AND :PERIODO.FIN
+            )
+            OR
+            (
+                VCOM.DHBAIXA
+                    BETWEEN :PERIODO.INI AND :PERIODO.FIN
+            )
+        )
+        AND VCOM.POSICAO_QUERY = '2'
+    )
+
+    OR
+
+    (
+        VCOM.DHBAIXA
+            BETWEEN :PERIODO.INI AND :PERIODO.FIN
+        AND VCOM.POSICAO_QUERY IN ('3', '4', '5', '6')
+    )
+
+    OR
+
+    (
+        (
+            VCOM.DHBAIXA
+                BETWEEN :PERIODO.INI AND :PERIODO.FIN
+            OR
+            (
+                VCOM.TIPFATSERV IN ('S', 'U')
+                AND VCOM.DHBAIXA < :PERIODO.INI
+                AND VCOM.INICEXEC
+                    BETWEEN :PERIODO.INI AND :PERIODO.FIN
+            )
+        )
+        AND VCOM.POSICAO_QUERY IN ('7', '8')
+    )
+)
+
+AND VCOM.CODVEND = :CODVEND
+
+ORDER BY
+    COM.CODVEND,
+    COM.CODFORM,
+    COM.NUNOTAORIG,
+    VCOM.COMLIQ,
+    COM.TIPO]]>
+        </expression>
+        <metadata>
+          <field name="AD_REVISADO" label="Revisado?" type="S" visible="false" useFooter="false">
+          </field>
+          <field name="STATUS_REVISAO" label="Status Revisão" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="NOME_REVISOR" label="Nome Revisor" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="AD_DHREV" label="Data e Hora da Revisão" type="D" visible="true" useFooter="false">
+          </field>
+          <field name="FAROL_REVISAO" label="Revisado?" type="LP" visible="true" useFooter="false">
+          </field>
+          <field name="NOMEPARC" label="Parceiro" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="COMISSAO" label="Comissão" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="PERCCOM" label="% Comissão" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="VLRBAIXA" label="Vlr. Baixa" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="NUMNOTA" label="Nro. Nota" type="F" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="NUNOTA" label="Nro. Único Nota" type="F" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="COMLIQ" label="Comissão Parc. Liq" type="F" visible="true" useFooter="false" mask="#.##0,0000">
+          </field>
+          <field name="VLRCOM" label="Vlr. Comissão" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="COMISSAO_PARCELA" label="Comissão Parcela" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="DESCROPER" label="Tipo Operação" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="FINNUFIN" label="Nro. Único Fin." type="F" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="DESCRFORM" label="Fórmula" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="VLRDESDOB" label="Vlr. Desdob" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="DHBAIXA" label="Dt. Baixa" type="D" visible="true" useFooter="false">
+          </field>
+          <field name="CODVEND" label="Cód. Vendedor" type="I" visible="true" useFooter="false">
+          </field>
+          <field name="APELIDO" label="Vendedor" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="NUNOTAORIG" label="Nro. Único Nota Orig." type="I" visible="true" useFooter="false">
+          </field>
+          <field name="CODEMP" label="Cód. Empresa" type="I" visible="true" useFooter="false">
+          </field>
+          <field name="NOMEFANTASIA" label="Nome Fantasia" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="CODPARC" label="Cód. Parceiro" type="I" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="CODPARCVEN" label="Cód. Parceiro Vendedor" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="TIPO" label="Tip. Comissão" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="VLRDESC" label="Vlr. Desc." type="F" visible="true" useFooter="false">
+          </field>
+          <field name="DESCRNAT" label="Natureza" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="TIPCALC_DESCRICAO" label="Tip. Pgt. Comis." type="S" visible="true" useFooter="false">
+          </field>
+          <field name="DESDOBRAMENTO" label="Desdob." type="S" visible="true" useFooter="false">
+          </field>
+          <field name="DTVENC" label="Dt. Vencimento" type="D" visible="true" useFooter="false">
+          </field>
+          <field name="CODTIPTIT" label="Cód. Tip. Título" type="I" visible="true" useFooter="false">
+          </field>
+          <field name="DHCONCILIACAO" label="Dt. Conciliação" type="D" visible="true" useFooter="false">
+          </field>
+          <field name="NOSSONUM" label="Nosso Número" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="DTNEG" label="Dt. Negociação" type="D" visible="true" useFooter="false">
+          </field>
+          <field name="DTFATUR" label="Dt. Fatur." type="D" visible="true" useFooter="false">
+          </field>
+          <field name="CODTIPVENDA" label="Cód. Tip. Neg." type="I" visible="true" useFooter="false">
+          </field>
+          <field name="NUMOSORIG" label="Nro. O.S." type="I" visible="true" useFooter="false">
+          </field>
+          <field name="NUMITEMORIG" label="Nro. Item O.S." type="I" visible="true" useFooter="false">
+          </field>
+          <field name="TIPMOV_DESCRICAO" label="Tip. Movto" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="NUFINORIG" label="Nro. Fin. Origem" type="I" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="TAXA" label="Taxa Cartão" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="CODEVENTO" label="Cód. Evento" type="I" visible="true" useFooter="false">
+          </field>
+          <field name="TIPINTEGRA" label="Tipo de Integração" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="CODFORM" label="Cód. Fórmula" type="I" visible="true" useFooter="false">
+          </field>
+          <field name="INICEXEC" label="Dh. Execução" type="D" visible="true" useFooter="false">
+          </field>
+          <field name="DTMOV" label="Dt. Movto." type="D" visible="true" useFooter="false">
+          </field>
+          <field name="CODCENCUSPAD" label="Cód. Centro Resultado Padrão" type="F" visible="true" useFooter="false">
+          </field>
+          <field name="RECDESP_DESCRICAO" label="Receita/Despesa" type="S" visible="true" useFooter="false">
+          </field>
+          <field name="PERIODO_INI" label="Início do Período" type="D" visible="false" useFooter="false">
+          </field>
+          <field name="PERIODO_FIN" label="Fim do Período" type="D" visible="false" useFooter="false">
+          </field>
+          <field name="NUFIN" label="Nu. Financeiro" type="I" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="AD_CODUSUREV" label="Cód. Usuário Revisor" type="I" visible="true" useFooter="false" mask="###0">
+          </field>
+          <field name="EMAIL_USUARIO_REVISOR" label="EMAIL_USUARIO_REVISOR" type="S" visible="false" useFooter="false">
+          </field>
+          <field name="POSICAO_QUERY" label="POSICAO_QUERY" type="S" visible="false" useFooter="false">
+          </field>
+          <field name="TIPFATSERV" label="TIPFATSERV" type="S" visible="false" useFooter="false">
+          </field>
+        </metadata>
+        </grid>
+      </container>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,32 @@
+-- SOMENTE LEITURA. Usar apenas se o Lote B tiver recebido GO e sido publicado.
+
+SELECT OWNER,
+       OBJECT_NAME,
+       OBJECT_TYPE,
+       STATUS,
+       LAST_DDL_TIME
+  FROM ALL_OBJECTS
+ WHERE OWNER = SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+   AND OBJECT_NAME = 'PRA_ACTION_NOTIF_COMPRA_INT';
+
+SELECT OWNER,
+       NAME,
+       TYPE,
+       LINE,
+       POSITION,
+       TEXT
+  FROM ALL_ERRORS
+ WHERE OWNER = SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+   AND NAME = 'PRA_ACTION_NOTIF_COMPRA_INT'
+ ORDER BY SEQUENCE;
+
+-- Depois da primeira execução controlada, conferir os avisos criados.
+SELECT NUAVISO,
+       TITULO,
+       IDENTIFICADOR,
+       CODGRUPO,
+       DHCRIACAO
+  FROM TSIAVI
+ WHERE IDENTIFICADOR LIKE 'FRI:%'
+ ORDER BY DHCRIACAO DESC;
+

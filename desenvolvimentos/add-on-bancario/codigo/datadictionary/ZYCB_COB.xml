@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadados xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../.gradle/metadados.xsd">
+<table name="ZYCB_COB"><description>Cobranças bancárias</description><primaryKey><field name="ID"/></primaryKey><instances><instance name="ZycbCobranca"><description>Cobranças bancárias</description></instance></instances><fields>
+<field name="ID" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Identificador</description></field>
+<field name="IDCFG" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Configuração</description></field>
+<field name="NUFIN" dataType="INTEIRO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Número único financeiro</description></field>
+<field name="GERACAO" dataType="INTEIRO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Geração</description></field>
+<field name="ESTADO" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Situação da cobrança</description></field>
+</fields></table>
+</metadados>

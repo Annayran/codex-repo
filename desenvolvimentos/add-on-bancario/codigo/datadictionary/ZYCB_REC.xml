@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadados xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../.gradle/metadados.xsd">
+<table name="ZYCB_REC"><description>Recebimentos bancários</description><primaryKey><field name="ID"/></primaryKey><instances><instance name="ZycbRecebimento"><description>Recebimentos bancários</description></instance></instances><fields>
+<field name="ID" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Identificador</description></field>
+<field name="IDCOB" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Cobrança</description></field>
+<field name="STATUS" dataType="TEXTO" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Situação</description></field>
+<field name="DHCAD" dataType="DATA_HORA" allowSearch="S" visibleOnSearch="S" readOnly="true"><description>Data de registro</description></field>
+</fields></table>
+</metadados>

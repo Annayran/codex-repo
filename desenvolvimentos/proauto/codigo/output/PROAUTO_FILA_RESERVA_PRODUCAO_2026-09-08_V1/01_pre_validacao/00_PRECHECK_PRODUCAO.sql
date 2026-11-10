@@ -1,0 +1,88 @@
+-- SOMENTE LEITURA.
+-- Execute cada consulta e valide os resultados antes do deploy.
+
+-- 1. Confirmar ambiente.
+SELECT USER AS USUARIO,
+       SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA') AS SCHEMA_ATUAL,
+       SYS_CONTEXT('USERENV', 'DB_NAME') AS BANCO
+  FROM DUAL;
+
+-- 2. Parâmetros obrigatórios do Lote A.
+SELECT CHAVE,
+       INTEIRO,
+       TEXTO
+  FROM TSIPAR
+ WHERE CHAVE IN ('DTNACINT', 'DTINTERINT')
+ ORDER BY CHAVE;
+
+SELECT CASE
+           WHEN COUNT(*) = 2
+            AND COUNT(DISTINCT CHAVE) = 2
+            AND MIN(INTEIRO) >= 0
+           THEN 'OK'
+           ELSE 'PARAR: revisar DTNACINT/DTINTERINT'
+       END AS RESULTADO_LOTE_A
+  FROM TSIPAR
+ WHERE CHAVE IN ('DTNACINT', 'DTINTERINT');
+
+-- 3. Estado dos objetos usados pelo Lote A.
+SELECT OWNER,
+       OBJECT_NAME,
+       OBJECT_TYPE,
+       STATUS,
+       LAST_DDL_TIME
+  FROM ALL_OBJECTS
+ WHERE OBJECT_NAME IN (
+       'TRG_IUD_TGFITE_FILRES_PRA',
+       'STP_GRAVAFILA_PRA',
+       'STP_VALIDAFAT_FILARES_PRA',
+       'AD_VGFRESEST',
+       'AD_TGFSEQENT'
+ )
+   AND OWNER = SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+ ORDER BY OBJECT_TYPE, OBJECT_NAME;
+
+-- 4. Erros existentes antes do deploy.
+SELECT OWNER,
+       NAME,
+       TYPE,
+       LINE,
+       POSITION,
+       TEXT
+  FROM ALL_ERRORS
+ WHERE OWNER = SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+   AND NAME IN (
+       'TRG_IUD_TGFITE_FILRES_PRA',
+       'STP_GRAVAFILA_PRA',
+       'STP_VALIDAFAT_FILARES_PRA',
+       'AD_VGFRESEST'
+ )
+ ORDER BY NAME, SEQUENCE;
+
+-- 5. Colunas usadas pela parametrização.
+SELECT OWNER,
+       TABLE_NAME,
+       COLUMN_NAME,
+       DATA_TYPE,
+       DATA_LENGTH,
+       NULLABLE
+  FROM ALL_TAB_COLUMNS
+ WHERE (TABLE_NAME = 'TSIPAR' AND COLUMN_NAME IN ('CHAVE', 'INTEIRO'))
+    OR (TABLE_NAME = 'TGFPRO' AND COLUMN_NAME = 'ORIGPROD')
+ ORDER BY TABLE_NAME, OWNER, COLUMN_ID;
+
+-- 6. Distribuição de origem. Deve ser apenas analisada; não altera dados.
+SELECT NVL(TO_CHAR(ORIGPROD), '<NULL>') AS ORIGPROD,
+       COUNT(*) AS PRODUTOS
+  FROM TGFPRO
+ GROUP BY ORIGPROD
+ ORDER BY ORIGPROD;
+
+-- 7. Parâmetros propostos do Lote B. Ausência mantém o Lote B bloqueado.
+SELECT CHAVE,
+       INTEIRO,
+       TEXTO
+  FROM TSIPAR
+ WHERE CHAVE IN ('DTNOTINT', 'GRPCOMINT')
+ ORDER BY CHAVE;
+

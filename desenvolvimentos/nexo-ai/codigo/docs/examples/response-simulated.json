@@ -1,0 +1,83 @@
+{
+  "id": "27890149-8f63-48cf-a1aa-1d954a8c43cd",
+  "simulated": true,
+  "symptom": "Synthetic stock confirmation error",
+  "action": "CONFIRMAR_NOTA",
+  "process": "confirmation-stock",
+  "state": "HIPOTESE",
+  "facts": [
+    "Synthetic note and item; no ERP query executed",
+    "company=SYNTHETIC-COMPANY; product=SYNTHETIC-PRODUCT; location=L1; expectedLocation=L1; unit=UN; stockUnit=UN; control=A; stockControl=A; required=10; suppliedAvailability=1; policyValidatedInFixture=true; policy=fixture-rule-v1"
+  ],
+  "divergences": [
+    {
+      "kind": "DISPONIBILIDADE",
+      "detail": "Availability supplied by validated policy is below required quantity; origin not established",
+      "evidenceIds": [
+        "fixture-context",
+        "fixture-item-1"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "kind": "ORIGEM",
+      "detail": "Origin requires event history and historical configuration",
+      "evidenceIds": [
+        "fixture-context",
+        "fixture-item-1"
+      ]
+    }
+  ],
+  "rootCause": null,
+  "missing": [
+    "ERP event history and related documents unavailable",
+    "Current and historical operation/product settings not inspected",
+    "Customizations and integrations not inspected"
+  ],
+  "nextVerification": "Validate dimension mappings and availability policy; obtain historical events in homologation",
+  "evidence": [
+    {
+      "id": "fixture-context",
+      "source": "fixture://confirmation/1",
+      "version": "1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "Synthetic note and item; no ERP query executed"
+    },
+    {
+      "id": "fixture-item-1",
+      "source": "fixture://confirmation/1/item/1",
+      "version": "1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "company=SYNTHETIC-COMPANY; product=SYNTHETIC-PRODUCT; location=L1; expectedLocation=L1; unit=UN; stockUnit=UN; control=A; stockControl=A; required=10; suppliedAvailability=1; policyValidatedInFixture=true; policy=fixture-rule-v1"
+    },
+    {
+      "id": "8c7dc428-d2e2-42c7-b561-827d1dc22189",
+      "source": "C:\\Users\\annayran.ferreira\\Documents\\ChatGPT\\Nexo AI\\target\\fixture-knowledge.md",
+      "version": "1",
+      "process": "confirmation-stock",
+      "tenant": "demo-a",
+      "simulated": true,
+      "observation": "Explicitly reviewed import; applicability must be verified per incident"
+    }
+  ],
+  "tools": [
+    {
+      "tool": "readConfirmationContext",
+      "nunota": 1001,
+      "outcome": "SIMULATED",
+      "elapsedMs": 8
+    },
+    {
+      "tool": "retrieveReviewedKnowledge",
+      "nunota": 1001,
+      "outcome": "documents=1",
+      "elapsedMs": 11
+    }
+  ],
+  "explanation": "Deterministic report; no model invoked."
+}

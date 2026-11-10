@@ -1,0 +1,77 @@
+/*
+  Matriz somente leitura das TOPs marcadas com AD_FILARESERVA.
+  Não depende do pacote candidato e pode ser executada no estado atual.
+*/
+
+WITH ULTIMA_VERSAO AS (
+    SELECT TOP.CODTIPOPER,
+           TOP.DHALTER,
+           TOP.DESCROPER,
+           TOP.TIPMOV,
+           NVL(TOP.AD_FILARESERVA, 'N') AS AD_FILARESERVA,
+           ROW_NUMBER() OVER (
+               PARTITION BY TOP.CODTIPOPER
+               ORDER BY TOP.DHALTER DESC
+           ) AS RN
+      FROM TGFTOP TOP
+),
+CLASSIFICADA AS (
+    SELECT CODTIPOPER,
+           DHALTER,
+           DESCROPER,
+           TIPMOV,
+           AD_FILARESERVA,
+           CASE
+               WHEN AD_FILARESERVA = 'S' THEN 'S'
+               ELSE 'N'
+           END AS TRIGGER_ATUAL_GRAVA_TGFSEQENT,
+           CASE
+               WHEN AD_FILARESERVA = 'S' AND TIPMOV IN ('P', 'J') THEN 'S'
+               ELSE 'N'
+           END AS VIEW_ATUAL_EXIBE_FILA,
+           CASE
+               WHEN AD_FILARESERVA = 'S' AND TIPMOV IN ('P', 'J') THEN 'S'
+               ELSE 'N'
+           END AS CANDIDATO_CRIA_RESERVA,
+           CASE
+               WHEN AD_FILARESERVA = 'S' THEN 'S'
+               ELSE 'N'
+           END AS CANDIDATO_PROTEGE_ESTOQUE,
+           CASE
+               WHEN UPPER(DESCROPER) LIKE '%INATIV%' THEN 'REVISAR_INATIVA'
+               WHEN AD_FILARESERVA = 'S' AND TIPMOV NOT IN ('P', 'J') THEN 'VALIDAR_PROTECAO_SEM_FILA'
+               WHEN AD_FILARESERVA = 'S' THEN 'VALIDAR_CRIACAO_FILA'
+               ELSE 'FORA_DO_PROCESSO'
+           END AS ACAO_RECOMENDADA
+      FROM ULTIMA_VERSAO
+     WHERE RN = 1
+       AND AD_FILARESERVA = 'S'
+)
+SELECT *
+  FROM CLASSIFICADA
+ ORDER BY TIPMOV,
+          CODTIPOPER;
+
+-- Resumo quantitativo para evidência.
+WITH ULTIMA_VERSAO AS (
+    SELECT TOP.CODTIPOPER,
+           TOP.DESCROPER,
+           TOP.TIPMOV,
+           NVL(TOP.AD_FILARESERVA, 'N') AS AD_FILARESERVA,
+           ROW_NUMBER() OVER (
+               PARTITION BY TOP.CODTIPOPER
+               ORDER BY TOP.DHALTER DESC
+           ) AS RN
+      FROM TGFTOP TOP
+)
+SELECT TIPMOV,
+       COUNT(*) AS TOTAL_MARCADAS,
+       SUM(CASE WHEN TIPMOV IN ('P', 'J') THEN 1 ELSE 0 END) AS CRIAM_FILA_CANDIDATO,
+       SUM(CASE WHEN TIPMOV NOT IN ('P', 'J') THEN 1 ELSE 0 END) AS SOMENTE_PROTECAO_PENDENTE,
+       SUM(CASE WHEN UPPER(DESCROPER) LIKE '%INATIV%' THEN 1 ELSE 0 END) AS DESCRITAS_INATIVAS
+  FROM ULTIMA_VERSAO
+ WHERE RN = 1
+   AND AD_FILARESERVA = 'S'
+ GROUP BY TIPMOV
+ ORDER BY TIPMOV;
+

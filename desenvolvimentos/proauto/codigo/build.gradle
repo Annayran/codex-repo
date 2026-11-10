@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+}
+
+group = providers.gradleProperty('projectGroup').getOrElse('br.com.zaya.proauto.filareserva')
+version = providers.gradleProperty('projectVersion').getOrElse('0.1.0-SNAPSHOT')
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+repositories {
+    mavenCentral()
+}
+
+def sankhyaDependenciesDir = providers.gradleProperty('sankhyaDependenciesDir')
+        .orElse(providers.environmentVariable('SANKHYA_DEPENDENCIES_DIR'))
+        .getOrElse('C:/dev/zaya/platform/modulos-sankhya/Dependencias')
+def sankhyaVersionDir = providers.gradleProperty('sankhyaVersionDir').getOrElse('')
+
+if (!file(sankhyaDependenciesDir).isDirectory()) {
+    throw new GradleException(
+            "Diretorio de dependencias Sankhya nao encontrado: ${sankhyaDependenciesDir}"
+    )
+}
+
+dependencies {
+    compileOnly fileTree(
+            dir: "${sankhyaDependenciesDir}/Jar",
+            include: ['*.jar'],
+            exclude: ['pdfbox*.jar', 'fontbox*.jar']
+    )
+
+    if (sankhyaVersionDir) {
+        compileOnly fileTree(
+                dir: "${sankhyaDependenciesDir}/${sankhyaVersionDir}",
+                include: ['*.jar'],
+                exclude: ['pdfbox*.jar', 'fontbox*.jar']
+        )
+    }
+
+    testImplementation 'junit:junit:4.13.2'
+}
+
+test {
+    useJUnit()
+}
+
+jar {
+    archiveFileName = providers.gradleProperty('artifactName')
+            .getOrElse("${rootProject.name}.jar")
+}

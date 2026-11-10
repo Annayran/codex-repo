@@ -1,0 +1,30 @@
+-- SOMENTE LEITURA. Executar imediatamente após o deploy do Lote A.
+
+SELECT OWNER,
+       OBJECT_NAME,
+       OBJECT_TYPE,
+       STATUS,
+       LAST_DDL_TIME
+  FROM ALL_OBJECTS
+ WHERE OWNER = SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+   AND OBJECT_NAME = 'TRG_IUD_TGFITE_FILRES_PRA';
+
+SELECT OWNER,
+       NAME,
+       TYPE,
+       LINE,
+       POSITION,
+       TEXT
+  FROM ALL_ERRORS
+ WHERE OWNER = SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA')
+   AND NAME = 'TRG_IUD_TGFITE_FILRES_PRA'
+ ORDER BY SEQUENCE;
+
+-- A primeira consulta deve retornar VALID; a segunda não deve retornar linhas.
+
+SELECT CHAVE,
+       INTEIRO
+  FROM TSIPAR
+ WHERE CHAVE IN ('DTNACINT', 'DTINTERINT')
+ ORDER BY CHAVE;
+

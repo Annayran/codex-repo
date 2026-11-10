@@ -1,0 +1,20 @@
+.gradle/
+build/
+out/
+bin/
+.idea/
+*.iml
+*.class
+*.log
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# O Gradle Wrapper deve permanecer versionado.
+!gradle/
+!gradle/wrapper/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties

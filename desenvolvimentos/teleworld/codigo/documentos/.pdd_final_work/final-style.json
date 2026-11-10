@@ -1,0 +1,170 @@
+{
+  "input": "C:\\Users\\annayran.ferreira\\Documents\\Teleworld\\documentos\\ZY-TLW-2026-INTPDD-004_Finalizacao_Flow_Fornecedor_XML.docx",
+  "fonts_by_char_count": {
+    "Arial": 6413
+  },
+  "direct_run_formatting_runs": 146,
+  "direct_paragraph_formatting_paragraphs": 154,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 3,
+      "text": "INTPDD DOCUMENTO DE INTEGRA\u00c7\u00c3O E DESENVOLVIMENTO",
+      "style": "Normal"
+    },
+    {
+      "para_index": 5,
+      "text": "Processo homologado para entradas MDE e Portal de Importa\u00e7\u00e3o",
+      "style": "Normal"
+    },
+    {
+      "para_index": 7,
+      "text": "TELEWORLD  USO INTERNO ZAYA",
+      "style": "Normal"
+    },
+    {
+      "para_index": 69,
+      "text": "Identifica\u00e7\u00e3o",
+      "style": "Normal"
+    },
+    {
+      "para_index": 70,
+      "text": "Informa\u00e7\u00e3o",
+      "style": "Normal"
+    },
+    {
+      "para_index": 83,
+      "text": "Origem do XML",
+      "style": "Normal"
+    },
+    {
+      "para_index": 84,
+      "text": "Como o sistema trata",
+      "style": "Normal"
+    },
+    {
+      "para_index": 85,
+      "text": "Resultado",
+      "style": "Normal"
+    },
+    {
+      "para_index": 92,
+      "text": "Informa\u00e7\u00e3o",
+      "style": "Normal"
+    },
+    {
+      "para_index": 93,
+      "text": "Finalidade para o processo",
+      "style": "Normal"
+    },
+    {
+      "para_index": 110,
+      "text": "Status",
+      "style": "Normal"
+    },
+    {
+      "para_index": 111,
+      "text": "Significado para o usu\u00e1rio",
+      "style": "Normal"
+    },
+    {
+      "para_index": 120,
+      "text": "Etapa",
+      "style": "Normal"
+    },
+    {
+      "para_index": 121,
+      "text": "Localiza\u00e7\u00e3o",
+      "style": "Normal"
+    },
+    {
+      "para_index": 122,
+      "text": "Grava\u00e7\u00e3o",
+      "style": "Normal"
+    },
+    {
+      "para_index": 135,
+      "text": "Destino no formul\u00e1rio",
+      "style": "Normal"
+    },
+    {
+      "para_index": 136,
+      "text": "Valor enviado",
+      "style": "Normal"
+    },
+    {
+      "para_index": 137,
+      "text": "Uso",
+      "style": "Normal"
+    },
+    {
+      "para_index": 150,
+      "text": "Regra",
+      "style": "Normal"
+    },
+    {
+      "para_index": 151,
+      "text": "Comportamento homologado",
+      "style": "Normal"
+    }
+  ],
+  "examples": {
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 1,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "text": "",
+        "style": "Normal"
+      },
+      {
+        "para_index": 3,
+        "text": "INTPDD DOCUMENTO DE INTEGRA\u00c7\u00c3O E DESENVOLVIMENTO",
+        "style": "Normal"
+      },
+      {
+        "para_index": 5,
+        "text": "Processo homologado para entradas MDE e Portal de Importa\u00e7\u00e3o",
+        "style": "Normal"
+      },
+      {
+        "para_index": 6,
+        "text": "Fila de processamento  A\u00e7\u00e3o agendada  Flow 15  Preenchimento autom\u00e1tico do parceiro",
+        "style": "Normal"
+      }
+    ],
+    "direct_run_formatting": [
+      {
+        "para_index": 3,
+        "run_text": "INTPDD DOCUMENTO DE INTEGRA\u00c7\u00c3O E DESENVOLVIMENTO",
+        "style": "Normal"
+      },
+      {
+        "para_index": 5,
+        "run_text": "Processo homologado para entradas MDE e Portal de Importa\u00e7\u00e3o",
+        "style": "Normal"
+      },
+      {
+        "para_index": 6,
+        "run_text": "Fila de processamento  A\u00e7\u00e3o agendada  Flow 15  Preenchimento autom\u00e1tico do parce",
+        "style": "Normal"
+      },
+      {
+        "para_index": 7,
+        "run_text": "TELEWORLD  USO INTERNO ZAYA",
+        "style": "Normal"
+      },
+      {
+        "para_index": 8,
+        "run_text": "Documento ZY TLW 2026 INTPDD 004",
+        "style": "Normal"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}

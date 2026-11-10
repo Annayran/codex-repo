@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PortoMag · Pedidos recebidos</title><link rel="stylesheet" href="styles.css"></head>
+<body data-action-id="68"><header><div class="brand">PORTOMAG <span>COMERCIAL</span></div><span class="badge">Conferência de pedidos</span></header>
+<main><section class="intro"><div><p class="eyebrow">PEDIDOS RECEBIDOS</p><h1>Do PDF ao pedido organizado.</h1><p>Importe o pedido da Claro e confira as informações antes de continuar.</p></div><button id="choose">Importar PDF</button><input id="file" type="file" accept="application/pdf,.pdf" hidden></section>
+<div id="drop" tabindex="0" role="button" aria-label="Selecionar ou arrastar PDF"><strong>Arraste seu pedido em PDF</strong><span>ou use Importar PDF · até 10 MB e 30 páginas</span></div>
+<p id="status" role="status" aria-live="polite">Aguardando documento. Nenhum registro foi salvo no Sankhya.</p>
+<section id="result" hidden><div class="section-head"><div><p class="eyebrow">REGISTRO MESTRE</p><h2 id="title"></h2></div><span class="badge">Em conferência</span></div><dl id="headerFields" class="cards"></dl>
+<div id="alerts" role="alert"></div><div class="section-head"><h2>Itens do pedido</h2><span id="count"></span></div><div class="table-wrap"><table><thead><tr><th>Item</th><th>Tipo / código externo</th><th>Quantidade</th><th>Preço unitário</th><th>Total impresso</th><th>Entrega</th></tr></thead><tbody id="items"></tbody></table></div>
+<section id="details"></section><footer><p>Revise os itens e as pendências. O documento comercial será gerado em uma etapa posterior.</p><button id="save" disabled>Salvar pedido recebido</button><button id="download" class="secondary">Baixar leitura para conferência</button></footer>
+<p class="muted" id="connection">Gravação configurada pela ação Sankhya 68. Homologue permissões e rollback antes da produção.</p></section></main><script type="module" src="../controller/dashboard.mjs"></script></body></html>

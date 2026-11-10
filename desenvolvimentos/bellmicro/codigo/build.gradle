@@ -1,0 +1,90 @@
+plugins { id 'java' }
+
+group = 'br.com.zaya.belmicro'
+version = '7.14'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+sourceSets {
+    main { java.srcDirs = ['src']; resources.srcDirs = ['src/main/resources'] }
+    test { java.srcDirs = ['test']; resources.srcDirs = [] }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 8
+    options.compilerArgs += ['-proc:none']
+}
+
+// Domain and application ports are pure Java; production SDK adapters are pending.
+def sdkPath = providers.gradleProperty('sankhyaDependenciesDir')
+    .orElse(providers.environmentVariable('SNK_LIB'))
+    .orElse(providers.environmentVariable('SANKHYA_DEPENDENCIES_DIR'))
+def sdkVersion = providers.gradleProperty('sankhyaVersionDir').getOrElse('')
+if (sdkPath.isPresent()) {
+    sourceSets.main.java.srcDir 'sankhya/src'
+    sourceSets.main.resources.srcDir 'sankhya/resources'
+    if (!file(sdkPath.get()).isDirectory()) {
+        throw new GradleException('Diretorio de bibliotecas Sankhya configurado nao existe.')
+    }
+    dependencies {
+        if (sdkVersion) {
+            compileOnly fileTree(dir: "${sdkPath.get()}/${sdkVersion}", include: ['*.jar'])
+        }
+        // Prefer the selected SDK over older module JARs in the shared library folder.
+        compileOnly fileTree(dir: sdkPath.get(), include: ['*.jar', 'Jar/*.jar'])
+    }
+    sourceSets.create('actionTest') {
+        java.srcDirs = ['sankhya/test']
+        resources.srcDirs = []
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+    tasks.register('actionTest', JavaExec) {
+        dependsOn actionTestClasses
+        classpath = sourceSets.actionTest.runtimeClasspath
+        mainClass = 'br.com.zaya.belmicro.rateio.acao.TesteAcoesFinanceiro'
+    }
+    tasks.named('check') { dependsOn actionTest }
+}
+
+// Standalone regression suite: no external test dependencies or SDK needed.
+tasks.register('domainTest', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.belmicro.rateio.TesteDominio'
+}
+tasks.register('applicationTest', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.belmicro.rateio.TesteSimulacao'
+}
+tasks.register('jdbcTest', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.belmicro.rateio.TesteJdbc'
+}
+tasks.register('persistenceTest', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'br.com.zaya.belmicro.rateio.TestePersistencia'
+}
+// No JUnit engine: the executable suite above is the test runner for this phase.
+tasks.named('test') { enabled = false }
+tasks.named('check') { dependsOn domainTest, applicationTest, jdbcTest, persistenceTest }
+tasks.named('processResources') { from('web') { into 'META-INF/resources/rateio' } }
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+jar {
+    archiveFileName = "ZAYA-BLM-V${version}.jar"
+    manifest {
+        attributes 'Implementation-Title': 'Belmicro - Rateio de despesas',
+            'Implementation-Version': version,
+            'Implementation-Vendor': 'Zaya.IT',
+            'Sankhya-Integration': sdkPath.isPresent().toString(),
+            'Built-By': 'Zaya.IT Build'
+    }
+}

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+  <instances>
+    <instance name="ZPM_PEDITE" isUpdate="false">
+      <instanceDescription>PortoMag - Itens do pedido recebido</instanceDescription>
+      <tableInfo name="ZPM_PEDITE" sequenceType="M">
+        <tableDescription>PortoMag - Itens do pedido recebido</tableDescription>
+        <primaryKey>
+          <IDPED />
+          <SEQEXT />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="IDPED" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Pedido recebido</description>
+        </field>
+        <field name="SEQEXT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Sequencia no PDF</description>
+        </field>
+        <field name="TIPO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Material ou servico</description>
+        </field>
+        <field name="CODEXT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Codigo externo Claro</description>
+        </field>
+        <field name="DESCRICAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="2000">
+          <description>Descricao e execucao no PDF</description>
+        </field>
+        <field name="CENTROEXT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Centro externo Claro</description>
+        </field>
+        <field name="DTENTREGA" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Entrega prevista</description>
+        </field>
+        <field name="QTDE" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Quantidade</description>
+        </field>
+        <field name="UNEXT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Unidade no PDF</description>
+        </field>
+        <field name="VLRUNIT" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Preco unitario no PDF</description>
+        </field>
+        <field name="ALIQICMS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Aliquota ICMS ou ISS informada</description>
+        </field>
+        <field name="VLRICMS" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Valor ICMS ou ISS informado</description>
+        </field>
+        <field name="ALIQST" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Aliquota ST informada</description>
+        </field>
+        <field name="VLRST" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Valor ST informado</description>
+        </field>
+        <field name="ALIQIPI" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Aliquota IPI informada</description>
+        </field>
+        <field name="VLRIPI" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Valor IPI informado</description>
+        </field>
+        <field name="TOTALITEM" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Total impresso do item</description>
+        </field>
+        <field name="SITE" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Identificadores de site no PDF</description>
+        </field>
+        <field name="MUNICIPIO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Municipio de execucao</description>
+        </field>
+        <field name="INICIO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Mes e ano inicial</description>
+        </field>
+        <field name="TERMINO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Mes e ano final</description>
+        </field>
+        <field name="PAGINA" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Pagina do item</description>
+        </field>
+        <field name="CNPJCLI" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>CNPJ de faturamento do item</description>
+        </field>
+        <field name="FATURAMENTO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="2000">
+          <description>Bloco de faturamento do anexo</description>
+        </field>
+        <field name="LOCENTREGA" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="2000">
+          <description>Bloco de entrega do anexo</description>
+        </field>
+        <field name="PAGANEXO" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Pagina do anexo</description>
+        </field>
+      </fields>
+    </instance>
+    <instance name="ZPM_PEDREC" isUpdate="false">
+      <instanceDescription>PortoMag - Pedidos recebidos</instanceDescription>
+      <tableInfo name="ZPM_PEDREC" sequenceType="A" sequenceField="ID" presentationField="NUMPED">
+        <tableDescription>PortoMag - Pedidos recebidos</tableDescription>
+        <primaryKey>
+          <ID />
+        </primaryKey>
+      </tableInfo>
+      <fields>
+        <field name="ID" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Identificador</description>
+        </field>
+        <field name="NUMPED" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Numero do pedido externo</description>
+        </field>
+        <field name="DTEMISSAO" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Data de emissao</description>
+        </field>
+        <field name="CNPJFORN" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>CNPJ fornecedor no PDF</description>
+        </field>
+        <field name="FORNECEDOR" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Fornecedor no PDF</description>
+        </field>
+        <field name="COMPRADOR" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Comprador no PDF</description>
+        </field>
+        <field name="CONDPAG" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Condicao de pagamento no PDF</description>
+        </field>
+        <field name="TOTALPDF" systemField="N" dataType="F" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Total impresso no PDF</description>
+        </field>
+        <field name="LAYOUT" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Versao do leitor</description>
+        </field>
+        <field name="CNPJCLI" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>CNPJ de faturamento</description>
+        </field>
+        <field name="ARQUIVO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="255">
+          <description>Nome do arquivo de origem</description>
+        </field>
+        <field name="SHA256" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>SHA256 informado pelo leitor</description>
+        </field>
+        <field name="PAGINAS" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Quantidade de paginas</description>
+        </field>
+        <field name="CHAVEIMP" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Chave unica de recebimento</description>
+        </field>
+        <field name="SITUACAO" systemField="N" dataType="S" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N" size="100">
+          <description>Situacao do recebimento</description>
+        </field>
+        <field name="CODUSU" systemField="N" dataType="I" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Usuario da importacao</description>
+        </field>
+        <field name="DHIMPORT" systemField="N" dataType="D" presentationType="P" calculated="N" allowSearch="N" allowDefault="S" visibleOnSearch="S" allowNull="N">
+          <description>Data e hora da importacao - validar precisao no ambiente</description>
+        </field>
+      </fields>
+      <relationShip>
+        <relation entityName="ZPM_PEDITE" type="I" insert="N" update="N" remove="S">
+          <targetInfo systemInstance="N" tableName="ZPM_PEDITE" />
+          <fields>
+            <field localName="ID" targetName="IDPED" />
+          </fields>
+        </relation>
+      </relationShip>
+    </instance>
+  </instances>
+</metadata>

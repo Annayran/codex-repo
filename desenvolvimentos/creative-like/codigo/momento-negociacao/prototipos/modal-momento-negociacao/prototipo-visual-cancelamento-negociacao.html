@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancelamento de Proposta / Negociação</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: #172033;
+            background:
+                radial-gradient(circle at top left, rgba(22, 163, 74, 0.12), transparent 32%),
+                linear-gradient(135deg, #eef3f8 0%, #f8fafc 52%, #eef4ef 100%);
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        .cancelamento-negociacao-modal {
+            min-height: 100vh;
+            padding: 28px;
+            background: rgba(15, 23, 42, 0.12);
+        }
+
+        .cancelamento-negociacao-modal .modal-shell {
+            width: min(1560px, calc(100vw - 56px));
+            height: min(920px, calc(100vh - 56px));
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #dfe7ef;
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
+        }
+
+        .cancelamento-negociacao-modal .modal-header {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 22px;
+            border-bottom: 1px solid #e7edf3;
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .cancelamento-negociacao-modal .header-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .cancelamento-negociacao-modal .brand-mark {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0f8f3a, #2fa84f);
+            color: #ffffff;
+            font-weight: 900;
+            box-shadow: 0 10px 20px rgba(22, 163, 74, 0.22);
+        }
+
+        .cancelamento-negociacao-modal h1 {
+            margin: 0;
+            font-size: 20px;
+            line-height: 1.2;
+        }
+
+        .cancelamento-negociacao-modal .header-subtitle {
+            margin-top: 4px;
+            color: #667085;
+            font-size: 13px;
+        }
+
+        .cancelamento-negociacao-modal .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cancelamento-negociacao-modal .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            border: 1px solid #a7dfb7;
+            background: #eefbf1;
+            color: #137333;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .cancelamento-negociacao-modal .close-button {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #d8e0e8;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #667085;
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .cancelamento-negociacao-modal .close-button:hover {
+            background: #f3f6f9;
+            color: #172033;
+        }
+
+        .cancelamento-negociacao-modal .modal-content {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: auto;
+            padding: 18px 20px 22px;
+            background: #f4f7fa;
+        }
+
+        .cancelamento-negociacao-modal .meta-strip {
+            display: grid;
+            grid-template-columns: 170px repeat(4, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .cancelamento-negociacao-modal .meta-card,
+        .cancelamento-negociacao-modal .section-card,
+        .cancelamento-negociacao-modal .side-panel,
+        .cancelamento-negociacao-modal .decision-card,
+        .cancelamento-negociacao-modal .metric-card {
+            border: 1px solid #dfe7ef;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.035);
+        }
+
+        .cancelamento-negociacao-modal .meta-card {
+            min-height: 76px;
+            padding: 12px 14px;
+        }
+
+        .cancelamento-negociacao-modal .meta-label {
+            color: #667085;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cancelamento-negociacao-modal .meta-value {
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .cancelamento-negociacao-modal .negotiation-number {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            color: #0b7d35;
+        }
+
+        .cancelamento-negociacao-modal .work-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 318px;
+            gap: 14px;
+            align-items: start;
+        }
+
+        .cancelamento-negociacao-modal .main-column {
+            min-width: 0;
+        }
+
+        .cancelamento-negociacao-modal .decision-row {
+            display: grid;
+            grid-template-columns: minmax(320px, 1.4fr) repeat(4, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .cancelamento-negociacao-modal .decision-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 18px;
+            min-height: 126px;
+            border-color: #cdeed7;
+            background: linear-gradient(135deg, #ffffff, #f2fbf5);
+        }
+
+        .cancelamento-negociacao-modal .decision-icon {
+            width: 74px;
+            height: 74px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #15803d, #34a853);
+            color: #ffffff;
+            font-size: 38px;
+            box-shadow: 0 0 0 10px #ddf7e5;
+        }
+
+        .cancelamento-negociacao-modal .decision-card h2 {
+            margin: 0;
+            font-size: 17px;
+            color: #087443;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .cancelamento-negociacao-modal .decision-card p {
+            margin: 7px 0 0;
+            color: #475467;
+            line-height: 1.45;
+        }
+
+        .cancelamento-negociacao-modal .metric-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 126px;
+            padding: 16px;
+        }
+
+        .cancelamento-negociacao-modal .metric-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            border-radius: 16px;
+            color: #ffffff;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .metric-icon.blue {
+            background: #2563eb;
+        }
+
+        .cancelamento-negociacao-modal .metric-icon.purple {
+            background: #7c3aed;
+        }
+
+        .cancelamento-negociacao-modal .metric-icon.green {
+            background: #16a34a;
+        }
+
+        .cancelamento-negociacao-modal .metric-icon.red {
+            background: #dc2626;
+        }
+
+        .cancelamento-negociacao-modal .metric-icon.gray {
+            background: #64748b;
+        }
+
+        .cancelamento-negociacao-modal .metric-value {
+            display: block;
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .metric-label {
+            display: block;
+            margin-top: 2px;
+            color: #475467;
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .cancelamento-negociacao-modal .macro-copy {
+            margin: -4px 16px 14px;
+            color: #667085;
+            line-height: 1.45;
+        }
+
+        .cancelamento-negociacao-modal .macro-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(120px, 1fr));
+            gap: 10px;
+            padding: 0 16px 16px;
+        }
+
+        .cancelamento-negociacao-modal .macro-card {
+            min-height: 116px;
+            padding: 12px 13px;
+            border: 1px solid #dfe7ef;
+            border-left: 5px solid #f59e0b;
+            border-radius: 10px;
+            background: #ffffff;
+        }
+
+        .cancelamento-negociacao-modal .macro-card.ok {
+            border-left-color: #16a34a;
+        }
+
+        .cancelamento-negociacao-modal .macro-card.warn {
+            border-left-color: #f59e0b;
+        }
+
+        .cancelamento-negociacao-modal .macro-card.block {
+            border-left-color: #dc2626;
+        }
+
+        .cancelamento-negociacao-modal .macro-card .macro-label {
+            display: block;
+            color: #667085;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 7px;
+        }
+
+        .cancelamento-negociacao-modal .macro-card strong {
+            display: block;
+            font-size: 18px;
+            line-height: 1.08;
+            margin-bottom: 7px;
+        }
+
+        .cancelamento-negociacao-modal .macro-card span:last-child {
+            display: block;
+            color: #667085;
+            font-size: 12px;
+            line-height: 1.28;
+        }
+
+        .cancelamento-negociacao-modal .section-card {
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .cancelamento-negociacao-modal .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 15px 16px;
+            border-bottom: 1px solid #e8eef4;
+        }
+
+        .cancelamento-negociacao-modal .section-header h2 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .cancelamento-negociacao-modal .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
+            padding: 14px 16px 4px;
+            color: #344054;
+            font-size: 12px;
+        }
+
+        .cancelamento-negociacao-modal .breadcrumb span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            font-weight: 700;
+        }
+
+        .cancelamento-negociacao-modal .breadcrumb b {
+            color: #94a3b8;
+        }
+
+        .cancelamento-negociacao-modal .table-wrap {
+            width: 100%;
+            overflow: auto;
+            padding: 10px 10px 14px;
+        }
+
+        .cancelamento-negociacao-modal table {
+            width: 100%;
+            min-width: 940px;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: #172033;
+            font-size: 12px;
+        }
+
+        .cancelamento-negociacao-modal th,
+        .cancelamento-negociacao-modal td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e8eef4;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .cancelamento-negociacao-modal th {
+            background: #f8fafc;
+            color: #475467;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .cancelamento-negociacao-modal tbody tr:hover td {
+            background: #fbfdff;
+        }
+
+        .cancelamento-negociacao-modal .doc-tag,
+        .cancelamento-negociacao-modal .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .cancelamento-negociacao-modal .doc-tag {
+            background: #eaf2ff;
+            color: #1d4ed8;
+        }
+
+        .cancelamento-negociacao-modal .status-pill.green {
+            background: #e9f8ef;
+            color: #087443;
+        }
+
+        .cancelamento-negociacao-modal .status-pill.red {
+            background: #fdecec;
+            color: #b42318;
+        }
+
+        .cancelamento-negociacao-modal .status-pill.blue {
+            background: #eef4ff;
+            color: #175cd3;
+        }
+
+        .cancelamento-negociacao-modal .muted {
+            color: #667085;
+        }
+
+        .cancelamento-negociacao-modal .number-green {
+            color: #087443;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .number-red {
+            color: #b42318;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .filters {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0 16px 12px;
+        }
+
+        .cancelamento-negociacao-modal .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .cancelamento-negociacao-modal .filter-button,
+        .cancelamento-negociacao-modal .secondary-button,
+        .cancelamento-negociacao-modal .action-button {
+            min-height: 34px;
+            border: 1px solid #d5dde7;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #344054;
+            padding: 7px 11px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .cancelamento-negociacao-modal .filter-button.active {
+            border-color: #15803d;
+            background: #eefbf1;
+            color: #0b7d35;
+        }
+
+        .cancelamento-negociacao-modal .search-box {
+            width: min(320px, 100%);
+            position: relative;
+        }
+
+        .cancelamento-negociacao-modal .search-box input {
+            width: 100%;
+            height: 36px;
+            padding: 8px 10px 8px 34px;
+            border: 1px solid #d5dde7;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #172033;
+        }
+
+        .cancelamento-negociacao-modal .search-box span {
+            position: absolute;
+            left: 11px;
+            top: 8px;
+            color: #94a3b8;
+        }
+
+        .cancelamento-negociacao-modal .action-button {
+            background: #ffffff;
+            color: #0f5132;
+            border-color: #a7dfb7;
+        }
+
+        .cancelamento-negociacao-modal .action-button:hover {
+            background: #eefbf1;
+        }
+
+        .cancelamento-negociacao-modal .side-panel {
+            position: sticky;
+            top: 0;
+            overflow: hidden;
+        }
+
+        .cancelamento-negociacao-modal .side-panel h2 {
+            margin: 0;
+            padding: 16px 16px 12px;
+            font-size: 16px;
+        }
+
+        .cancelamento-negociacao-modal .rule-result {
+            margin: 0 16px 14px;
+            padding: 14px;
+            border: 1px solid #a7dfb7;
+            border-radius: 11px;
+            background: #f1fbf4;
+            line-height: 1.4;
+        }
+
+        .cancelamento-negociacao-modal .rule-result strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #0f5132;
+            font-size: 14px;
+        }
+
+        .cancelamento-negociacao-modal .rule-result ul {
+            margin: 10px 0 0 18px;
+            padding: 0;
+        }
+
+        .cancelamento-negociacao-modal .side-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 0 16px 14px;
+        }
+
+        .cancelamento-negociacao-modal .side-actions button {
+            min-height: 42px;
+            border-radius: 9px;
+            border: 1px solid #d5dde7;
+            background: #ffffff;
+            color: #172033;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .cancelamento-negociacao-modal .side-actions .primary-side-action {
+            border-color: #0f5132;
+            background: #172033;
+            color: #ffffff;
+        }
+
+        .cancelamento-negociacao-modal .side-block {
+            padding: 14px 16px;
+            border-top: 1px solid #e8eef4;
+        }
+
+        .cancelamento-negociacao-modal .rule-box {
+            padding: 13px;
+            border: 1px solid #bdecc9;
+            border-radius: 11px;
+            background: #f1fbf4;
+            color: #23402c;
+            line-height: 1.45;
+            font-size: 12px;
+        }
+
+        .cancelamento-negociacao-modal .rule-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #087443;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .check-dot {
+            width: 22px;
+            height: 22px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #16a34a;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .side-list {
+            display: grid;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 12px;
+        }
+
+        .cancelamento-negociacao-modal .side-list li {
+            display: grid;
+            grid-template-columns: 24px 1fr;
+            gap: 8px;
+            align-items: start;
+        }
+
+        .cancelamento-negociacao-modal .side-list strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .cancelamento-negociacao-modal .summary-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 0;
+            color: #475467;
+            font-size: 12px;
+        }
+
+        .cancelamento-negociacao-modal .summary-line strong {
+            color: #172033;
+        }
+
+        .cancelamento-negociacao-modal .legend {
+            display: grid;
+            gap: 9px;
+            font-size: 12px;
+        }
+
+        .cancelamento-negociacao-modal .legend-item {
+            display: grid;
+            grid-template-columns: 14px 1fr;
+            gap: 8px;
+            align-items: start;
+        }
+
+        .cancelamento-negociacao-modal .legend-dot {
+            width: 10px;
+            height: 10px;
+            margin-top: 4px;
+            border-radius: 50%;
+        }
+
+        .cancelamento-negociacao-modal .legend-dot.green {
+            background: #16a34a;
+        }
+
+        .cancelamento-negociacao-modal .legend-dot.red {
+            background: #dc2626;
+        }
+
+        .cancelamento-negociacao-modal .legend-dot.blue {
+            background: #64748b;
+        }
+
+        .cancelamento-negociacao-modal .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.38);
+        }
+
+        .cancelamento-negociacao-modal .reason-modal {
+            width: min(470px, 100%);
+            overflow: hidden;
+            border: 1px solid #dfe7ef;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 26px 70px rgba(15, 23, 42, 0.24);
+        }
+
+        .cancelamento-negociacao-modal .reason-head,
+        .cancelamento-negociacao-modal .reason-body,
+        .cancelamento-negociacao-modal .reason-footer {
+            padding: 16px;
+        }
+
+        .cancelamento-negociacao-modal .reason-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e8eef4;
+        }
+
+        .cancelamento-negociacao-modal .reason-head h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .cancelamento-negociacao-modal label {
+            display: block;
+            margin-bottom: 6px;
+            color: #475467;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .cancelamento-negociacao-modal select,
+        .cancelamento-negociacao-modal textarea {
+            width: 100%;
+            border: 1px solid #d5dde7;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #172033;
+            padding: 9px 10px;
+        }
+
+        .cancelamento-negociacao-modal textarea {
+            min-height: 86px;
+            resize: vertical;
+        }
+
+        .cancelamento-negociacao-modal .field {
+            margin-bottom: 13px;
+        }
+
+        .cancelamento-negociacao-modal .reason-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            border-top: 1px solid #e8eef4;
+            background: #f8fafc;
+        }
+
+        .cancelamento-negociacao-modal .primary-button {
+            min-height: 36px;
+            border: 1px solid #15803d;
+            border-radius: 9px;
+            background: #168a3a;
+            color: #ffffff;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: 900;
+        }
+
+        .cancelamento-negociacao-modal .primary-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .cancelamento-negociacao-modal .empty-state {
+            padding: 18px;
+            color: #667085;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 1280px) {
+            .cancelamento-negociacao-modal .modal-shell {
+                height: auto;
+                min-height: calc(100vh - 56px);
+            }
+
+            .cancelamento-negociacao-modal .work-grid,
+            .cancelamento-negociacao-modal .decision-row,
+            .cancelamento-negociacao-modal .macro-grid,
+            .cancelamento-negociacao-modal .meta-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .cancelamento-negociacao-modal .side-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .cancelamento-negociacao-modal {
+                padding: 10px;
+            }
+
+            .cancelamento-negociacao-modal .modal-shell {
+                width: 100%;
+                min-height: calc(100vh - 20px);
+                border-radius: 12px;
+            }
+
+            .cancelamento-negociacao-modal .modal-header,
+            .cancelamento-negociacao-modal .section-header,
+            .cancelamento-negociacao-modal .filters {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .cancelamento-negociacao-modal .decision-card {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .cancelamento-negociacao-modal .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="cancelamento-negociacao-modal">
+    <div class="modal-shell" role="dialog" aria-modal="true" aria-label="Cancelamento de Proposta / Negociação">
+        <header class="modal-header">
+            <div class="header-title">
+                <div class="brand-mark">Z</div>
+                <div>
+                    <h1>Cancelamento de Proposta / Negociação</h1>
+                    <div class="header-subtitle">Bancada visual para validação operacional de cancelamento</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span class="badge">● Em análise</span>
+                <button class="close-button" type="button" aria-label="Fechar">×</button>
+            </div>
+        </header>
+
+        <main class="modal-content">
+            <section class="meta-strip" aria-label="Dados da negociação">
+                <div class="meta-card">
+                    <div class="meta-label">Negociação</div>
+                    <div class="meta-value negotiation-number"># 123456</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">Cliente</div>
+                    <div class="meta-value">000123 - CLIENTE EXEMPLO LTDA</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">Vendedor</div>
+                    <div class="meta-value">0001 - MARIA SILVA</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">Data da Negociação</div>
+                    <div class="meta-value">24/04/2024</div>
+                </div>
+                <div class="meta-card">
+                    <div class="meta-label">Valor Total</div>
+                    <div class="meta-value">R$ 125.430,50</div>
+                </div>
+            </section>
+
+            <section class="work-grid">
+                <div class="main-column">
+                    <section class="decision-row" aria-label="Resumo do cancelamento">
+                        <article class="decision-card">
+                            <div class="decision-icon">✓</div>
+                            <div>
+                                <div class="meta-label">Situação do Cancelamento</div>
+                                <h2>Cancelamento parcial possível</h2>
+                                <p>Existem itens com saldo disponível para cancelamento. Itens totalmente entregues estão bloqueados.</p>
+                            </div>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon blue">PV</div>
+                            <div><span class="metric-value" id="metricPedidos">2</span><span class="metric-label">Pedidos de Venda encontrados</span></div>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon purple">IT</div>
+                            <div><span class="metric-value" id="metricItens">18</span><span class="metric-label">Itens no total</span></div>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon green">✓</div>
+                            <div><span class="metric-value" id="metricSaldo">7</span><span class="metric-label">Itens com saldo disponível</span></div>
+                        </article>
+                        <article class="metric-card">
+                            <div class="metric-icon red">!</div>
+                            <div><span class="metric-value" id="metricBloqueados">11</span><span class="metric-label">Itens bloqueados</span></div>
+                        </article>
+                    </section>
+
+                    <section class="section-card">
+                        <div class="section-header">
+                            <h2>Acompanhamento da negociação</h2>
+                        </div>
+                        <p class="macro-copy">
+                            Visão macro mantida do dashboard de acompanhamento da negociação. Estes cards explicam o momento geral da proposta
+                            antes da validação específica dos itens de suprimentos.
+                        </p>
+                        <div class="macro-grid">
+                            <article class="macro-card warn">
+                                <span class="macro-label">Suprimento</span>
+                                <strong>Pendente compra</strong>
+                                <span>Aberto porque há itens com quantidade divergente.</span>
+                            </article>
+                            <article class="macro-card ok">
+                                <span class="macro-label">Layout</span>
+                                <strong>Concluído</strong>
+                                <span>Informativo do acompanhamento geral da negociação.</span>
+                            </article>
+                            <article class="macro-card warn">
+                                <span class="macro-label">Produção</span>
+                                <strong>Aguardando suprimento</strong>
+                                <span>Mostra o reflexo operacional antes do cancelamento.</span>
+                            </article>
+                            <article class="macro-card warn">
+                                <span class="macro-label">Faturamento</span>
+                                <strong>Aguardando</strong>
+                                <span>Acompanha se existe etapa fiscal/financeira pendente.</span>
+                            </article>
+                            <article class="macro-card warn">
+                                <span class="macro-label">Entrega</span>
+                                <strong>Não iniciada</strong>
+                                <span>Indica se a negociação já avançou para entrega.</span>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="section-card">
+                        <div class="section-header">
+                            <h2>Documentos relacionados à negociação</h2>
+                        </div>
+                        <div class="breadcrumb">
+                            <span>Negociação #123456</span>
+                            <b>›</b>
+                            <span>Pedido(s) de Venda</span>
+                            <b>›</b>
+                            <span>Nota de Movimentação Interna</span>
+                            <b>›</b>
+                            <span>Itens (TGFITE)</span>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Tipo de Documento</th>
+                                    <th>Nº do Documento</th>
+                                    <th>Data Emissão</th>
+                                    <th>Cliente</th>
+                                    <th>Itens</th>
+                                    <th>Itens com Saldo</th>
+                                    <th>Itens Bloqueados</th>
+                                    <th>Valor Total</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody id="documentosBody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="section-card">
+                        <div class="section-header">
+                            <h2>Itens do Pedido de Venda: <span id="pedidoSelecionado">00098765</span></h2>
+                            <div class="muted">Regra visual: QTDNEG - QTDENTREGUE define saldo</div>
+                        </div>
+                        <div class="filters">
+                            <div class="filter-buttons">
+                                <button class="filter-button active" type="button" data-filter="todos">Todos</button>
+                                <button class="filter-button" type="button" data-filter="saldo">Com saldo</button>
+                                <button class="filter-button" type="button" data-filter="bloqueados">Bloqueados</button>
+                            </div>
+                            <div class="search-box">
+                                <span>⌕</span>
+                                <input id="buscaItem" type="search" placeholder="Buscar item">
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Seq.</th>
+                                    <th>Código do Item</th>
+                                    <th>Descrição do Item</th>
+                                    <th>Qtd. Negociada<br><span class="muted">(QTDNEG)</span></th>
+                                    <th>Qtd. Entregue<br><span class="muted">(QTDENTREGUE)</span></th>
+                                    <th>Saldo<br><span class="muted">(QTDNEG - QTDENTREGUE)</span></th>
+                                    <th>Status</th>
+                                    <th>Pendente<br><span class="muted">(TGFITE.PENDENTE)</span></th>
+                                    <th>Ação</th>
+                                </tr>
+                                </thead>
+                                <tbody id="itensBody"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="section-card">
+                        <div class="section-header">
+                            <h2>Acompanhamentos que serão gerados (TGFACT) - Simulação</h2>
+                            <span class="badge"><span id="metricCancelados">0</span> item cancelado na simulação</span>
+                        </div>
+                        <div class="table-wrap" id="acompanhamentosWrap"></div>
+                    </section>
+                </div>
+
+                <aside class="side-panel">
+                    <h2>Resultado da regra</h2>
+                    <div class="rule-result">
+                        <strong>Pode cancelar</strong>
+                        Itens com saldo podem receber PENDENTE = N mediante motivo.
+                        <ul>
+                            <li><span id="sidePodeCancelar">7</span> item(ns) podem abrir popup de motivo.</li>
+                        </ul>
+                    </div>
+                    <div class="side-actions">
+                        <button class="primary-side-action" type="button" onclick="abrirPrimeiroCancelavel()">Cancelar itens com saldo</button>
+                        <button type="button" onclick="renderizarTudo()">Revalidar</button>
+                        <button type="button" onclick="alert('Resumo técnico gerado apenas visualmente neste protótipo.')">Ver resumo técnico</button>
+                        <button type="button" onclick="limparSimulacao()">Limpar simulação</button>
+                    </div>
+                    <h2>Painel de Acompanhamento</h2>
+                    <div class="side-block">
+                        <div class="rule-box">
+                            <div class="rule-title"><span class="check-dot">✓</span> Regra aplicada</div>
+                            <p>Itens totalmente entregues não podem ser cancelados.</p>
+                            <p>Itens com saldo permitem cancelamento mediante motivo.</p>
+                        </div>
+                    </div>
+                    <div class="side-block">
+                        <h3>Ações disponíveis</h3>
+                        <ul class="side-list">
+                            <li><span>□</span><div><strong>Cancelar item com saldo</strong><span class="muted">Abre modal para informar o motivo.</span></div></li>
+                            <li><span>↻</span><div><strong>Simular cancelamento</strong><span class="muted">Altera PENDENTE de S para N.</span></div></li>
+                            <li><span>＋</span><div><strong>Gerar acompanhamentos (TGFACT)</strong><span class="muted">Simula gravação dos registros.</span></div></li>
+                        </ul>
+                    </div>
+                    <div class="side-block">
+                        <h3>Resumo técnico (simulação)</h3>
+                        <div class="summary-line"><span>Itens selecionados para cancelamento</span><strong id="sideSelecionados">0</strong></div>
+                        <div class="summary-line"><span>Itens que serão cancelados</span><strong id="sideCancelados">0</strong></div>
+                        <div class="summary-line"><span>Acompanhamentos que serão gerados</span><strong id="sideAcompanhamentos">0</strong></div>
+                        <div class="summary-line"><span>Última simulação em</span><strong id="sideUltima">—</strong></div>
+                    </div>
+                    <div class="side-block">
+                        <h3>Legenda de Status</h3>
+                        <div class="legend">
+                            <div class="legend-item"><span class="legend-dot green"></span><div><strong>Com saldo</strong><br><span class="muted">Item possui saldo para cancelamento.</span></div></div>
+                            <div class="legend-item"><span class="legend-dot red"></span><div><strong>Bloqueado</strong><br><span class="muted">Item totalmente entregue.</span></div></div>
+                            <div class="legend-item"><span class="legend-dot blue"></span><div><strong>Cancelado (simulado)</strong><br><span class="muted">Item já cancelado na simulação.</span></div></div>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <div class="overlay" id="motivoOverlay">
+        <div class="reason-modal" role="dialog" aria-modal="true" aria-label="Motivo do cancelamento do item">
+            <div class="reason-head">
+                <h3>Motivo do cancelamento do item</h3>
+                <button class="close-button" type="button" onclick="fecharMotivo()">×</button>
+            </div>
+            <div class="reason-body">
+                <div class="field">
+                    <label for="motivoCancelamento">Motivo obrigatório</label>
+                    <select id="motivoCancelamento">
+                        <option value="">Selecione o motivo</option>
+                        <option>Erro comercial</option>
+                        <option>Solicitação do cliente</option>
+                        <option>Item sem saldo</option>
+                        <option>Duplicidade</option>
+                        <option>Outro</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="observacaoCancelamento">Observação opcional</label>
+                    <textarea id="observacaoCancelamento" placeholder="Informe detalhes adicionais..."></textarea>
+                </div>
+            </div>
+            <div class="reason-footer">
+                <button class="secondary-button" type="button" onclick="fecharMotivo()">Cancelar</button>
+                <button class="primary-button" type="button" onclick="confirmarCancelamento()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Protótipo visual: dados mockados em memória, sem backend e sem integração Sankhya.
+    var negociacao = {
+        numero: '123456',
+        usuario: 'usuario.logado',
+        pedidoSelecionado: '00098765',
+        ultimaSimulacao: '',
+        documentos: [
+            {
+                tipo: 'PV',
+                descricao: 'Pedido de Venda',
+                documento: '00098765',
+                data: '24/04/2024',
+                cliente: '000123 - CLIENTE EXEMPLO LTDA',
+                itens: 10,
+                saldo: 4,
+                bloqueados: 6,
+                valor: 'R$ 75.320,10'
+            },
+            {
+                tipo: 'PV',
+                descricao: 'Pedido de Venda',
+                documento: '00098766',
+                data: '24/04/2024',
+                cliente: '000123 - CLIENTE EXEMPLO LTDA',
+                itens: 8,
+                saldo: 3,
+                bloqueados: 5,
+                valor: 'R$ 50.110,40'
+            }
+        ],
+        itens: [
+            {seq: 1, codigo: 'PROD001', descricao: 'PRODUTO 001', qtdNeg: 10, qtdEntregue: 10, pendente: 'N'},
+            {seq: 2, codigo: 'PROD002', descricao: 'PRODUTO 002', qtdNeg: 5, qtdEntregue: 2, pendente: 'S'},
+            {seq: 3, codigo: 'PROD003', descricao: 'PRODUTO 003', qtdNeg: 3, qtdEntregue: 0, pendente: 'S'},
+            {seq: 4, codigo: 'PROD004', descricao: 'PRODUTO 004', qtdNeg: 7, qtdEntregue: 7, pendente: 'N'},
+            {seq: 5, codigo: 'PROD005', descricao: 'PRODUTO 005', qtdNeg: 2, qtdEntregue: 1, pendente: 'S'}
+        ],
+        acompanhamentos: []
+    };
+
+    var filtroAtual = 'todos';
+    var itemSelecionado = null;
+
+    function formatarQuantidade(valor) {
+        return Number(valor).toLocaleString('pt-BR', {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3
+        });
+    }
+
+    function saldoItem(item) {
+        return Number(item.qtdNeg) - Number(item.qtdEntregue);
+    }
+
+    function statusItem(item) {
+        if (item.cancelado) {
+            return 'Cancelado (simulado)';
+        }
+
+        return saldoItem(item) > 0 ? 'Com saldo' : 'Bloqueado';
+    }
+
+    function classeStatus(item) {
+        if (item.cancelado) {
+            return 'blue';
+        }
+
+        return saldoItem(item) > 0 ? 'green' : 'red';
+    }
+
+    function renderizarDocumentos() {
+        var body = document.getElementById('documentosBody');
+        body.innerHTML = negociacao.documentos.map(function(doc) {
+            return '<tr>'
+                + '<td><span class="doc-tag">' + doc.tipo + '</span> ' + doc.descricao + '</td>'
+                + '<td><strong>' + doc.documento + '</strong></td>'
+                + '<td>' + doc.data + '</td>'
+                + '<td>' + doc.cliente + '</td>'
+                + '<td>' + doc.itens + '</td>'
+                + '<td class="number-green">' + doc.saldo + '</td>'
+                + '<td class="number-red">' + doc.bloqueados + '</td>'
+                + '<td><strong>' + doc.valor + '</strong></td>'
+                + '<td><button class="secondary-button" type="button">Ver itens</button></td>'
+                + '</tr>';
+        }).join('');
+    }
+
+    function renderizarItens() {
+        var busca = document.getElementById('buscaItem').value.toLowerCase();
+        var body = document.getElementById('itensBody');
+        var itens = negociacao.itens.filter(function(item) {
+            var status = statusItem(item);
+            var atendeFiltro = filtroAtual === 'todos'
+                || (filtroAtual === 'saldo' && status === 'Com saldo')
+                || (filtroAtual === 'bloqueados' && status === 'Bloqueado');
+            var atendeBusca = !busca
+                || item.codigo.toLowerCase().indexOf(busca) >= 0
+                || item.descricao.toLowerCase().indexOf(busca) >= 0
+                || String(item.seq).indexOf(busca) >= 0;
+            return atendeFiltro && atendeBusca;
+        });
+
+        body.innerHTML = itens.map(function(item) {
+            var saldo = saldoItem(item);
+            var status = statusItem(item);
+            var acao = status === 'Com saldo'
+                ? '<button class="action-button" type="button" onclick="abrirMotivo(' + item.seq + ')">Cancelar item</button>'
+                : '<span class="muted">—</span>';
+
+            return '<tr>'
+                + '<td><strong>' + item.seq + '</strong></td>'
+                + '<td>' + item.codigo + '</td>'
+                + '<td>' + item.descricao + '</td>'
+                + '<td>' + formatarQuantidade(item.qtdNeg) + '</td>'
+                + '<td>' + formatarQuantidade(item.qtdEntregue) + '</td>'
+                + '<td class="' + (saldo > 0 ? 'number-green' : 'muted') + '">' + formatarQuantidade(saldo) + '</td>'
+                + '<td><span class="status-pill ' + classeStatus(item) + '">' + status + '</span></td>'
+                + '<td><strong>' + item.pendente + '</strong></td>'
+                + '<td>' + acao + '</td>'
+                + '</tr>';
+        }).join('');
+    }
+
+    function renderizarAcompanhamentos() {
+        var wrap = document.getElementById('acompanhamentosWrap');
+
+        if (!negociacao.acompanhamentos.length) {
+            wrap.innerHTML = '<div class="empty-state">Nenhum acompanhamento TGFACT simulado ainda.</div>';
+            return;
+        }
+
+        wrap.innerHTML = '<table><thead><tr>'
+            + '<th>Ocorrência</th>'
+            + '<th>Referência</th>'
+            + '<th>Item<br><span class="muted">(NUNOTA/SEQUENCIA)</span></th>'
+            + '<th>Descrição</th>'
+            + '<th>Usuário</th>'
+            + '<th>Data/Hora</th>'
+            + '<th>Motivo</th>'
+            + '<th>Flag Item Cancelado</th>'
+            + '</tr></thead><tbody>'
+            + negociacao.acompanhamentos.map(function(row) {
+                return '<tr>'
+                    + '<td><strong>' + row.ocorrencia + '</strong></td>'
+                    + '<td>' + row.referencia + '</td>'
+                    + '<td>' + row.item + '</td>'
+                    + '<td>' + row.descricao + '</td>'
+                    + '<td>' + row.usuario + '</td>'
+                    + '<td>' + row.dataHora + '</td>'
+                    + '<td>' + row.motivo + '</td>'
+                    + '<td><span class="status-pill green">' + row.flag + '</span></td>'
+                    + '</tr>';
+            }).join('')
+            + '</tbody></table>';
+    }
+
+    function atualizarIndicadores() {
+        var totalItens = 18;
+        var comSaldo = 7 - negociacao.acompanhamentos.length;
+        var bloqueados = 11;
+        var cancelados = negociacao.acompanhamentos.length;
+
+        document.getElementById('metricPedidos').innerText = negociacao.documentos.length;
+        document.getElementById('metricItens').innerText = totalItens;
+        document.getElementById('metricSaldo').innerText = Math.max(comSaldo, 0);
+        document.getElementById('metricBloqueados').innerText = bloqueados;
+        document.getElementById('metricCancelados').innerText = cancelados;
+        document.getElementById('sideSelecionados').innerText = cancelados;
+        document.getElementById('sideCancelados').innerText = cancelados;
+        document.getElementById('sideAcompanhamentos').innerText = cancelados;
+        document.getElementById('sideUltima').innerText = negociacao.ultimaSimulacao || '—';
+        document.getElementById('sidePodeCancelar').innerText = Math.max(comSaldo, 0);
+    }
+
+    function abrirMotivo(seq) {
+        itemSelecionado = negociacao.itens.find(function(item) {
+            return item.seq === seq;
+        });
+        document.getElementById('motivoCancelamento').value = '';
+        document.getElementById('observacaoCancelamento').value = '';
+        document.getElementById('motivoOverlay').style.display = 'flex';
+    }
+
+    function fecharMotivo() {
+        document.getElementById('motivoOverlay').style.display = 'none';
+        itemSelecionado = null;
+    }
+
+    function confirmarCancelamento() {
+        var motivo = document.getElementById('motivoCancelamento').value;
+
+        if (!motivo) {
+            alert('Informe o motivo do cancelamento.');
+            return;
+        }
+
+        if (!itemSelecionado) {
+            return;
+        }
+
+        itemSelecionado.cancelado = true;
+        itemSelecionado.pendente = 'N';
+        negociacao.ultimaSimulacao = new Date().toLocaleString('pt-BR');
+
+        negociacao.acompanhamentos.push({
+            ocorrencia: 'CANC.ITEM.PV',
+            referencia: 'Neg: 123456 | PV: 00098765',
+            item: '00098765 / ' + itemSelecionado.seq,
+            descricao: 'Cancelamento de item do Pedido de Venda (simulação)',
+            usuario: negociacao.usuario,
+            dataHora: negociacao.ultimaSimulacao,
+            motivo: motivo,
+            flag: 'Sim'
+        });
+
+        fecharMotivo();
+        renderizarTudo();
+    }
+
+    function abrirPrimeiroCancelavel() {
+        var item = negociacao.itens.find(function(linha) {
+            return !linha.cancelado && saldoItem(linha) > 0;
+        });
+
+        if (!item) {
+            alert('Não existem itens com saldo disponíveis para cancelamento.');
+            return;
+        }
+
+        abrirMotivo(item.seq);
+    }
+
+    function limparSimulacao() {
+        negociacao.itens.forEach(function(item) {
+            delete item.cancelado;
+            item.pendente = saldoItem(item) > 0 ? 'S' : 'N';
+        });
+        negociacao.acompanhamentos = [];
+        negociacao.ultimaSimulacao = '';
+        renderizarTudo();
+    }
+
+    function configurarFiltros() {
+        document.querySelectorAll('.filter-button').forEach(function(botao) {
+            botao.addEventListener('click', function() {
+                document.querySelectorAll('.filter-button').forEach(function(item) {
+                    item.classList.remove('active');
+                });
+                botao.classList.add('active');
+                filtroAtual = botao.getAttribute('data-filter');
+                renderizarItens();
+            });
+        });
+
+        document.getElementById('buscaItem').addEventListener('input', renderizarItens);
+    }
+
+    function renderizarTudo() {
+        document.getElementById('pedidoSelecionado').innerText = negociacao.pedidoSelecionado;
+        renderizarDocumentos();
+        renderizarItens();
+        renderizarAcompanhamentos();
+        atualizarIndicadores();
+    }
+
+    configurarFiltros();
+    renderizarTudo();
+</script>
+</body>
+</html>

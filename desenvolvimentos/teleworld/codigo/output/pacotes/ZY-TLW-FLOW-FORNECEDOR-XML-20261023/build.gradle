@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+group = 'br.com.zaya.teleworld'
+version = '2.5'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// As bibliotecas proprietarias do Sankhya permanecem externas ao pacote.
+// Para outro ambiente, use: -PsankhyaLibsDir=C:/caminho/Dependencias
+def sankhyaLibsDir = providers.gradleProperty('sankhyaLibsDir').get()
+
+dependencies {
+    compileOnly fileTree(dir: "${sankhyaLibsDir}/Jar", include: ['*.jar'])
+    compileOnly fileTree(dir: "${sankhyaLibsDir}/4_35", include: ['*.jar'])
+
+    testImplementation fileTree(dir: "${sankhyaLibsDir}/Jar", include: ['*.jar'])
+    testImplementation fileTree(dir: "${sankhyaLibsDir}/4_35", include: ['*.jar'])
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    archiveFileName = 'ZAYA-TLW-FLOW-FORNECEDOR-XML-2.5.jar'
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    manifest {
+        attributes(
+                'Implementation-Title': 'Teleworld - Flow Fornecedor via XML',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'Zaya.IT',
+                'Built-By': 'Gradle')
+    }
+}
